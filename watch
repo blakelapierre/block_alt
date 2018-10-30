@@ -40,7 +40,7 @@ commit
           merge
             ;;
 
-         *)
+      *)
           echo "CCC committing $SUSPEND"
           commit
 
