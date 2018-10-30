@@ -19,7 +19,7 @@ commit () {
 
 commit_and_reset_comment() {
   commit $COMMENT
-  $COMMENT=''
+  $COMMENT=""
 }
 
 merge () {
