@@ -1,0 +1,50 @@
+#!/bin/sh
+
+BRANCH=${1:-autosave}
+
+echo "  About to watch"
+echo "    please have inotifywait and git..."
+echo ""
+
+checkout () {
+  git checkout -b ${1} 2> /dev/null
+  git checkout ${1}
+}
+
+commit () {
+  git add .
+  git commit --no-gpg-sign -m "auto-commit"
+  git push origin ${1:-$BRANCH}
+}
+
+merge () {
+  checkout master
+  git merge --no-gpg-sign $BRANCH
+  git push origin master
+  checkout $BRANCH
+}
+
+checkout $BRANCH
+commit
+
+
+#inotifywait -m ./ -e CLOSE_WRITE -e CREATE |
+(inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat) |
+  while read path action file; do
+    echo "$path" "$action" "$file"
+
+    case $path in
+      ":m")
+
+          echo "MMM merging"
+          merge
+            ;;
+
+         *)
+          echo "CCC committing $SUSPEND"
+          commit
+
+            ;;
+    esac
+
+  done
