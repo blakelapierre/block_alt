@@ -22,6 +22,10 @@ commit_and_reset_comment() {
   COMMENT=""
 }
 
+branch () {
+  git branch -b $1
+}
+
 merge () {
   checkout master
   git merge --no-gpg-sign $BRANCH
@@ -40,6 +44,11 @@ commit_and_reset_comment
     echo "$path" "$action" "$file"
 
     case $path in
+      "b")
+          echo "branch"
+          branch
+            ;;
+
       "c")
           echo "comment"
           COMMENT="$action"
