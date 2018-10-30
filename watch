@@ -23,7 +23,11 @@ commit_and_reset_comment() {
 }
 
 branch () {
-  git checkout -b ${1}
+  checkout
+}
+
+delete () {
+  git branch -d ${1}
 }
 
 merge () {
@@ -53,6 +57,10 @@ commit_and_reset_comment
           echo "comment"
           COMMENT="$action"
             ;;
+
+      "d")
+          echo "delete"
+          delete
 
       "m")
 
