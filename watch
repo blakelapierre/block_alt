@@ -13,8 +13,13 @@ checkout () {
 
 commit () {
   git add .
-  git commit --no-gpg-sign -m "auto-commit"
+  git commit --no-gpg-sign -m "${1:-auto-commit}"
   git push origin ${1:-$BRANCH}
+}
+
+commit_and_reset_comment() {
+  commit $COMMENT
+  $COMMENT=''
 }
 
 merge () {
@@ -24,12 +29,9 @@ merge () {
   checkout $BRANCH
 }
 
-comment () {
-
-}
 
 checkout $BRANCH
-commit
+commit_and_reset_comment
 
 
 #inotifywait -m ./ -e CLOSE_WRITE -e CREATE |
@@ -40,7 +42,7 @@ commit
     case $path in
       "c")
           echo "comment"
-          comment
+          COMMENT="$action"
             ;;
 
       "m")
@@ -51,7 +53,7 @@ commit
 
       *)
           echo "CCC committing $SUSPEND"
-          commit
+          commit_and_reset_comment
             ;;
     esac
 
