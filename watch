@@ -23,7 +23,7 @@ commit_and_reset_comment() {
 }
 
 branch () {
-  checkout
+  checkout ${1}
 }
 
 delete () {
