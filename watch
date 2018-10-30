@@ -14,7 +14,7 @@ checkout () {
 commit () {
   git add .
   git commit --no-gpg-sign -m "${1:-auto-commit}"
-  git push origin ${1:-$BRANCH}
+  git push origin ${2:-$BRANCH}
 }
 
 commit_and_reset_comment() {
