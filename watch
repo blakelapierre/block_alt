@@ -61,6 +61,7 @@ commit_and_reset_comment
       "d")
           echo "delete"
           delete
+            ;;
 
       "m")
 
