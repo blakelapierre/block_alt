@@ -52,6 +52,11 @@ commit_and_reset_comment
     echo "$path" "$action" "$file"
 
     case $path in
+      "~")
+          echo "home branch: ${1}"
+          checkout "$BRANCH"
+            ;;
+
       "b")
           echo "branch"
           branch "$action"
