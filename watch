@@ -46,7 +46,7 @@ commit_and_reset_comment
     case $path in
       "b")
           echo "branch"
-          branch
+          branch "$action"
             ;;
 
       "c")
