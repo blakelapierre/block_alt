@@ -37,6 +37,10 @@ merge () {
   checkout $BRANCH
 }
 
+rebase () {
+  git rebase ${1:-master}
+}
+
 
 checkout $BRANCH
 commit_and_reset_comment
@@ -67,6 +71,11 @@ commit_and_reset_comment
 
           echo "MMM merging"
           merge
+            ;;
+
+      "r")
+          echo "rebase"
+          rebase
             ;;
 
       *)
