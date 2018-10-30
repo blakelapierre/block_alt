@@ -24,6 +24,10 @@ merge () {
   checkout $BRANCH
 }
 
+comment () {
+
+}
+
 checkout $BRANCH
 commit
 
@@ -34,6 +38,11 @@ commit
     echo "$path" "$action" "$file"
 
     case $path in
+      "c")
+          echo "comment"
+          comment
+            ;;
+
       "m")
 
           echo "MMM merging"
@@ -43,7 +52,6 @@ commit
       *)
           echo "CCC committing $SUSPEND"
           commit
-
             ;;
     esac
 
