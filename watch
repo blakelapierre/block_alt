@@ -23,7 +23,7 @@ commit_and_reset_comment() {
 }
 
 branch () {
-  git branch -b $1
+  git checkout -b $1
 }
 
 merge () {
