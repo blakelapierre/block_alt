@@ -34,7 +34,7 @@ commit
     echo "$path" "$action" "$file"
 
     case $path in
-      ":m")
+      "m")
 
           echo "MMM merging"
           merge
