@@ -6,6 +6,8 @@ HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
 
+rm .updates; mkfifo .updates
+
 while :
 do
   nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
