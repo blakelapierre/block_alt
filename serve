@@ -1,6 +1,7 @@
 #!/bin/bash
 
 PORT=${1:-4444}
+UPDATES_PORT=${1:-4445}
 FILE=${2:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
@@ -10,5 +11,6 @@ rm .updates 2> /dev/null; mkfifo .updates
 
 while :
 do
-  nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
+  nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE) &
+  nc -l $UPDATES_PORT < .updates
 done
