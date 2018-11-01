@@ -17,3 +17,9 @@ echo "updates" > .updates
     nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
   done)
 
+  &
+
+(while :
+  do
+    nc -l $UPDATES_PORT < <(cat .updates)
+  done)
