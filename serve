@@ -2,7 +2,7 @@
 
 PORT=${1:-4444}
 FILE=${2:-index.html}
-OK="200 OK\n"
+OK="200 OK\n\n"
 
 
 nc -l $PORT < <(cat <(echo "$OK") $FILE)
