@@ -6,7 +6,7 @@ HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
 
-rm .updates; mkfifo .updates
+rm .updates 2> /dev/null; mkfifo .updates
 
 while :
 do
