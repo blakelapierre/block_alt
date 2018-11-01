@@ -22,3 +22,4 @@ rm .updates 2> /dev/null; mkfifo .updates
   done)
 
 
+echo "test" > .updates
