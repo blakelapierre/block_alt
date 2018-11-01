@@ -7,4 +7,4 @@ STATUS="200"
 HEADER="Server: custom\r\n"
 
 
-nc -l $PORT < <(cat <(echo '$HTTP $STATUS\r\n$HEADER\r\n') $FILE)
+nc -l $PORT < <(cat <(echo "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
