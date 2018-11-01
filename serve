@@ -4,4 +4,4 @@ FILE=${2:-index.html}
 OK="200 OK\n"
 
 
-nc -l ${1:-4444} < <(cat $FILE)
+nc -l ${1:-4444} < <(cat "$FILE")
