@@ -1,8 +1,8 @@
 #!/bin/bash
 
 PORT=${1:-4444}
-UPDATES_PORT=${3:-4445}
-FILE=${2:-index.html}
+UPDATES_PORT=${2:-4445}
+FILE=${3:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
