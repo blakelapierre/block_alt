@@ -7,4 +7,4 @@ STATUS="200 OK"
 HEADERS="Content-Type: text/html;"
 
 
-nc -l $PORT < <(cat <(echo "$HTTP $STATUS $HEADERS\r\n") $FILE)
+nc -l $PORT < <(cat <(echo "$HTTP $STATUS\r\n$HEADERS\r\n") $FILE)
