@@ -5,4 +5,4 @@ FILE=$2
 echo "$2"
 cat "$2"
 
-nc -l -k -c 'echo "200 OK\n$(echo "$FILE")"' ${1:-4444}
+nc -l -k -c 'echo "200 OK\n"' ${1:-4444}
