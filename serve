@@ -6,4 +6,4 @@ OK="200 OK\n"
 echo "$2"
 cat "$2"
 
-nc -l ${1:-4444} < $OK$(cat "$FILE")
+nc -l ${1:-4444} < echo "$OK$(cat "$FILE")"
