@@ -2,7 +2,8 @@
 
 PORT=${1:-4444}
 FILE=${2:-index.html}
-OK="200 OK\n\n"
+HTTP="HTTP/1.1"
+OK="200 OK"
 
 
-nc -l $PORT < <(cat <(echo "$OK") $FILE)
+nc -l $PORT < <(cat <(echo "$HTTP $OK\n") $FILE)
