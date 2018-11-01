@@ -14,7 +14,7 @@ checkout () {
 commit () {
   git add .
   git commit --no-gpg-sign -m "${1:-auto-commit}"
-  git push origin ${2:-$BRANCH}
+  push ${2:-$BRANCH}
 }
 
 commit_and_reset_comment() {
@@ -24,6 +24,7 @@ commit_and_reset_comment() {
 
 branch () {
   checkout ${1}
+  push ${1}
 }
 
 delete () {
@@ -33,8 +34,12 @@ delete () {
 merge () {
   checkout master
   git merge --no-gpg-sign $BRANCH
-  git push origin master
+  push master
   checkout $BRANCH
+}
+
+push () {
+  git push origin $1
 }
 
 rebase () {
