@@ -3,7 +3,8 @@
 PORT=${1:-4444}
 FILE=${2:-index.html}
 HTTP="HTTP/1.1"
-OK="200 OK"
+STATUS="200 OK"
+HEADERS="Content-Type: text/html;"
 
 
-nc -l $PORT < <(cat <(echo "$HTTP $OK\n") $FILE)
+nc -l $PORT < <(cat <(echo "$HTTP $STATUS $HEADERS\r\n") $FILE)
