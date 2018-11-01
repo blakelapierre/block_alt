@@ -3,7 +3,5 @@
 FILE=${2:-index.html}
 OK="200 OK\n"
 
-echo "$2" "$FILE"
-cat "$2"
 
-nc -l -k ${1:-4444} < <(cat $FILE)
+nc -l -k ${1:-4444} < <(cat <(echo "$OK") $FILE)
