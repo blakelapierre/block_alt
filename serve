@@ -18,5 +18,5 @@ rm .updates 2> /dev/null; mkfifo .updates
 
 (while :
   do
-    nc -l $UPDATES_PORT < <(cat .updates)
+    nc -l $UPDATES_PORT < <(echo "hi")
   done)
