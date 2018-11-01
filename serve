@@ -1,3 +1,5 @@
 #!/bin/sh
 
+echo "$2"
+
 nc -l -k -c 'echo "200 OK\n$(cat "$2")"' ${1:-4444}
