@@ -21,6 +21,6 @@ echo "test"
 (
   while :
   do
-    nc -l $UPDATES_PORT < <(cat .updates)
+    nc -l -k $UPDATES_PORT < <(cat .updates)
   done
 )
