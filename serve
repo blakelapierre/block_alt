@@ -4,7 +4,7 @@ PORT=${1:-4444}
 FILE=${2:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
-HEADERS="Content-Type: text/html;"
+HEADERS="Server: custom"
 
 
 nc -l $PORT < <(cat <(echo '$HTTP $STATUS\r\n$HEADERS\r\n') $FILE)
