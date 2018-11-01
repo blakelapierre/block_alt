@@ -14,13 +14,13 @@ $(
   do
     nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
   done
-)
+) &
 
-  & echo "test" &
+echo "test"
 
 $(
   while :
   do
     nc -l $UPDATES_PORT < <(echo "hi")
   done
-)
+) &
