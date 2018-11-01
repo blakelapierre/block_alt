@@ -4,4 +4,4 @@ FILE=${2:-index.html}
 OK="200 OK\n"
 
 
-nc -l -k ${1:-4444} < <(cat <(echo "$OK") $FILE)
+nc -l -k ${1:-4444} < <(cat $FILE)
