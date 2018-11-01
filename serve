@@ -9,8 +9,18 @@ HEADER="Server: custom\r\n"
 
 rm .updates 2> /dev/null; mkfifo .updates
 
-while :
-do
-  (nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE) &
-  nc -l $UPDATES_PORT < .updates)
-done
+(
+  while :
+  do
+    nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
+  done
+
+  &
+
+  while :
+  do
+    nc -l $UPDATES_PORT < .updates
+  done
+)
+
+
