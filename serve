@@ -5,4 +5,4 @@ FILE=${2:-index.html}
 OK="200 OK\n"
 
 
-nc -l $PORT < <(echo "$OK")
+nc -l $PORT <  <(echo "$OK")
