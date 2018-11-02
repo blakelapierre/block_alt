@@ -5,17 +5,17 @@
     </style>
     <script>
       console.log('run');
-        document.onload = function() {
-          console.log('load');
-          var updates = document.createElement('iframe');
-          updates.src = ':4445';
+      function load() {
+        console.log('load');
+        var updates = document.createElement('iframe');
+        updates.src = ':4445';
 
-          console.dir(updates);
-          document.body.appendChild(updates);
-        };
+        console.dir(updates);
+        document.body.appendChild(updates);
+      }
     </script>
   </head>
-  <body>
+  <body onload="load()">
     <canvas></canvas>
     <textarea></textarea>
   <body>
