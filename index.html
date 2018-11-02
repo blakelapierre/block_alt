@@ -4,15 +4,7 @@
     <style>
     </style>
     <script>
-      console.log('run');
-      function load() {
-        console.log('load');
-        var updates = document.createElement('iframe');
-        updates.src = '//127.0.0.1:4445';
-
-        console.dir(updates);
-        document.body.appendChild(updates);
-      }
+      var ws = new WebSocket('ws://127.0.0.1:4445');
     </script>
   </head>
   <body onload="load()">
