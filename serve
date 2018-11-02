@@ -24,7 +24,7 @@ host_ws () {
   while :
   do
     #serve_ws $1 $2
-    nc -l $1 < <(cat <(echo -e "$HTTP $STATUS\r\n$KA\r\n") $2)
+    nc -l -k $1 < <(cat <(echo -e "$HTTP $STATUS\r\n$KA\r\n") $2)
   done
 }
 
