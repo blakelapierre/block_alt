@@ -77,13 +77,13 @@
             var content = event.target.textContent;
 
             offerEl.remove();
-
+            setElText(inputAreaEl, '');
 
             var i = JSON.parse(atob(content));
             console.log(i);
 
             var answerEl = document.createElement('answer');
-            el.appendChild(answerEl);
+            el.prependChild(answerEl);
 
             if (i.type === 'offer') {
               var newPC = new RTCPeerConnection(config);
