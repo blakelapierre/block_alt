@@ -71,7 +71,7 @@
             var pc = new RTCPeerConnection(config);
 
             pc
-              .setRemoteDescription({type: 'offer', sdp: content})
+              .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: content}))
               .then(pc.createAnswer)
               .then(function(answer) {
                 console.log('answer', answer);
