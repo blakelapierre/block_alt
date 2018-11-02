@@ -2,13 +2,33 @@
 <html>
   <head>
     <style>
+
+      area {
+        display: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+      }
+
+      templates { display: none; }
+
       sdp { word-break: break-all; }
+
     </style>
     <script>
       function load() {
 
 
-        var sdpEl = document.getElementsByTagName('sdp')[0];
+        var area = getEl('area'),
+            templates = getEl('templates');
+
+
+        var connectionT = getEl('connection', templates);
+
+        var el = connectionT.cloneNode();
+        area.appendChild(el);
+
 
         var googleSTUN = getGoogleSTUN();
 
@@ -53,10 +73,29 @@
           };
         }
 
+        function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
+
       }
     </script>
   </head>
   <body onload="load()">
-    <sdp></sdp>
+
+    <area></area>
+
+    <templates>
+
+      <connection>
+        <initiate>
+          <sdp></sdp>
+          <answer></answer>
+        </initiate>
+        <receive>
+          <offer></offer>
+          <answer></answer>
+        </receive>
+      </connection>
+
+    </templates>
+
   <body>
 </html>
