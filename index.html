@@ -22,6 +22,7 @@
             .createOffer()
             .then(function(offer) {
               // setSdpElText(JSON.stringify(offer));
+              console.log(offer);
               setSdpElText(atob(offer.sdp));
             })
             .catch(function(error) {
