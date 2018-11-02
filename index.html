@@ -67,6 +67,9 @@
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
+
+            var pc = new RTCPeerConnection(config);
+
             pc
               .setRemoteDescription({type: 'offer', sdp: content})
               .then(pc.createAnswer)
