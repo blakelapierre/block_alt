@@ -47,7 +47,7 @@ commit_and_reset_comment
 #inotifywait -m ./ -e CLOSE_WRITE -e CREATE |
 (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat) |
   while read path action file; do
-    echo "$path" "$action" "$file"
+    echo "$path" "$action" "$file" "$CHECKING_OUT"
 
     if [ $CHECKING_OUT != 1 ]
     then
