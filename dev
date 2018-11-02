@@ -7,8 +7,10 @@ echo "    please have inotifywait and git..."
 echo ""
 
 checkout () {
+  CHECKING_OUT=1
   git checkout -b ${1} 2> /dev/null
   git checkout ${1}
+  CHECKING_OUT=0
 }
 
 commit () {
@@ -47,42 +49,47 @@ commit_and_reset_comment
   while read path action file; do
     echo "$path" "$action" "$file"
 
-    case $path in
-      "~")
-          echo "home branch: ${1}"
-          checkout "$BRANCH"
-            ;;
+    if [ CHECKING_OUT != 1 ]
+    then
 
-      "b")
-          echo "branch"
-          branch "$action"
-            ;;
+      case $path in
+        "~")
+            echo "home branch: ${1}"
+            checkout "$BRANCH"
+              ;;
 
-      "c")
-          echo "comment"
-          COMMENT="$action"
-            ;;
+        "b")
+            echo "branch"
+            branch "$action"
+              ;;
 
-      "d")
-          echo "delete"
-          delete
-            ;;
+        "c")
+            echo "comment"
+            COMMENT="$action"
+              ;;
 
-      "m")
+        "d")
+            echo "delete"
+            delete
+              ;;
 
-          echo "MMM merging"
-          merge
-            ;;
+        "m")
 
-      "r")
-          echo "rebase"
-          rebase
-            ;;
+            echo "MMM merging"
+            merge
+              ;;
 
-      *)
-          echo "CCC committing $SUSPEND"
-          commit_and_reset_comment
-            ;;
-    esac
+        "r")
+            echo "rebase"
+            rebase
+              ;;
+
+        *)
+            echo "CCC committing $SUSPEND"
+            commit_and_reset_comment
+              ;;
+      esac
+
+    fi
 
   done
