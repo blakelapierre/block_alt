@@ -106,11 +106,22 @@
                   });
               };
 
-              newPC.onicecandidateerror = function (event) {};
+              newPC.onicecandidate = function (event) {
+                console.log('icecandidate2', event);
+              };
+              newPC.onicecandidateerror = function (event) {
+                console.log('icecandidateerror2', event);
+              };
 
-              newPC.onsignalingstatechange = function (event) {};
-              newPC.oniceconnectionstatechange = function (event) {};
-              newPC.onicegatheringstatechange = function (event) {};
+              newPC.onsignalingstatechange = function (event) {
+                console.log('signalingstatechange2', event);
+              };
+              newPC.oniceconnectionstatechange = function (event) {
+                console.log('iceconnectionstatechange2', event);
+              };
+              newPC.onicegatheringstatechange = function (event) {
+                console.log('icegatheringstatechange2', event);
+              };
 
               newPC.onconnectionstatechange = function (event) {
                 setElText(el, newPC.connectionState);
