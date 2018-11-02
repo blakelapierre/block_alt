@@ -105,8 +105,12 @@
                   console.log('error', error);
                 });
             }
-            else {
-
+            else if (i.type === 'answer') {
+              pc
+                .setRemoteDescription(i)
+                .catch(function (error) {
+                  console.log('answer error', error);
+                });
             }
           };
 
