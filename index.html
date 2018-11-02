@@ -80,6 +80,9 @@
               })
               .then(function(answer) {
                 console.log('answer', answer);
+                var enc = btoa(answer.sdp);
+
+                setAnswerElText(enc);
               })
               .catch(function(error) {
                 console.log('error', error);
@@ -116,7 +119,13 @@
             console.log('icecandidate', event);
           };
 
-          function setSdpElText(text) { sdpEl.innerHTML = text; }
+          function setElText (el, text) { el.innerHTML = text; }
+          // function makeSetElText(el) {
+          //   return function(text) { el.innerHTML = text; };
+          // }
+
+          function setSdpElText(text) { setElText(sdpEl, text); }
+          function setAnswerElText(text) { setElText(answerEl, text); }
           function selectText(el) {
             var range = document.createRange();
             range.selectNodeContents(el);
