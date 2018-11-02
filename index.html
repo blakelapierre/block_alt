@@ -4,14 +4,12 @@
     <style>
     </style>
     <script>
-      console.log('run');
       function load() {
-        console.log('load');
-        var updates = document.createElement('iframe');
-        updates.src = '//127.0.0.1:4445';
+        var iframe = document.createElement('iframe');
 
-        console.dir(updates);
-        document.body.appendChild(updates);
+        iframe.src = 'http://127.0.0.1:4445';
+
+        document.body.appendChild(iframe);
       }
     </script>
   </head>

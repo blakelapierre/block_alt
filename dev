@@ -27,10 +27,6 @@ branch () {
   push ${1}
 }
 
-delete () {
-  git branch -d ${1}
-}
-
 merge () {
   checkout master
   git merge --no-gpg-sign $BRANCH
@@ -38,14 +34,9 @@ merge () {
   checkout $BRANCH
 }
 
-push () {
-  git push origin $1
-}
-
-rebase () {
-  git rebase --no-gpg-sign ${1:-master}
-}
-
+delete () { git branch -d ${1}                    ;}
+push   () { git push origin $1                    ;}
+rebase () { git rebase --no-gpg-sign ${1:-master} ;}
 
 checkout $BRANCH
 commit_and_reset_comment
