@@ -62,7 +62,12 @@
           var el = makeConnectionNode();
           space.appendChild(el);
 
-          var sdpEl = getEl('sdp', el);
+          var sdpEl = getEl('sdp', el),
+              inputAreaEl = getEl('input-area', el);
+
+          inputAreaEl.oninput = function(event) {
+            console.log('input', event);
+          };
 
           var googleSTUN = getGoogleSTUN();
 
