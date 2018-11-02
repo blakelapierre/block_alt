@@ -10,7 +10,7 @@ HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
 
 rm .updates 2> /dev/null; mkfifo .updates
 
-host () {
+host_file () {
   while :
   do
     serve_file $1 $2
@@ -21,5 +21,5 @@ serve_file() {
   nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
 }
 
-(host $PORT $FILE) &
-(host $UPDATES_PORT .updates)
+(host_file $PORT $FILE) &
+(host_file $UPDATES_PORT .updates)
