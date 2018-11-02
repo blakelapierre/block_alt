@@ -17,7 +17,7 @@
     </style>
     <script>
       function load() {
-
+        function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
         var area = getEl('area'),
             templates = getEl('templates');
@@ -78,7 +78,7 @@
           }
         }
 
-        function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
+
 
       }
     </script>
