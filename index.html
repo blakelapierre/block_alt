@@ -102,11 +102,7 @@
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
 
-                var range = document.createRange();
-                range.selectNodeContents(sdpEl);
-                var sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
+                selectText(sdpEl);
 
                 // setSdpElText(offer.sdp);
                 pc.setLocalDescription(offer);
@@ -121,6 +117,13 @@
           };
 
           function setSdpElText(text) { sdpEl.innerHTML = text; }
+          function selectText(el) {
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
 
 
 
