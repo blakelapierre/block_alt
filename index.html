@@ -120,12 +120,10 @@
           };
 
           function setElText (el, text) { el.innerHTML = text; }
-          // function makeSetElText(el) {
-          //   return function(text) { el.innerHTML = text; };
-          // }
 
           function setSdpElText(text) { setElText(sdpEl, text); }
           function setAnswerElText(text) { setElText(answerEl, text); }
+
           function selectText(el) {
             var range = document.createRange();
             range.selectNodeContents(el);
