@@ -49,7 +49,7 @@
       function load() {
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
-        var area = getEl('area'),
+        var space = getEl('space'),
             templates = getEl('templates');
 
 
@@ -60,7 +60,7 @@
           function makeConnectionNode() { return connectionT.cloneNode(true); }
 
           var el = makeConnectionNode();
-          area.appendChild(el);
+          space.appendChild(el);
 
           var sdpEl = getEl('sdp', el);
 
