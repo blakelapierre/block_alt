@@ -66,7 +66,8 @@
               inputAreaEl = getEl('input-area', el);
 
           inputAreaEl.oninput = function(event) {
-            console.log('input', event);
+            var content = event.target.textContent;
+            pc.
           };
 
           var googleSTUN = getGoogleSTUN();
@@ -85,6 +86,7 @@
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
                 setSdpElText(offer.sdp);
+                pc.setLocalDescription(offer);
               })
               .catch(function(error) {
                 setSdpElText(JSON.stringify(error));
