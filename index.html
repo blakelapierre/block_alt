@@ -7,9 +7,13 @@
       var iframe = document.createElement('iframe');
 
       iframe.src = '127.0.0.1:4445';
+
+      function load() {
+        document.body.appendChild(iframe);
+      }
     </script>
   </head>
-  <body>
+  <body onload="load()">
     <canvas></canvas>
     <textarea></textarea>
   <body>
