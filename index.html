@@ -106,6 +106,16 @@
                   });
               };
 
+              newPC.onicecandidateerror = function (event) {};
+
+              newPC.onsignalingstatechange = function (event) {};
+              newPC.oniceconnectionstatechange = function (event) {};
+              newPC.onicegatheringstatechange = function (event) {};
+
+              newPC.onconnectionstatechange = function (event) {
+                setElText(el, newPC.connectionState);
+              };
+
               newPC
                 .setRemoteDescription(i)
                 .then(function() {
