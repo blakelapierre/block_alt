@@ -38,7 +38,7 @@ merge () {
   checkout $BRANCH
 }
 
-push () { git push origin $1; }
+push () { git push origin $1 ;}
 
 rebase () {
   git rebase --no-gpg-sign ${1:-master}
