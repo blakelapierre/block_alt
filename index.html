@@ -185,10 +185,11 @@
                 pc.setLocalDescription(offer);
 
                 setOfferElText(btoa(JSON.stringify(offer)));
-
                 selectText(offerEl);
               })
               .catch(function(error) {
+                console.log('error', error);
+
                 setOfferElText(JSON.stringify(error));
                 selectText(offerEl);
               });
