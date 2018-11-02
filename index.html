@@ -18,26 +18,17 @@
 
       connection {
         flex: 1 1 auto;
-
-        display: flex;
-      }
-
-      connection
-      initiate {
-        flex: 1 1 auto;
         display: flex;
         flex-direction: column;
       }
 
       connection
-      initiate
       sdp {
         flex: 1 1 auto;
       }
 
       connection
-      initiate
-      answer {
+      input-area {
         flex: 1 1 auto;
 
         background-color: rgba(0, 0, 0, 0.33);
@@ -78,6 +69,7 @@
                 // setSdpElText(JSON.stringify(offer));
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
+                setSdpElText(offer.sdp);
               })
               .catch(function(error) {
                 setSdpElText(JSON.stringify(error));
@@ -119,15 +111,8 @@
     <templates>
 
       <connection>
-        <initiate>
-          <sdp></sdp>
-          <answer contenteditable="true"></answer>
-        </initiate>
-
-        <receive>
-          <offer></offer>
-          <answer></answer>
-        </receive>
+        <sdp></sdp>
+        <input-area contenteditable="true"></input-area>
       </connection>
 
     </templates>
