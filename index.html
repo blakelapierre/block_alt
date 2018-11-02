@@ -72,7 +72,6 @@
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
-            console.log(content);
 
             var newPC = new RTCPeerConnection(config);
 
@@ -82,7 +81,7 @@
             if (i.type === 'offer') {
 
               newPC
-                .setRemoteDescription(i)
+                .setRemoteDescription(offer)
                 .then(function() {
                   return newPC.createAnswer();
                 })
@@ -110,34 +109,24 @@
           var pc = new RTCPeerConnection(config);
 
           pc.onnegotiationneeded = function (event) {
-            updateOffer();
+            pc
+              .createOffer()
+              .then(function(offer) {
+                pc.setLocalDescription(offer);
+
+                setSdpElText(btoa(JSON.stringify(offer)));
+
+                selectText(sdpEl);
+              })
+              .catch(function(error) {
+                setSdpElText(JSON.stringify(error));
+              });
           };
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
-            // updateOffer();
-            console.log(pc.localDescription);
+            setSdpElText(btoa(JSON.stringify({'type': 'offer', 'sdp': pc.localDescription})));
           };
-
-          function updateOffer() {
-            return new Promise(function(resolve, reject) {
-              pc
-                .createOffer()
-                .then(function(offer) {
-                  pc.setLocalDescription(offer);
-console.log(offer);
-                  setSdpElText(btoa(JSON.stringify(offer)));
-
-                  selectText(sdpEl);
-                  resolve(offer);
-                })
-                .catch(function(error) {
-                  console.log('error', error);
-                  setSdpElText(JSON.stringify(error));
-                  reject(error);
-                });
-            });
-          }
 
           function setElText (el, text) { el.innerHTML = text; }
 
