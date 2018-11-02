@@ -75,7 +75,9 @@
 
             pc
               .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: content}))
-              .then(pc.createAnswer)
+              .then(function() {
+                return pc.createAnswer();
+              })
               .then(function(answer) {
                 console.log('answer', answer);
               })
