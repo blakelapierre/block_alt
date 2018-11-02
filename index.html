@@ -101,14 +101,10 @@
             pc
               .createOffer()
               .then(function(offer) {
-                // setSdpElText(JSON.stringify(offer));
-                console.log(offer);
-                setSdpElText(btoa(offer.sdp));
-
-                selectText(sdpEl);
-
-                // setSdpElText(offer.sdp);
                 pc.setLocalDescription(offer);
+
+                setSdpElText(btoa(offer.sdp));
+                selectText(sdpEl);
               })
               .catch(function(error) {
                 setSdpElText(JSON.stringify(error));
