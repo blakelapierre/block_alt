@@ -5,16 +5,52 @@
     </style>
     <script>
       function load() {
+<<<<<<< HEAD
         var iframe = document.createElement('iframe');
 
         iframe.src = 'http://127.0.0.1:4445';
 
         document.body.appendChild(iframe);
+=======
+
+
+        var sdpEl = document.getElementsByTagName('sdp')[0];
+
+
+        var config = {
+          'iceServers': []
+        };
+        var pc = new RTCPeerConnection(config);
+
+        pc.onnegotiationneeded = function(event) {
+          pc
+            .createOffer()
+            .then(function(offer) {
+              setSdpElText(JSON.stringify(offer));
+            })
+            .catch(function(error) {
+              setSdpElText(JSON.stringify(error));
+            });
+        };
+
+        function setSdpElText(text) { sdpEl.innerHTML = text; }
+
+
+
+
+
+        pc.createDataChannel('block');
+
+>>>>>>> autosave
       }
     </script>
   </head>
   <body onload="load()">
+<<<<<<< HEAD
     <canvas></canvas>
     <textarea></textarea>
+=======
+    <sdp></sdp>
+>>>>>>> autosave
   <body>
 </html>
