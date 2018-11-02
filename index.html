@@ -84,10 +84,6 @@
               offerEl.remove();
               inputAreaEl.remove();
 
-              var answerEl = document.createElement('answer');
-
-              el.appendChild(answerEl);
-
               var newPC = new RTCPeerConnection(config);
 
               newPC.onnegotiationneeded = function (event) {
@@ -137,11 +133,12 @@
                 console.log(channel);
               };
 
+              var answerEl = document.createElement('answer');
+              el.appendChild(answerEl);
+
               newPC
                 .setRemoteDescription(i)
-                .then(function() {
-                  return newPC.createAnswer();
-                })
+                .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer);
                   var enc = btoa(JSON.stringify(answer));
@@ -159,6 +156,8 @@
                 .setRemoteDescription(i)
                 .then(function() {
                   console.log('remote description set', pc.remoteDescription);
+                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
+                  selectText(answerEl);
                 })
                 .catch(function (error) {
                   console.log('answer error', error);
