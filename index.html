@@ -11,8 +11,18 @@
 
 
         var config = {
-          'iceServers': []
+          'iceServers': [
+            {
+              urls: [
+                'stun:stun1.l.google.com:19302',
+                'stun:stun2.l.google.com:19302',
+                'stun:stun3.l.google.com:19302',
+                'stun:stun4.l.google.com:19302'
+              ]
+            }
+          ]
         };
+
         var pc = new RTCPeerConnection(config);
 
         pc.onnegotiationneeded = function(event) {
@@ -27,8 +37,6 @@
         };
 
         function setSdpElText(text) { sdpEl.innerHTML = text; }
-
-
 
 
 
