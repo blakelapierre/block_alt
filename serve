@@ -23,19 +23,3 @@ serve_file() {
 
 (host $PORT $FILE) &
 (host $UPDATES_PORT .update)
-
-(
-  while :
-  do
-    serve_file $PORT $FILE
-  done
-) &
-
-echo "test"
-
-(
-  while :
-  do
-    serve_file $UPDATES_PORT .updates
-  done
-)
