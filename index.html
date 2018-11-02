@@ -4,12 +4,15 @@
     <style>
     </style>
     <script>
-        var updates = document.createElement('iframe');
-        updates.src = ':4445';
+        document.addEventListener('load', function() {
+          var updates = document.createElement('iframe');
+          updates.src = ':4445';
 
-        document.body.appendChild(updates);
+          console.dir(updates);
+          document.body.appendChild(updates);
+        });
 
-        console.dir(updates);
+
 
     </script>
   </head>
