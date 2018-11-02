@@ -75,7 +75,6 @@
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
 
-            var newPC = new RTCPeerConnection(config);
 
             var i = JSON.parse(atob(content));
             console.log(i);
@@ -88,6 +87,24 @@
               var answerEl = document.createElement('answer');
 
               el.appendChild(answerEl);
+
+              var newPC = new RTCPeerConnection(config);
+
+              newPC.onnegotiationneeded = function (event) {
+                newPC
+                  .createOffer()
+                  .then(function(offer) {
+                    newPC.setLocalDescription(offer);
+
+                    setSdpElText(btoa(JSON.stringify(offer)));
+
+                    selectText(sdpEl);
+                  })
+                  .catch(function(error) {
+                    setSdpElText(JSON.stringify(error));
+                    selectText(sdpEl);
+                  });
+              };
 
               newPC
                 .setRemoteDescription(i)
@@ -116,6 +133,7 @@
               inputAreaEl.remove();
 
               setElText(el, pc.connectionState);
+              console.dir(pc);
             }
           };
 
