@@ -21,4 +21,21 @@ serve_file() {
   nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
 }
 
-(host $PORT $FILE) & (host $UPDATES_PORT .update)
+(host $PORT $FILE) &
+(host $UPDATES_PORT .update)
+
+(
+  while :
+  do
+    serve_file $PORT $FILE
+  done
+) &
+
+echo "test"
+
+(
+  while :
+  do
+    serve_file $UPDATES_PORT .updates
+  done
+)
