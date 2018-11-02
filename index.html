@@ -72,9 +72,10 @@
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
-          offerEl.remove();
 
           inputAreaEl.oninput = function(event) {
+            offerEl.remove();
+
             var content = event.target.textContent;
 
             if (content === undefined || content === '') return;
