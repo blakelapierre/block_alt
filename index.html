@@ -72,6 +72,7 @@
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
+            console.log(content);
 
             var newPC = new RTCPeerConnection(config);
 
