@@ -189,17 +189,20 @@
           };
 
           pc.onicecandidateerror = function (event) {
-            console.log('icecandidate', event);
+            console.log('onicecandidateerror', event);
           };
 
           pc.onsignalingstatechange = function (event) {
-            console.log('icecandidateerror', event);
+            console.log('onsignalingstatechange', event);
+            setElText(el, pc.signalingState);
           };
           pc.oniceconnectionstatechange = function (event) {
             console.log('oniceconnectionstatechange', event);
+            setElText(el, pc.iceConnectionState);
           };
           pc.onicegatheringstatechange = function (event) {
             console.log('onicegatheringstatechange', event);
+            setElText(el, pc.iceGatheringState);
           };
 
           pc.onconnectionstatechange = function (event) {
