@@ -75,20 +75,28 @@
 
             var newPC = new RTCPeerConnection(config);
 
-            newPC
-              .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: atob(content)}))
-              .then(function() {
-                return newPC.createAnswer();
-              })
-              .then(function(answer) {
-                console.log('answer', answer);
-                var enc = btoa(answer.sdp);
+            var i = JSON.parse(atob(content));
 
-                setAnswerElText(enc);
-              })
-              .catch(function(error) {
-                console.log('error', error);
-              });
+            if (i.type === 'offer') {
+
+              newPC
+                .setRemoteDescription(offer)
+                .then(function() {
+                  return newPC.createAnswer();
+                })
+                .then(function(answer) {
+                  console.log('answer', answer);
+                  var enc = btoa(answer.sdp);
+
+                  setAnswerElText(enc);
+                })
+                .catch(function(error) {
+                  console.log('error', error);
+                });
+            }
+            else {
+
+            }
           };
 
           var googleSTUN = getGoogleSTUN();
@@ -105,7 +113,8 @@
               .then(function(offer) {
                 pc.setLocalDescription(offer);
 
-                setSdpElText(btoa(offer.sdp));
+                setSdpElText(btoa(JSON.stringify(offer)));
+
                 selectText(sdpEl);
               })
               .catch(function(error) {
