@@ -96,7 +96,7 @@
                   console.log('answer', answer);
                   var enc = btoa(answer.sdp);
 
-                  setAnswerElText(enc);
+                  setElText(answer, enc);
                 })
                 .catch(function(error) {
                   console.log('error', error);
