@@ -13,7 +13,7 @@ rm .updates 2> /dev/null; mkfifo .updates
 host () {
   while :
   do
-    serve_file
+    serve_file $1 $2
   done
 }
 
