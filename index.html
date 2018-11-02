@@ -76,6 +76,7 @@
             var newPC = new RTCPeerConnection(config);
 
             var i = JSON.parse(atob(content));
+            console.log(i);
 
             if (i.type === 'offer') {
 
