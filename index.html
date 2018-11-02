@@ -74,7 +74,7 @@
             var pc = new RTCPeerConnection(config);
 
             pc
-              .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: content}))
+              .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: atob(content)}))
               .then(function() {
                 return pc.createAnswer();
               })
@@ -101,7 +101,7 @@
                 // setSdpElText(JSON.stringify(offer));
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
-                setSdpElText(offer.sdp);
+                // setSdpElText(offer.sdp);
                 pc.setLocalDescription(offer);
               })
               .catch(function(error) {
