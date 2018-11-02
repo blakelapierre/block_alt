@@ -49,7 +49,7 @@ commit_and_reset_comment
   while read path action file; do
     echo "$path" "$action" "$file"
 
-    if [ CHECKING_OUT != 1 ]
+    if [ $CHECKING_OUT != 1 ]
     then
 
       case $path in
