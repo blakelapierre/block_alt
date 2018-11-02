@@ -4,11 +4,36 @@
     <style>
     </style>
     <script>
-      alert('test!');
+      function load() {
+
+
+        var sdpEl = document.getElementsByTagName('sdp')[0];
+
+
+        var config = {
+          'iceServers': []
+        };
+        var pc = new RTCPeerConnection(config);
+
+        pc.onnegotiationneeded = function(event) {
+          pc
+            .createOffer()
+            .then(function(offer) {
+              setSdpElText(JSON.stringify(offer));
+            })
+            .catch(function(error) {
+              setSdpElText(JSON.stringify(error));
+            });
+        };
+
+
+
+        function setSdpElText(text) { sdpEl.innerHTML = text; }
+
+      }
     </script>
   </head>
-  <body>
-    <canvas></canvas>
-    <textarea></textarea>
+  <body onload="load()">
+    <sdp></sdp>
   <body>
 </html>
