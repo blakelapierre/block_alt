@@ -4,13 +4,13 @@
     <style>
     </style>
     <script>
-        document.addEventListener('load', function() {
+        document.onload = function() {
           var updates = document.createElement('iframe');
           updates.src = ':4445';
 
           console.dir(updates);
           document.body.appendChild(updates);
-        });
+        };
 
 
 
