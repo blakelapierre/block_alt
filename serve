@@ -18,7 +18,6 @@ http_host() {
   while :
   do
     http_host $PORT $FILE
-    #nc -l $PORT < <(cat <(echo -e "$HTTP_OK") $FILE)
   done
 ) &
 
@@ -27,6 +26,6 @@ echo "test"
 (
   while :
   do
-    nc -l -k $UPDATES_PORT < <(cat <(echo -e "$HTTP_OK") .updates)
+    http_host $UPDATES_PORT .updates
   done
 )
