@@ -65,6 +65,66 @@
         startConnection();
 
         function startConnection() {
+
+          function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
+            var googleSTUN = getGoogleSTUN();
+
+            var config = {
+              'iceServers': [googleSTUN]
+            };
+
+            var pc = new RTCPeerConnection(config);
+
+            pc.onnegotiationneeded = function (event) {
+              pc
+                .createOffer()
+                .then(function(offer) {
+                  pc.setLocalDescription(offer);
+                  receiveOffer(offer);
+                })
+                .catch(receiveError);
+            };
+
+            pc.onicecandidate = function (event) {
+              console.log('icecandidate', event);
+              receiveOffer(pc.localDescription);
+            };
+
+            pc.onicecandidateerror = function (event) {
+              console.log('onicecandidateerror', event);
+            };
+
+            pc.onsignalingstatechange = function (event) {
+              console.log('onsignalingstatechange', event);
+              // setElText(el, pc.signalingState);
+            };
+            pc.oniceconnectionstatechange = function (event) {
+              console.log('oniceconnectionstatechange', event);
+              // setElText(el, pc.iceConnectionState);
+            };
+            pc.onicegatheringstatechange = function (event) {
+              console.log('onicegatheringstatechange', event);
+              // setElText(el, pc.iceGatheringState);
+            };
+
+            pc.onconnectionstatechange = function (event) {
+              // setElText(el, pc.connectionState);
+            };
+
+            return pc;
+          }
+
+          var pc = createNewPeerConnection(function (offer) {
+            setOfferElText(btoa(JSON.stringify(offer)));
+            selectText(offerEl);
+          }, function (answer) {
+
+          }, function (error) {
+            console.log('error', error);
+            setOfferElText(JSON.stringify(error));
+            selectText(offerEl);
+          });
+
           var el = ConnectionTemplate.createNew();
 
           space.appendChild(el);
@@ -167,58 +227,6 @@
 
               console.dir(pc, i);
             }
-          };
-
-          var googleSTUN = getGoogleSTUN();
-
-          var config = {
-            'iceServers': [googleSTUN]
-          };
-
-          var pc = new RTCPeerConnection(config);
-
-          pc.onnegotiationneeded = function (event) {
-            pc
-              .createOffer()
-              .then(function(offer) {
-                pc.setLocalDescription(offer);
-
-                setOfferElText(btoa(JSON.stringify(offer)));
-                selectText(offerEl);
-              })
-              .catch(function(error) {
-                console.log('error', error);
-
-                setOfferElText(JSON.stringify(error));
-                selectText(offerEl);
-              });
-          };
-
-          pc.onicecandidate = function (event) {
-            console.log('icecandidate', event);
-            setOfferElText(btoa(JSON.stringify(pc.localDescription)));
-            selectText(offerEl);
-          };
-
-          pc.onicecandidateerror = function (event) {
-            console.log('onicecandidateerror', event);
-          };
-
-          pc.onsignalingstatechange = function (event) {
-            console.log('onsignalingstatechange', event);
-            // setElText(el, pc.signalingState);
-          };
-          pc.oniceconnectionstatechange = function (event) {
-            console.log('oniceconnectionstatechange', event);
-            // setElText(el, pc.iceConnectionState);
-          };
-          pc.onicegatheringstatechange = function (event) {
-            console.log('onicegatheringstatechange', event);
-            // setElText(el, pc.iceGatheringState);
-          };
-
-          pc.onconnectionstatechange = function (event) {
-            // setElText(el, pc.connectionState);
           };
 
           function setElText (el, text) { el.innerHTML = text; }
