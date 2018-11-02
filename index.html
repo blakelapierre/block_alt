@@ -17,7 +17,7 @@
 
       templates { display: none; }
 
-      sdp, answer {
+      offer, answer {
         word-break: break-all;
         white-space: pre-wrap;
       }
@@ -29,7 +29,7 @@
       }
 
       connection
-      sdp,
+      offer,
       connection
       input-area,
       connection
@@ -69,7 +69,7 @@
 
           space.appendChild(el);
 
-          var sdpEl = getEl('sdp', el),
+          var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
           inputAreaEl.oninput = function(event) {
@@ -81,7 +81,7 @@
 
             if (i.type === 'offer') {
 
-              sdpEl.remove();
+              offerEl.remove();
               inputAreaEl.remove();
 
               var answerEl = document.createElement('answer');
@@ -96,14 +96,14 @@
                   .then(function(offer) {
                     newPC.setLocalDescription(offer);
 
-                    setSdpElText(btoa(JSON.stringify(offer)));
+                    setOfferElText(btoa(JSON.stringify(offer)));
 
-                    selectText(sdpEl);
+                    selectText(offerEl);
                   })
                   .catch(function(error) {
                     console.log('error', error);
-                    setSdpElText(JSON.stringify(error));
-                    selectText(sdpEl);
+                    setOfferElText(JSON.stringify(error));
+                    selectText(offerEl);
                   });
               };
 
@@ -184,20 +184,20 @@
               .then(function(offer) {
                 pc.setLocalDescription(offer);
 
-                setSdpElText(btoa(JSON.stringify(offer)));
+                setOfferElText(btoa(JSON.stringify(offer)));
 
-                selectText(sdpEl);
+                selectText(offerEl);
               })
               .catch(function(error) {
-                setSdpElText(JSON.stringify(error));
-                selectText(sdpEl);
+                setOfferElText(JSON.stringify(error));
+                selectText(offerEl);
               });
           };
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
-            setSdpElText(btoa(JSON.stringify(pc.localDescription)));
-            selectText(sdpEl);
+            setOfferElText(btoa(JSON.stringify(pc.localDescription)));
+            selectText(offerEl);
           };
 
           pc.onicecandidateerror = function (event) {
@@ -223,7 +223,7 @@
 
           function setElText (el, text) { el.innerHTML = text; }
 
-          function setSdpElText(text) { setElText(sdpEl, text); }
+          function setOfferElText(text) { setElText(offerEl, text); }
           function setAnswerElText(text) { setElText(answerEl, text); }
 
           function selectText(el) {
@@ -263,7 +263,7 @@
     <templates>
 
       <connection>
-        <sdp></sdp>
+        <offer></offer>
         <input-area contenteditable="true"></input-area>
       </connection>
 
