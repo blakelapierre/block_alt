@@ -74,11 +74,9 @@
 
 
           inputAreaEl.oninput = function(event) {
-            offerEl.remove();
-
             var content = event.target.textContent;
 
-            if (content === undefined || content === '') return;
+            offerEl.remove();
 
 
             var i = JSON.parse(atob(content));
