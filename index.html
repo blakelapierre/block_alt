@@ -124,7 +124,7 @@
                 .createOffer()
                 .then(function(offer) {
                   pc.setLocalDescription(offer);
-
+console.log(offer);
                   setSdpElText(btoa(JSON.stringify(offer)));
 
                   selectText(sdpEl);
