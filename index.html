@@ -188,11 +188,19 @@
             selectText(sdpEl);
           };
 
-          pc.onicecandidateerror = function (event) {};
+          pc.onicecandidateerror = function (event) {
+            console.log('icecandidate', event);
+          };
 
-          pc.onsignalingstatechange = function (event) {};
-          pc.oniceconnectionstatechange = function (event) {};
-          pc.onicegatheringstatechange = function (event) {};
+          pc.onsignalingstatechange = function (event) {
+            console.log('icecandidateerror', event);
+          };
+          pc.oniceconnectionstatechange = function (event) {
+            console.log('oniceconnectionstatechange', event);
+          };
+          pc.onicegatheringstatechange = function (event) {
+            console.log('onicegatheringstatechange', event);
+          };
 
           pc.onconnectionstatechange = function (event) {
             setElText(el, pc.connectionState);
