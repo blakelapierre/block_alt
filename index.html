@@ -80,6 +80,9 @@
 
             if (i.type === 'offer') {
 
+              sdpEl.remove();
+              inputAreaEl.remove();
+
               newPC
                 .setRemoteDescription(offer)
                 .then(function() {
