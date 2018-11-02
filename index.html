@@ -96,7 +96,7 @@
                 })
                 .then(function(answer) {
                   console.log('answer', answer);
-                  var enc = btoa(answer.sdp);
+                  var enc = btoa(JSON.stringify(answer);
 
                   setElText(answer, enc);
                 })
