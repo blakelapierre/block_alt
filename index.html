@@ -120,12 +120,14 @@
               })
               .catch(function(error) {
                 setSdpElText(JSON.stringify(error));
+                selectText(sdpEl);
               });
           };
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
             setSdpElText(btoa(JSON.stringify({'type': 'offer', 'sdp': pc.localDescription})));
+            selectText(sdpEl);
           };
 
           function setElText (el, text) { el.innerHTML = text; }
