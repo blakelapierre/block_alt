@@ -7,6 +7,8 @@ HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
 HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
+WS_HEADER="Connection: Upgrade\r\nUpgrade: websocket\r\n"
+WS_UPGRADE="$HTTP 101 Switching Protocols\r\n$WS_HEADER\r\n"
 
 rm .updates 2> /dev/null; mkfifo .updates
 
@@ -18,8 +20,8 @@ host_file () {
 }
 
 serve_file() {
-  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+  nc -l $1 < <(cat <(echo -e "$2") $3)
 }
 
-(host_file $PORT $FILE) &
-(host_file $UPDATES_PORT .updates)
+(host_file $PORT $HTTP_OK $FILE) &
+(host_file $UPDATES_PORT $WS_UPGRADE .updates)
