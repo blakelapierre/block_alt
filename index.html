@@ -79,10 +79,12 @@
             var i = JSON.parse(atob(content));
             console.log(i);
 
+            var answerEl = document.createElement('answer');
+            el.appendChild(answerEl);
+
             if (i.type === 'offer') {
 
               offerEl.remove();
-              inputAreaEl.remove();
 
               var newPC = new RTCPeerConnection(config);
 
@@ -133,9 +135,6 @@
                 console.log(channel);
               };
 
-              var answerEl = document.createElement('answer');
-              el.appendChild(answerEl);
-
               newPC
                 .setRemoteDescription(i)
                 .then(function() { return newPC.createAnswer(); })
@@ -152,6 +151,8 @@
             }
             else if (i.type === 'answer') {
               console.log('sdp', i.sdp);
+
+
               pc
                 .setRemoteDescription(i)
                 .then(function() {
