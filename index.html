@@ -83,7 +83,7 @@
             console.log(i);
 
             var answerEl = document.createElement('answer');
-            el.prependChild(answerEl);
+            el.insertBefore(answerEl, el.firstChild);
 
             if (i.type === 'offer') {
               var newPC = new RTCPeerConnection(config);
