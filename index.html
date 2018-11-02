@@ -28,37 +28,38 @@
         var el = connectionT.cloneNode();
         area.appendChild(el);
 
+        var sdpEl = getEl('sdp', el);
 
-        // var googleSTUN = getGoogleSTUN();
+        var googleSTUN = getGoogleSTUN();
 
-        // var config = {
-        //   'iceServers': [googleSTUN]
-        // };
+        var config = {
+          'iceServers': [googleSTUN]
+        };
 
-        // var pc = new RTCPeerConnection(config);
+        var pc = new RTCPeerConnection(config);
 
-        // pc.onnegotiationneeded = function (event) {
-        //   pc
-        //     .createOffer()
-        //     .then(function(offer) {
-        //       // setSdpElText(JSON.stringify(offer));
-        //       console.log(offer);
-        //       setSdpElText(btoa(offer.sdp));
-        //     })
-        //     .catch(function(error) {
-        //       setSdpElText(JSON.stringify(error));
-        //     });
-        // };
+        pc.onnegotiationneeded = function (event) {
+          pc
+            .createOffer()
+            .then(function(offer) {
+              // setSdpElText(JSON.stringify(offer));
+              console.log(offer);
+              setSdpElText(btoa(offer.sdp));
+            })
+            .catch(function(error) {
+              setSdpElText(JSON.stringify(error));
+            });
+        };
 
-        // pc.onicecandidate = function (event) {
-        //   console.log('icecandidate', event);
-        // };
+        pc.onicecandidate = function (event) {
+          console.log('icecandidate', event);
+        };
 
-        // function setSdpElText(text) { sdpEl.innerHTML = text; }
+        function setSdpElText(text) { sdpEl.innerHTML = text; }
 
 
 
-        // pc.createDataChannel('block');
+        pc.createDataChannel('block');
 
 
         function getGoogleSTUN() {
