@@ -6,13 +6,14 @@ FILE=${3:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
+HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
 
 rm .updates 2> /dev/null; mkfifo .updates
 
 (
   while :
   do
-    nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
+    nc -l $PORT < <(cat <(echo -e "$HTTP_OK") $FILE)
   done
 ) &
 
@@ -21,6 +22,6 @@ echo "test"
 (
   while :
   do
-    nc -l -k $UPDATES_PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") .updates)
+    nc -l -k $UPDATES_PORT < <(cat <(echo -e "$HTTP_OK") .updates)
   done
 )
