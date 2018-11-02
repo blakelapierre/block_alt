@@ -22,4 +22,4 @@ serve_file() {
 }
 
 (host $PORT $FILE) &
-(host $UPDATES_PORT .update)
+(host $UPDATES_PORT .updates)
