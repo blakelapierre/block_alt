@@ -9,18 +9,10 @@
 
         var sdpEl = document.getElementsByTagName('sdp')[0];
 
+        var googleSTUN = getGoogleSTUN();
 
         var config = {
-          'iceServers': [
-            {
-              urls: [
-                'stun:stun1.l.google.com:19302',
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302',
-                'stun:stun4.l.google.com:19302'
-              ]
-            }
-          ]
+          'iceServers': [googleSTUN]
         };
 
         var pc = new RTCPeerConnection(config);
@@ -45,6 +37,18 @@
 
 
         pc.createDataChannel('block');
+
+
+        function getGoogleSTUN() {
+          return {
+            urls: [
+              'stun:stun1.l.google.com:19302',
+              'stun:stun2.l.google.com:19302',
+              'stun:stun3.l.google.com:19302',
+              'stun:stun4.l.google.com:19302'
+            ]
+          };
+        }
 
       }
     </script>
