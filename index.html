@@ -67,7 +67,12 @@
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
-            pc.
+            pc
+              .setRemoteDescription({type: 'offer', sdp: content})
+              .then(pc.createAnswer)
+              .then(function(answer) {
+                console.log('answer', answer);
+              });
           };
 
           var googleSTUN = getGoogleSTUN();
