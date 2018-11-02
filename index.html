@@ -126,6 +126,18 @@
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
+            pc
+              .createOffer()
+              .then(function(offer) {
+                pc.setLocalDescription(offer);
+
+                setSdpElText(btoa(JSON.stringify(offer)));
+
+                selectText(sdpEl);
+              })
+              .catch(function(error) {
+                setSdpElText(JSON.stringify(error));
+              });
           };
 
           function setElText (el, text) { el.innerHTML = text; }
