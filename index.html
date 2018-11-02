@@ -139,8 +139,8 @@
                 .setRemoteDescription(i)
                 .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
-                  console.log('answer', answer);
-                  var enc = btoa(JSON.stringify(answer));
+                  console.log('answer', answer, pc);
+                  var enc = btoa(JSON.stringify(pc.remoteDescription));
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
@@ -151,7 +151,6 @@
             }
             else if (i.type === 'answer') {
               console.log('sdp', i.sdp);
-
 
               pc
                 .setRemoteDescription(i)
