@@ -95,14 +95,9 @@
                   .createOffer()
                   .then(function(offer) {
                     newPC.setLocalDescription(offer);
-
-                    setSdpElText(btoa(JSON.stringify(offer)));
-
-                    selectText(sdpEl);
                   })
                   .catch(function(error) {
-                    setSdpElText(JSON.stringify(error));
-                    selectText(sdpEl);
+                    console.log('error', error);
                   });
               };
 
