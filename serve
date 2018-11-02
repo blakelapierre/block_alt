@@ -6,6 +6,7 @@ FILE=${3:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
+KA="Connection: keep-alive\r\n"
 HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
 WS_HEADER="Connection: Upgrade\r\nUpgrade: websocket\r\n"
 WS_UPGRADE="$HTTP 101 Switching Protocols\r\n$WS_HEADER\r\n"
@@ -22,7 +23,8 @@ host_file () {
 host_ws () {
   while :
   do
-    serve_ws $1 $2
+    #serve_ws $1 $2
+    nc -l $1 < <(cat <(echo -e "$HTTP $STATUS\r\n$KA\r\n") $2)
   done
 }
 
