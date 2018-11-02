@@ -77,7 +77,7 @@
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
 
-            if (content === '') return;
+            if (content === undefined || content === '') return;
 
 
             var i = JSON.parse(atob(content));
