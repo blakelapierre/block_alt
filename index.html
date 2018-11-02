@@ -4,7 +4,9 @@
     <style>
     </style>
     <script>
-      var ws = new WebSocket('ws://127.0.0.1:4445');
+      var iframe = document.createElement('iframe');
+
+      iframe.src = '127.0.0.1:4445';
     </script>
   </head>
   <body>
