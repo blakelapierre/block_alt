@@ -101,7 +101,13 @@
                 // setSdpElText(JSON.stringify(offer));
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
-                sdpEl.select()
+
+                var range = document.createRange();
+                range.selectNodeContents(sdpEl);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+
                 // setSdpElText(offer.sdp);
                 pc.setLocalDescription(offer);
               })
