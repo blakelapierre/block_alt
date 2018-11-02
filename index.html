@@ -25,7 +25,7 @@
 
         var pc = new RTCPeerConnection(config);
 
-        pc.onnegotiationneeded = function(event) {
+        pc.onnegotiationneeded = function (event) {
           pc
             .createOffer()
             .then(function(offer) {
@@ -34,6 +34,10 @@
             .catch(function(error) {
               setSdpElText(JSON.stringify(error));
             });
+        };
+
+        pc.oniceandidate = function (event) {
+          console.log(event);
         };
 
         function setSdpElText(text) { sdpEl.innerHTML = text; }
