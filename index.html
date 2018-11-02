@@ -133,6 +133,16 @@
             selectText(sdpEl);
           };
 
+          pc.onicecandidateerror = function (event) {};
+
+          pc.onsignalingstatechange = function (event) {};
+          pc.oniceconnectionstatechange = function (event) {};
+          pc.onicegatheringstatechange = function (event) {};
+
+          pc.onconnectionstatechange = function (event) {
+            setElText(el, pc.connectionState);
+          };
+
           function setElText (el, text) { el.innerHTML = text; }
 
           function setSdpElText(text) { setElText(sdpEl, text); }
