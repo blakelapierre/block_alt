@@ -83,6 +83,10 @@
               sdpEl.remove();
               inputAreaEl.remove();
 
+              var answerEl = document.createElement('answer');
+
+              el.appendChild(answerEl);
+
               newPC
                 .setRemoteDescription(i)
                 .then(function() {
