@@ -197,7 +197,7 @@
 
           pc.onsignalingstatechange = function (event) {
             console.log('onsignalingstatechange', event);
-            setElText(el, pc.signalingState);
+            // setElText(el, pc.signalingState);
           };
           pc.oniceconnectionstatechange = function (event) {
             console.log('oniceconnectionstatechange', event);
@@ -209,7 +209,7 @@
           };
 
           pc.onconnectionstatechange = function (event) {
-            setElText(el, pc.connectionState);
+            // setElText(el, pc.connectionState);
           };
 
           function setElText (el, text) { el.innerHTML = text; }
