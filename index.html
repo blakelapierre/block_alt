@@ -81,7 +81,6 @@
 
             if (i.type === 'offer') {
 
-              sdpEl.remove();
               inputAreaEl.remove();
 
               var answerEl = document.createElement('answer');
@@ -95,9 +94,15 @@
                   .createOffer()
                   .then(function(offer) {
                     newPC.setLocalDescription(offer);
+
+                    setSdpElText(btoa(JSON.stringify(offer)));
+
+                    selectText(sdpEl);
                   })
                   .catch(function(error) {
                     console.log('error', error);
+                    setSdpElText(JSON.stringify(error));
+                    selectText(sdpEl);
                   });
               };
 
