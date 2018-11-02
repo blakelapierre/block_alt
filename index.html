@@ -82,7 +82,7 @@
             if (i.type === 'offer') {
 
               newPC
-                .setRemoteDescription(offer)
+                .setRemoteDescription(i)
                 .then(function() {
                   return newPC.createAnswer();
                 })
