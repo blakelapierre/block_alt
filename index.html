@@ -25,7 +25,7 @@
 
         var connectionT = getEl('connection', templates);
 
-        var el = connectionT.cloneNode();
+        var el = connectionT.cloneNode(true);
         area.appendChild(el);
 
         var sdpEl = getEl('sdp', el);
