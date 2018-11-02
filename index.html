@@ -23,7 +23,7 @@
             .then(function(offer) {
               // setSdpElText(JSON.stringify(offer));
               console.log(offer);
-              setSdpElText(atob(offer.sdp));
+              setSdpElText(btoa(offer.sdp));
             })
             .catch(function(error) {
               setSdpElText(JSON.stringify(error));
