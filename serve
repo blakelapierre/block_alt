@@ -1,10 +1,25 @@
 #!/bin/bash
 
 PORT=${1:-4444}
-FILE=${2:-index.html}
+UPDATES_PORT=${2:-4445}
+FILE=${3:-index.html}
 HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
+HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
 
+rm .updates 2> /dev/null; mkfifo .updates
 
-nc -l $PORT < <(cat <(echo -e "$HTTP $STATUS\r\n$HEADER\r\n") $FILE)
+host_file () {
+  while :
+  do
+    serve_file $1 $2
+  done
+}
+
+serve_file() {
+  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+}
+
+(host_file $PORT $FILE) &
+(host_file $UPDATES_PORT .updates)
