@@ -21,7 +21,8 @@
           pc
             .createOffer()
             .then(function(offer) {
-              setSdpElText(JSON.stringify(offer));
+              // setSdpElText(JSON.stringify(offer));
+              setSdpElText(atob(offer.sdp));
             })
             .catch(function(error) {
               setSdpElText(JSON.stringify(error));
