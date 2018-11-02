@@ -99,6 +99,7 @@
                   var enc = btoa(JSON.stringify(answer));
 
                   setElText(answerEl, enc);
+                  selectText(answerEl);
                 })
                 .catch(function(error) {
                   console.log('error', error);
