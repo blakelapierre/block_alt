@@ -55,14 +55,16 @@
         var space = getEl('space'),
             templates = getEl('templates');
 
+        var ConnectionTemplate = {
+          createNew: function() { return getEl('connection', templates).cloneNode(true); }
+        };
+
 
         startConnection();
 
         function startConnection() {
-          var connectionT = getEl('connection', templates);
-          function makeConnectionNode() { return connectionT.cloneNode(true); }
+          var el = ConnectionTemplate.createNew();
 
-          var el = makeConnectionNode();
           space.appendChild(el);
 
           var sdpEl = getEl('sdp', el),
