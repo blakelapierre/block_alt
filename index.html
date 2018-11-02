@@ -101,6 +101,7 @@
                 // setSdpElText(JSON.stringify(offer));
                 console.log(offer);
                 setSdpElText(btoa(offer.sdp));
+                sdpEl.select()
                 // setSdpElText(offer.sdp);
                 pc.setLocalDescription(offer);
               })
