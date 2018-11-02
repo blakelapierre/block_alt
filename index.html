@@ -72,6 +72,9 @@
               .then(pc.createAnswer)
               .then(function(answer) {
                 console.log('answer', answer);
+              })
+              .catch(function(error) {
+                console.log('error', error);
               });
           };
 
