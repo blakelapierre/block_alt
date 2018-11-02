@@ -23,55 +23,59 @@
             templates = getEl('templates');
 
 
-        var connectionT = getEl('connection', templates);
-        function makeConnectionNode() { return connectionT.cloneNode(true); }
+        startConnection();
 
-        var el = makeConnectionNode();
-        area.appendChild(el);
+        function startConnection() {
+          var connectionT = getEl('connection', templates);
+          function makeConnectionNode() { return connectionT.cloneNode(true); }
 
-        var sdpEl = getEl('sdp', el);
+          var el = makeConnectionNode();
+          area.appendChild(el);
 
-        var googleSTUN = getGoogleSTUN();
+          var sdpEl = getEl('sdp', el);
 
-        var config = {
-          'iceServers': [googleSTUN]
-        };
+          var googleSTUN = getGoogleSTUN();
 
-        var pc = new RTCPeerConnection(config);
-
-        pc.onnegotiationneeded = function (event) {
-          pc
-            .createOffer()
-            .then(function(offer) {
-              // setSdpElText(JSON.stringify(offer));
-              console.log(offer);
-              setSdpElText(btoa(offer.sdp));
-            })
-            .catch(function(error) {
-              setSdpElText(JSON.stringify(error));
-            });
-        };
-
-        pc.onicecandidate = function (event) {
-          console.log('icecandidate', event);
-        };
-
-        function setSdpElText(text) { sdpEl.innerHTML = text; }
-
-
-
-        pc.createDataChannel('block');
-
-
-        function getGoogleSTUN() {
-          return {
-            urls: [
-              'stun:stun1.l.google.com:19302',
-              'stun:stun2.l.google.com:19302',
-              'stun:stun3.l.google.com:19302',
-              'stun:stun4.l.google.com:19302'
-            ]
+          var config = {
+            'iceServers': [googleSTUN]
           };
+
+          var pc = new RTCPeerConnection(config);
+
+          pc.onnegotiationneeded = function (event) {
+            pc
+              .createOffer()
+              .then(function(offer) {
+                // setSdpElText(JSON.stringify(offer));
+                console.log(offer);
+                setSdpElText(btoa(offer.sdp));
+              })
+              .catch(function(error) {
+                setSdpElText(JSON.stringify(error));
+              });
+          };
+
+          pc.onicecandidate = function (event) {
+            console.log('icecandidate', event);
+          };
+
+          function setSdpElText(text) { sdpEl.innerHTML = text; }
+
+
+
+          pc.createDataChannel('block');
+
+
+          function getGoogleSTUN() {
+            return {
+              urls: [
+                'stun:stun1.l.google.com:19302',
+                'stun:stun2.l.google.com:19302',
+                'stun:stun3.l.google.com:19302',
+                'stun:stun4.l.google.com:19302'
+              ]
+            };
+          }
         }
 
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
