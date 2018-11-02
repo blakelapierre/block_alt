@@ -71,12 +71,12 @@
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
 
-            var pc = new RTCPeerConnection(config);
+            var newPC = new RTCPeerConnection(config);
 
-            pc
+            newPC
               .setRemoteDescription(new RTCSessionDescription({type: 'offer', sdp: atob(content)}))
               .then(function() {
-                return pc.createAnswer();
+                return newPC.createAnswer();
               })
               .then(function(answer) {
                 console.log('answer', answer);
