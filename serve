@@ -23,5 +23,5 @@ serve_file() {
   nc -l $1 < <(cat <(echo -e "$2") $3)
 }
 
-(host_file $PORT $HTTP_OK $FILE) &
+(host_file $PORT "$HTTP_OK" $FILE) &
 (host_file $UPDATES_PORT $WS_UPGRADE .updates)
