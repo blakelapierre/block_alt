@@ -148,6 +148,7 @@
                 });
             }
             else if (i.type === 'answer') {
+              console.log('sdp', i.sdp);
               pc
                 .setRemoteDescription(i)
                 .then(function() {
