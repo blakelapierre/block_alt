@@ -131,6 +131,7 @@ console.log(offer);
                   resolve(offer);
                 })
                 .catch(function(error) {
+                  console.log('error', error);
                   setSdpElText(JSON.stringify(error));
                   reject(error);
                 });
