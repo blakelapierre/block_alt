@@ -115,19 +115,25 @@
 
               newPC.onsignalingstatechange = function (event) {
                 console.log('signalingstatechange2', event);
-                setElText(el, pc.signalingState);
+                // setElText(el, pc.signalingState);
               };
               newPC.oniceconnectionstatechange = function (event) {
                 console.log('iceconnectionstatechange2', event);
-                setElText(el, pc.iceConnectionState);
+                // setElText(el, pc.iceConnectionState);
               };
               newPC.onicegatheringstatechange = function (event) {
                 console.log('icegatheringstatechange2', event);
-                setElText(el, pc.iceGatheringState);
+                // setElText(el, pc.iceGatheringState);
               };
 
               newPC.onconnectionstatechange = function (event) {
-                setElText(el, newPC.connectionState);
+                // setElText(el, newPC.connectionState);
+              };
+
+              newPC.ondatachannel = function(event) {
+                var channel = event.channel;
+
+                console.log(channel);
               };
 
               newPC
