@@ -115,7 +115,8 @@
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
-            updateOffer();
+            // updateOffer();
+            console.log(pc.localDescription);
           };
 
           function updateOffer() {
