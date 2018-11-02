@@ -129,7 +129,7 @@
 
           pc.onicecandidate = function (event) {
             console.log('icecandidate', event);
-            setSdpElText(btoa(JSON.stringify({'type': 'offer', 'sdp': pc.localDescription})));
+            setSdpElText(btoa(JSON.stringify(pc.localDescription)));
             selectText(sdpEl);
           };
 
