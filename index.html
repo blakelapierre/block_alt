@@ -72,6 +72,8 @@
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
+          offerEl.remove();
+
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
 
@@ -83,9 +85,6 @@
             el.appendChild(answerEl);
 
             if (i.type === 'offer') {
-
-              offerEl.remove();
-
               var newPC = new RTCPeerConnection(config);
 
               newPC.onnegotiationneeded = function (event) {
