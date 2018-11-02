@@ -19,9 +19,20 @@ host_file () {
   done
 }
 
-serve_file() {
-  nc -l $1 < <(cat <(echo -e "$2") $3)
+host_ws () {
+  while :
+  do
+    serve_ws $1 $2
+  done
 }
 
-(host_file $PORT "$HTTP_OK" $FILE) &
-(host_file $UPDATES_PORT $WS_UPGRADE .updates)
+serve_file() {
+  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+}
+
+serve_ws() {
+  nc -l $1 < <(cat <(echo -e "$WS_UPGRADE") $2)
+}
+
+(host_file $PORT $FILE) &
+(host_ws $UPDATES_PORT .updates)
