@@ -51,6 +51,23 @@
 
     </style>
     <script>
+      var googleSTUN = getGoogleSTUN();
+
+      var config = {
+        'iceServers': [googleSTUN]
+      };
+
+      function getGoogleSTUN() {
+        return {
+          urls: [
+            'stun:stun1.l.google.com:19302'/*,
+            'stun:stun2.l.google.com:19302',
+            'stun:stun3.l.google.com:19302',
+            'stun:stun4.l.google.com:19302'*/
+          ]
+        };
+      }
+
       function load() {
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
@@ -65,13 +82,8 @@
         startConnection();
 
         function startConnection() {
-
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
-            var googleSTUN = getGoogleSTUN();
 
-            var config = {
-              'iceServers': [googleSTUN]
-            };
 
             var pc = new RTCPeerConnection(config);
 
@@ -214,25 +226,8 @@
             sel.addRange(range);
           }
 
-
-
           pc.createDataChannel('block');
-
-
-          function getGoogleSTUN() {
-            return {
-              urls: [
-                'stun:stun1.l.google.com:19302'/*,
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302',
-                'stun:stun4.l.google.com:19302'*/
-              ]
-            };
-          }
         }
-
-
-
       }
     </script>
   </head>
