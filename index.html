@@ -135,7 +135,7 @@
           }
 
           var pc = createNewPeerConnection(function (offer) {
-            setOfferElText(JSON.stringify(pc.localDescription));
+            setOfferElText(stringEncodeObject(pc.localDescription));
             selectText(offerEl);
           }, function (answer) {
 
@@ -146,6 +146,12 @@
           });
 
           var el = ConnectionTemplate.createNew();
+
+          function stringEncodeObject(obj) {
+            return JSON.stringify(obj, function (key, value) {
+              return typeof value === 'string' ? atob(value) : value;
+            });
+          }
 
           space.appendChild(el);
 
@@ -171,9 +177,7 @@
               var newPC = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
-                  setOfferElText(JSON.stringify(pc.localDescription, function (key, value) {
-                    return typeof value === 'string' ? atob(value) : value;
-                  }));
+                  setOfferElText(stringEncodeObject(pc.localDescription));
 
                   selectText(offerEl);
                 },
@@ -210,7 +214,7 @@
                   console.log('answer', answer, pc);
                     // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
-                  var enc = JSON.stringify(answer);
+                  var enc = stringEncodeObject(answer);
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
@@ -226,7 +230,7 @@
                 .setRemoteDescription(answer)
                 .then(function() {
                   console.log('remote description set', pc.remoteDescription);
-                  setElText(answerEl, JSON.stringify(pc.remoteDescription));
+                  setElText(answerEl, stringEncodeObject(pc.remoteDescription));
                   selectText(answerEl);
                 })
                 .catch(function (error) {
