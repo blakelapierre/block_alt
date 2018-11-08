@@ -153,6 +153,12 @@
             });
           }
 
+          function stringDecodeObject(obj) {
+            return JSON.parse(obj, function (key, value) {
+              return typeof value === 'string' ? atob(value) : value;
+            });
+          }
+
           space.appendChild(el);
 
           var offerEl = getEl('offer', el),
