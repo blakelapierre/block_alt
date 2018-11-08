@@ -92,7 +92,7 @@
               console.log('3events');
               return Object.keys(handlers).reduce(function (r, key) {
                 return r[key] = event(obj, key, obj[key]), r;
-              });
+              }, {});
             }
 
             var pc = new RTCPeerConnection(config);
