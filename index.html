@@ -166,6 +166,8 @@
             el.insertBefore(answerEl, el.firstChild);
 
             if (i.type === 'offer') {
+              var offer = i;
+
               var newPC = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
@@ -214,10 +216,8 @@
                 });
             }
             else if (i.type === 'answer') {
-
-              console.log('sdp', i);
-              var answer = {type: 'pranswer', sdp: i};
-
+              var answer = i;
+              answer.type = 'pranswer';
               pc
                 .setRemoteDescription(answer)
                 .then(function() {
