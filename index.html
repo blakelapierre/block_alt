@@ -158,7 +158,7 @@
             offerEl.remove();
             setElText(inputAreaEl, '');
 
-            var i = JSON.parse(atob(content));
+            var i = JSON.parse(content);
             console.log('i', i);
 
             var offer = {type: 'offer', sdp: i};
@@ -170,7 +170,7 @@
               var newPC = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
-                  setOfferElText(btoa(JSON.stringify(pc.localDescription)));
+                  setOfferElText(JSON.stringify(pc.localDescription));
 
                   selectText(offerEl);
                 },
@@ -204,7 +204,7 @@
                   console.log('answer', answer, pc);
                     // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
-                  var enc = btoa(JSON.stringify(answer.sdp));
+                  var enc = JSON.stringify(answer.sdp);
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
@@ -222,7 +222,7 @@
                 .setRemoteDescription(answer)
                 .then(function() {
                   console.log('remote description set', pc.remoteDescription);
-                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
+                  setElText(answerEl, JSON.stringify(pc.remoteDescription));
                   selectText(answerEl);
                 })
                 .catch(function (error) {
