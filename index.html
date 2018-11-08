@@ -89,9 +89,7 @@
             }
 
             function events (obj, handlers) {
-              console.log('3events');
               return Object.keys(handlers).reduce(function (r, key) {
-                console.log(key);
                 r[key] = event(obj, key, handlers[key]);
                 return r;
               }, {});
