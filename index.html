@@ -79,25 +79,46 @@
         startConnection();
 
         function startConnection() {
+
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
+
             function event(obj, registerName, handler) {
               obj[registerName] = function() {
                 handler.call(arguments);
               };
             }
 
+            function events (obj, handlers) {
+              return Object.keys(handlers).reduce(function (r, key) {
+                return r[key] = event(obj, key, obj[key]), r;
+              });
+            }
+
             var pc = new RTCPeerConnection(config);
 
-            event(pc, 'onnegotiationneeded', function (event) {
-              console.log('onneg');
-              pc
-                .createOffer()
-                .then(function(offer) {
-                  pc.setLocalDescription(offer);
-                  receiveOffer(offer);
-                })
-                .catch(receiveError);
+            events(pc, {
+              'onnegotiationneeded': function (event) {
+                console.log('onneg');
+                pc
+                  .createOffer()
+                  .then(function(offer) {
+                    pc.setLocalDescription(offer);
+                    receiveOffer(offer);
+                  })
+                  .catch(receiveError);
+              }
             });
+
+            // event(pc, 'onnegotiationneeded', function (event) {
+            //   console.log('onneg');
+            //   pc
+            //     .createOffer()
+            //     .then(function(offer) {
+            //       pc.setLocalDescription(offer);
+            //       receiveOffer(offer);
+            //     })
+            //     .catch(receiveError);
+            // });
 
             // pc.onnegotiationneeded = function (event) {
             //   pc
