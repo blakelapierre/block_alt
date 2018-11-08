@@ -162,12 +162,10 @@
             var i = JSON.parse(content);
             console.log('i', i);
 
-            var offer = {type: 'offer', sdp: i};
-
             var answerEl = document.createElement('answer');
             el.insertBefore(answerEl, el.firstChild);
 
-            if (pc.signalingState === 'have-local-offer') {
+            if (i.type === 'offer') {
               var newPC = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
@@ -215,7 +213,7 @@
                   console.log('error', error);
                 });
             }
-            else {
+            elsv if (i.type === 'answer') {
 
               console.log('sdp', i);
               var answer = {type: 'pranswer', sdp: i};
