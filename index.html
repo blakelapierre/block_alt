@@ -165,25 +165,6 @@
             el.insertBefore(answerEl, el.firstChild);
 
             if (pc.signalingState === 'have-local-offer') {
-              console.log('sdp', i);
-              var answer = {type: 'pranswer', sdp: i};
-
-              pc
-                .setRemoteDescription(answer)
-                .then(function() {
-                  console.log('remote description set', pc.remoteDescription);
-                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
-                  selectText(answerEl);
-                })
-                .catch(function (error) {
-                  console.log('answer error', error);
-                });
-
-              inputAreaEl.remove();
-
-              console.dir(pc, i);
-            }
-            else {
               var newPC = createNewPeerConnection(
                 function (offer) {
                   setOfferElText(btoa(JSON.stringify(offer)));
@@ -220,6 +201,26 @@
                 .catch(function(error) {
                   console.log('error', error);
                 });
+            }
+            else {
+
+              console.log('sdp', i);
+              var answer = {type: 'pranswer', sdp: i};
+
+              pc
+                .setRemoteDescription(answer)
+                .then(function() {
+                  console.log('remote description set', pc.remoteDescription);
+                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
+                  selectText(answerEl);
+                })
+                .catch(function (error) {
+                  console.log('answer error', error);
+                });
+
+              inputAreaEl.remove();
+
+              console.dir(pc, i);
             }
 
             // if (i.type === 'offer') {
