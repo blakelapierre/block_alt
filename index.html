@@ -198,7 +198,7 @@
               // };
 
               newPC
-                .setRemoteDescription(i)
+                .setRemoteDescription(offer)
                 .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer, pc);
