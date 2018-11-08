@@ -185,6 +185,7 @@
                 });
 
               events(newPC, {
+                'onsignalingstatechange': function (event) { console.log('signaling state change', pc.signalingState); },
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
