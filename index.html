@@ -109,55 +109,10 @@
                     receiveOffer(offer);
                   })
                   .catch(receiveError);
-              }
+              },
+
+              'onicecandidate': function (event) { return receiveOffer(pc.localDescription); }
             });
-
-            // event(pc, 'onnegotiationneeded', function (event) {
-            //   console.log('onneg');
-            //   pc
-            //     .createOffer()
-            //     .then(function(offer) {
-            //       pc.setLocalDescription(offer);
-            //       receiveOffer(offer);
-            //     })
-            //     .catch(receiveError);
-            // });
-
-            // pc.onnegotiationneeded = function (event) {
-            //   pc
-            //     .createOffer()
-            //     .then(function(offer) {
-            //       pc.setLocalDescription(offer);
-            //       receiveOffer(offer);
-            //     })
-            //     .catch(receiveError);
-            // };
-
-            pc.onicecandidate = function (event) {
-              console.log('icecandidate', event);
-              receiveOffer(pc.localDescription);
-            };
-
-            pc.onicecandidateerror = function (event) {
-              console.log('onicecandidateerror', event);
-            };
-
-            pc.onsignalingstatechange = function (event) {
-              console.log('onsignalingstatechange', event);
-              // setElText(el, pc.signalingState);
-            };
-            pc.oniceconnectionstatechange = function (event) {
-              console.log('oniceconnectionstatechange', event);
-              // setElText(el, pc.iceConnectionState);
-            };
-            pc.onicegatheringstatechange = function (event) {
-              console.log('onicegatheringstatechange', event);
-              // setElText(el, pc.iceGatheringState);
-            };
-
-            pc.onconnectionstatechange = function (event) {
-              // setElText(el, pc.connectionState);
-            };
 
             return pc;
           }
