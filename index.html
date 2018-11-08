@@ -82,15 +82,14 @@
 
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
 
-            function event(obj, registerName, handler) {
-              obj[registerName] = function() {
+            function event(obj, name, handler) {
+              obj[name] = function() {
                 handler.call(arguments);
               };
             }
 
             function events (obj, handlers) {
               return Object.keys(handlers).reduce(function (r, key) {
-                console.log(key);
                 r[key] = event(obj, key, handlers[key]);
                 return r;
               }, {});
