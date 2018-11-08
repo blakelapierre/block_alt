@@ -64,7 +64,12 @@
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
         var space = getEl('space'),
-            templates = getEl('templates');
+            templates = getEl('templates'),
+            iframe;
+
+        // space.appendChild((iframe = document.createElement('iframe')));
+
+        // iframe.src =
 
         var ConnectionTemplate = {
           createNew: function() { return getEl('connection', templates).cloneNode(true); }
@@ -75,11 +80,15 @@
 
         function startConnection() {
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
-
+            function event(obj, registerName, handler) {
+              obj[registerName] = function() {
+                handler.call(arguments);
+              };
+            }
 
             var pc = new RTCPeerConnection(config);
 
-            pc.onnegotiationneeded = function (event) {
+            event(pc, 'onnegotiationneeded', function (event) {
               pc
                 .createOffer()
                 .then(function(offer) {
@@ -87,7 +96,17 @@
                   receiveOffer(offer);
                 })
                 .catch(receiveError);
-            };
+            });
+
+            // pc.onnegotiationneeded = function (event) {
+            //   pc
+            //     .createOffer()
+            //     .then(function(offer) {
+            //       pc.setLocalDescription(offer);
+            //       receiveOffer(offer);
+            //     })
+            //     .catch(receiveError);
+            // };
 
             pc.onicecandidate = function (event) {
               console.log('icecandidate', event);
