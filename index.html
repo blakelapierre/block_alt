@@ -90,6 +90,7 @@
             }
 
             function events (obj, handlers) {
+              var allEvents = Object.keys(obj).filter(function (key) { return key.indexOf('on') === 0 && key.length > 2; });
               return Object.keys(handlers).reduce(function (r, key) {
                 r[key] = event(obj, key, handlers[key]);
                 return r;
