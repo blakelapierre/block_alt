@@ -116,6 +116,7 @@
             var pc = new RTCPeerConnection(config);
 
             events(pc, {
+              'onsignalingstatechange': function (event) { console.log(event); },
               'onnegotiationneeded': function (event) {
                 console.log('onneg');
                 pc
