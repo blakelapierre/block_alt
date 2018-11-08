@@ -95,6 +95,7 @@
               console.log('events -- ff not working');
 
               var allEvents = Object.keys(obj).filter(function (key) {
+                console.log('*', key );
                 return key.indexOf('on') === 0 && key.length > 2;
               });
 
