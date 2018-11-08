@@ -164,7 +164,25 @@
             var answerEl = document.createElement('answer');
             el.insertBefore(answerEl, el.firstChild);
 
-            if (i.type === 'offer') {
+            if (pc.signalingState === 'have-local-offer') {
+              console.log('sdp', i);
+
+              pc
+                .setRemoteDescription(i)
+                .then(function() {
+                  console.log('remote description set', pc.remoteDescription);
+                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
+                  selectText(answerEl);
+                })
+                .catch(function (error) {
+                  console.log('answer error', error);
+                });
+
+              inputAreaEl.remove();
+
+              console.dir(pc, i);
+            }
+            else {
               var newPC = createNewPeerConnection(
                 function (offer) {
                   setOfferElText(btoa(JSON.stringify(offer)));
@@ -191,7 +209,6 @@
                 .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer, pc);
-                  answer.type = 'pranswer';
                     // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
                   var enc = btoa(JSON.stringify(answer.sdp));
@@ -203,24 +220,63 @@
                   console.log('error', error);
                 });
             }
-            else if (i.type === 'answer') {
-              console.log('sdp', i);
 
-              pc
-                .setRemoteDescription(i)
-                .then(function() {
-                  console.log('remote description set', pc.remoteDescription);
-                  setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
-                  selectText(answerEl);
-                })
-                .catch(function (error) {
-                  console.log('answer error', error);
-                });
+            // if (i.type === 'offer') {
+            //   var newPC = createNewPeerConnection(
+            //     function (offer) {
+            //       setOfferElText(btoa(JSON.stringify(offer)));
 
-              inputAreaEl.remove();
+            //       selectText(offerEl);
+            //     },
+            //     function (answer) {
 
-              console.dir(pc, i);
-            }
+            //     },
+            //     function (error) {
+            //       console.log('error', error);
+            //       setOfferElText(JSON.stringify(error));
+            //       selectText(offerEl);
+            //     });
+
+            //   newPC.ondatachannel = function(event) {
+            //     var channel = event.channel;
+
+            //     console.log(channel);
+            //   };
+
+            //   newPC
+            //     .setRemoteDescription(i)
+            //     .then(function() { return newPC.createAnswer(); })
+            //     .then(function(answer) {
+            //       console.log('answer', answer, pc);
+            //         // pc.remoteDescription = answer.sdp;
+            //       // var enc = btoa(JSON.stringify(pc.remoteDescription));
+            //       var enc = btoa(JSON.stringify(answer.sdp));
+
+            //       setElText(answerEl, enc);
+            //       selectText(answerEl);
+            //     })
+            //     .catch(function(error) {
+            //       console.log('error', error);
+            //     });
+            // }
+            // else if (i.type === 'answer') {
+            //   console.log('sdp', i);
+
+            //   pc
+            //     .setRemoteDescription(i)
+            //     .then(function() {
+            //       console.log('remote description set', pc.remoteDescription);
+            //       setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
+            //       selectText(answerEl);
+            //     })
+            //     .catch(function (error) {
+            //       console.log('answer error', error);
+            //     });
+
+            //   inputAreaEl.remove();
+
+            //   console.dir(pc, i);
+            // }
           };
 
           function setElText (el, text) { el.innerHTML = text; }
