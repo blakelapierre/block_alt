@@ -94,7 +94,7 @@
             function events (obj, handlers) {
               console.log('events -- ff not working');
 
-              console.log(Object.keys(obj));
+              console.log(obj, Object.keys(obj));
 
               var allEvents = Object.keys(obj).filter(function (key) {
                 console.log('*', key );
