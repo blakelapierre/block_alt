@@ -180,11 +180,19 @@
                   selectText(offerEl);
                 });
 
-              newPC.ondatachannel = function(event) {
-                var channel = event.channel;
+              events(newPC, {
+                'ondatachannel': function(event) {
+                  var channel = event.channel;
 
-                console.log(channel);
-              };
+                  console.log(channel);
+                }
+              });
+
+              // newPC.ondatachannel = function(event) {
+              //   var channel = event.channel;
+
+              //   console.log(channel);
+              // };
 
               newPC
                 .setRemoteDescription(i)
