@@ -217,7 +217,7 @@
             }
             else if (i.type === 'answer') {
               var answer = i;
-              answer.type = 'pranswer';
+              answer.type = 'answer';
               pc
                 .setRemoteDescription(answer)
                 .then(function() {
