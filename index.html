@@ -206,7 +206,7 @@
                   console.log('answer', answer, pc);
                     // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
-                  var enc = JSON.stringify(answer.sdp);
+                  var enc = JSON.stringify(answer);
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
