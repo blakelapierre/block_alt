@@ -92,6 +92,7 @@
             }
 
             function events (obj, handlers) {
+              console.log('events');
 
               var allEvents = Object.keys(obj).filter(function (key) {
                 return key.indexOf('on') === 0 && key.length > 2;
