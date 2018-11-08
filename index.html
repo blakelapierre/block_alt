@@ -191,7 +191,7 @@
                 .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer.sdp, pc);
-                    pc.remoteDescription = answer.sdp;
+                    // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
                   var enc = btoa(JSON.stringify(answer.sdp));
 
