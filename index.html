@@ -149,15 +149,15 @@
 
           function stringEncodeObject(obj) {
             return JSON.stringify(obj, function (key, value) {
-              return typeof value === 'string' ? btoa(value) : value;
-              // return value;
+              // return typeof value === 'string' ? btoa(value) : value;
+              return value;
             });
           }
 
           function stringDecodeObject(obj) {
             return JSON.parse(obj, function (key, value) {
-              return typeof value === 'string' ? atob(value) : value;
-              // return value;
+              // return typeof value === 'string' ? atob(value) : value;
+              return value;
             });
           }
 
