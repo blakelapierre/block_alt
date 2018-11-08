@@ -161,13 +161,16 @@
             var i = JSON.parse(atob(content));
             console.log('i', i);
 
+            var offer = {type: 'offer', sdp: i};
+
             var answerEl = document.createElement('answer');
             el.insertBefore(answerEl, el.firstChild);
 
             if (pc.signalingState === 'have-local-offer') {
               var newPC = createNewPeerConnection(
                 function (offer) {
-                  setOfferElText(btoa(JSON.stringify(offer)));
+                  // setOfferElText(btoa(JSON.stringify(offer)));
+                  setOfferElText(btoa(JSON.stringify(pc.localDescription)));
 
                   selectText(offerEl);
                 },
