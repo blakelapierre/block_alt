@@ -96,7 +96,7 @@
 
               console.log(obj, Object.keys(obj));
 
-              var allEvents = Object.keys(obj.prototype).filter(function (key) {
+              var allEvents = Object.keys(obj.__proto__).filter(function (key) {
                 console.log('*', key );
                 return key.indexOf('on') === 0 && key.length > 2;
               });
