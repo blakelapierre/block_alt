@@ -60,6 +60,37 @@
         };
       }
 
+      function emptyFn() {}
+
+      function event(obj, name, handler) {
+        obj[name] = function() {
+          console.log(name, arguments);
+          handler.call(arguments);
+        };
+      }
+
+      function events (obj, handlers) {
+        console.log('events -- ff not working');
+
+        console.log(obj, Object.keys(obj));
+
+        var allEvents = Object.keys(obj.__proto__).filter(function (key) {
+          console.log('*', key );
+          return key.indexOf('on') === 0 && key.length > 2;
+        });
+
+        return allEvents.reduce(function (r, key) {
+          console.log(key);
+          r[key] = event(obj, key, handlers[key] || emptyFn);
+          return r;
+        }, {});
+
+        // return Object.keys(handlers).reduce(function (r, key) {
+        //   r[key] = event(obj, key, handlers[key]);
+        //   return r;
+        // }, {});
+      }
+
       function load() {
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
@@ -81,37 +112,6 @@
         function startConnection() {
 
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
-
-            function emptyFn() {}
-
-            function event(obj, name, handler) {
-              obj[name] = function() {
-                console.log(name, arguments);
-                handler.call(arguments);
-              };
-            }
-
-            function events (obj, handlers) {
-              console.log('events -- ff not working');
-
-              console.log(obj, Object.keys(obj));
-
-              var allEvents = Object.keys(obj.__proto__).filter(function (key) {
-                console.log('*', key );
-                return key.indexOf('on') === 0 && key.length > 2;
-              });
-
-              return allEvents.reduce(function (r, key) {
-                console.log(key);
-                r[key] = event(obj, key, handlers[key] || emptyFn);
-                return r;
-              }, {});
-
-              // return Object.keys(handlers).reduce(function (r, key) {
-              //   r[key] = event(obj, key, handlers[key]);
-              //   return r;
-              // }, {});
-            }
 
             var pc = new RTCPeerConnection(config);
 
