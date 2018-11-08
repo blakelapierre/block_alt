@@ -89,6 +89,7 @@
             var pc = new RTCPeerConnection(config);
 
             event(pc, 'onnegotiationneeded', function (event) {
+              console.log('onneg');
               pc
                 .createOffer()
                 .then(function(offer) {
