@@ -190,7 +190,8 @@
                 .setRemoteDescription(i)
                 .then(function() { return newPC.createAnswer(); })
                 .then(function(answer) {
-                  console.log('answer', answer.sdp, pc);
+                  console.log('answer', answer, pc);
+                  answer.type = 'pranswer';
                     // pc.remoteDescription = answer.sdp;
                   // var enc = btoa(JSON.stringify(pc.remoteDescription));
                   var enc = btoa(JSON.stringify(answer.sdp));
