@@ -134,7 +134,7 @@
           }
 
           var pc = createNewPeerConnection(function (offer) {
-            setOfferElText(btoa(JSON.stringify(pc.localDescription != null ? pc.localDescription.sdp : undefined)));
+            setOfferElText(JSON.stringify(pc.localDescription != null ? pc.localDescription.sdp : undefined));
             selectText(offerEl);
           }, function (answer) {
 
