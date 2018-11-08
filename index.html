@@ -171,7 +171,9 @@
               var newPC = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
-                  setOfferElText(JSON.stringify(pc.localDescription));
+                  setOfferElText(JSON.stringify(pc.localDescription, function (key, value) {
+                    return typeof value === 'string' ? atob(value) : value;
+                  }));
 
                   selectText(offerEl);
                 },
