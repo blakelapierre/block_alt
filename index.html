@@ -144,15 +144,10 @@
             );
           }
 
-          function stringEncodeObject(obj) {
-            return JSON.stringify(obj, value);
             // return JSON.stringify(obj, stingifyEncode);
-          }
-
-          function stringDecodeObject(obj) {
-            return JSON.parse(obj, value);
             // return JSON.parse(obj, parseDecode);
-          }
+          function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
+          function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
           function value(key, value) { return value; }
           function stingifyEncode(key, value) { return stringEncode(value); }
