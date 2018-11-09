@@ -50,8 +50,8 @@ publish () {
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
   && cp  -r ../index.html . \
   && git add . \
-  && commit publish \
-  && push gh-pages
+  && commit "publish" \
+  && push "gh-pages"
 }
 
 checkout $BRANCH
