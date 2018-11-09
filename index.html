@@ -192,6 +192,7 @@
             // };
 
             function sendInput (event) {
+              console.log('sending', event.target.textContent);
               channel.send(event.target.textContent);
               event.target.textContent = '';
             }
