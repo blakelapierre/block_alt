@@ -235,7 +235,7 @@
             }
           });
 
-          inputAreaEl.oninput = function(event) {
+          function connectionInputHandler(event) {
             var content = event.target.textContent;
 
             offerEl.remove();
@@ -292,7 +292,9 @@
             }
 
             inputAreaEl.remove();
-          };
+          }
+
+          inputAreaEl.oninput = connectionInputHandler;
 
           function setElText (el, text) { el.innerHTML = text; }
 
