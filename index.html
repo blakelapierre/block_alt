@@ -201,8 +201,6 @@
                 .then(function() { return pc.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer, pc);
-                    // pc.remoteDescription = answer.sdp;
-                  // var enc = btoa(JSON.stringify(pc.remoteDescription));
                   var enc = stringEncodeObject(answer);
 
                   setElText(answerEl, enc);
