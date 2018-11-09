@@ -184,11 +184,20 @@
             ui.appendChild(messages);
             ui.appendChild(channelInput);
 
-            inputAreaEl.oninput = function (event) {
-              var content = event.target.textContent;
+            // inputAreaEl.oninput = function (event) {
+            //   var content = event.target.textContent;
 
-              channel.send(content);
-              inputAreaEl.textContent = '';
+            //   channel.send(content);
+
+            // };
+
+            function sendInput (event) {
+              channel.send(event.target.textContent);
+              event.target.textContent = '';
+            }
+
+            inputAreaEl.onkeydown = function (event) {
+              if (event.keyCode === 13) return sendInput(event);
             };
 
             channel.onmessage = function (message) {
