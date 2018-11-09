@@ -145,13 +145,13 @@
           }
 
           function stringEncodeObject(obj) {
-            // return JSON.stringify(obj, value);
-            return JSON.stringify(obj, stingifyEncode);
+            return JSON.stringify(obj, value);
+            // return JSON.stringify(obj, stingifyEncode);
           }
 
           function stringDecodeObject(obj) {
-            // return JSON.parse(obj, value);
-            return JSON.parse(obj, parseDecode);
+            return JSON.parse(obj, value);
+            // return JSON.parse(obj, parseDecode);
           }
 
           function value(key, value) { return value; }
