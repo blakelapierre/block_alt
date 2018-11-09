@@ -172,7 +172,9 @@
 
           events(channel, {
             'onopen': function(event) {
-              console.log('!', event);
+              var channel = event.target;
+
+              console.log('channel open', channel);
             }
           });
 
