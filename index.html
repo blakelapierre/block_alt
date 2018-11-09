@@ -123,6 +123,7 @@
         function startConnection() {
 
           function makePeer() {
+            console.log('making peer');
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
