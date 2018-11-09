@@ -141,42 +141,6 @@
             );
           }
 
-          function makeOfferPeer() {
-            var pc; return (
-              pc = createNewPeerConnection(
-                function (offer) {
-                  setOfferElText(stringEncodeObject(pc.localDescription));
-                  selectText(offerEl);
-                }, function (answer) {
-
-                }, function (error) {
-                  console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerEl);
-                }
-              )
-            );
-          }
-
-          function makeAnswerPeer() {
-            var pc; return (
-              pc = createNewPeerConnection(
-                function (offer) {
-                  setOfferElText(stringEncodeObject(pc.localDescription));
-                  selectText(offerEl);
-                },
-                function (answer) {
-
-                },
-                function (error) {
-                  console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerEl);
-                }
-              )
-            );
-          }
-
           function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
           function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
