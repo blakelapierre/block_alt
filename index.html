@@ -82,10 +82,6 @@
           return r;
         }, {});
 
-        // return Object.keys(handlers).reduce(function (r, key) {
-        //   r[key] = event(obj, key, handlers[key]);
-        //   return r;
-        // }, {});
       }
 
       function load() {
@@ -149,18 +145,13 @@
           }
 
           function stringEncodeObject(obj) {
-            return JSON.stringify(obj, function (key, value) {
-              // return typeof value === 'string' ? btoa(value) : value;
-              return value;
-            });
+            // return JSON.stringify(obj, value);
+            return JSON.stringify(obj, encode);
           }
 
           function stringDecodeObject(obj) {
-            return JSON.parse(obj, value);
-            // return JSON.parse(obj, function (key, value) {
-            //   // return typeof value === 'string' ? atob(value) : value;
-            //   return value;
-            // });
+            // return JSON.parse(obj, value);
+            return JSON.parse(obj, decode);
           }
 
           function value(key, value) { return value; }
