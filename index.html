@@ -257,7 +257,6 @@
                   answerEl.remove();
 
                   startDataChannelUi(channel);
-                  // channel.send('test');
                 }
               });
             }
@@ -265,10 +264,6 @@
               var answer = i;
               pc
                 .setRemoteDescription(answer)
-                // .then(function() {
-                //   setElText(answerEl, 'good');
-                //   selectText(answerEl);
-                // })
                 .catch(function (error) {
                   console.log('answer error', error);
                 });
