@@ -161,6 +161,20 @@
           function encode (text) { return btoa(text); }
           function decode (text) { return atob(text); }
 
+
+
+          function makeDataChannelUI (channel) {
+            var messages = document.createElement('messages'),
+                channelInput = document.createElement('channel-input'),
+                ui = document.createElement('data-channel-' + channel.label + '-ui');
+
+            ui.appendChild(messages);
+            ui.appendChild(channelInput);
+
+            return ui;
+          }
+
+
           var el = ConnectionTemplate.createNew();
 
           space.appendChild(el);
@@ -225,7 +239,9 @@
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
-                  channel.send('test');
+                  var ui = makeDataChannelUI(channel);
+
+                  // channel.send('test');
                 }
               });
             }
