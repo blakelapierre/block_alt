@@ -165,7 +165,13 @@
 
           var pc = makePeer();
 
-          pc.createDataChannel('block');
+          var channel = pc.createDataChannel('block');
+
+          events(channel, {
+            'onopen': function(event) {
+              console.log('!', event);
+            }
+          });
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
