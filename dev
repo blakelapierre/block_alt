@@ -48,7 +48,6 @@ publish () {
   && git checkout -b gh-pages \
   && git remote add origin git@github.com:blakelapierre/block \
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
-  #&& echo "xun_pools.p2p.ninja" > CNAME \
   && cp  -r ../index.html . \
   && git add . \
   && git commit -m "publish" \
