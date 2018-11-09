@@ -203,6 +203,11 @@
 
             channel.addEventListener('message', function (event) {
               console.log('message', event);
+              var messageEl = document.createElement('message');
+
+              messageEl.innerText = event.data;
+
+              messages.appendChild(messageEl);
             });
             // channel.onmessage = function (message) {
             //   var messageEl = document.createElement('message');
