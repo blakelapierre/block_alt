@@ -215,7 +215,7 @@
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
-                  console.log(channel);
+                  console.log('chan!!!!!', channel);
                 }
               });
             }
@@ -226,8 +226,6 @@
                 .then(function() {
                   console.log('remote description set', pc.remoteDescription);
                   setElText(answerEl, 'good');
-
-                  // setElText(answerEl, stringEncodeObject(pc.remoteDescription));
                   selectText(answerEl);
                 })
                 .catch(function (error) {
@@ -235,8 +233,6 @@
                 });
 
               inputAreaEl.remove();
-
-              console.dir(pc, i);
             }
           };
 
