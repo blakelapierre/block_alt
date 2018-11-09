@@ -195,7 +195,7 @@
                 .then(function(answer) { return (pc.setLocalDescription(answer), answer); })
                 .then(function(answer) {
                   console.log('answer', answer, pc);
-                  var enc = stringEncodeObject(answer);
+                  var enc = stringEncodeObject(pc.localDescription);
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
