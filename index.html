@@ -124,6 +124,23 @@
 
         function startConnection() {
 
+          function makePeer() {
+            var pc; return (
+              pc = createNewPeerConnection(
+                function (offer) {
+                  setOfferElText(stringEncodeObject(pc.localDescription));
+                  selectText(offerEl);
+                }, function (answer) {
+
+                }, function (error) {
+                  console.log('error', error);
+                  setOfferElText(JSON.stringify(error));
+                  selectText(offerEl);
+                }
+              )
+            );
+          }
+
           function makeOfferPeer() {
             var pc; return (
               pc = createNewPeerConnection(
@@ -145,9 +162,7 @@
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  // setOfferElText(btoa(JSON.stringify(offer)));
                   setOfferElText(stringEncodeObject(pc.localDescription));
-
                   selectText(offerEl);
                 },
                 function (answer) {
@@ -162,8 +177,6 @@
             );
           }
 
-            // return JSON.stringify(obj, stingifyEncode);
-            // return JSON.parse(obj, parseDecode);
           function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
           function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
@@ -186,7 +199,7 @@
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
-          var pc = makeOfferPeer();
+          var pc = makePeer();
 
           pc.createDataChannel('block');
 
@@ -205,22 +218,7 @@
             if (i.type === 'offer') {
               var offer = i;
 
-              pc = makeAnswerPeer();
-              // pc = createNewPeerConnection(
-              //   function (offer) {
-              //     // setOfferElText(btoa(JSON.stringify(offer)));
-              //     setOfferElText(stringEncodeObject(pc.localDescription));
-
-              //     selectText(offerEl);
-              //   },
-              //   function (answer) {
-
-              //   },
-              //   function (error) {
-              //     console.log('error', error);
-              //     setOfferElText(JSON.stringify(error));
-              //     selectText(offerEl);
-              //   });
+              pc = makePeer();
 
               events(pc, {
                 'onsignalingstatechange': function (event) {
