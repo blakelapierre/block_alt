@@ -125,8 +125,7 @@
         function startConnection() {
 
           function makeOfferPeer() {
-            var pc;
-            return (
+            var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
                   setOfferElText(stringEncodeObject(pc.localDescription));
@@ -139,6 +138,38 @@
                   selectText(offerEl);
                 }
               )
+            );
+          }
+
+          function makeAnswerPeer() {
+            var pc; return (
+              pc = createNewPeerConnection(
+                function (offer) {
+                  // setOfferElText(btoa(JSON.stringify(offer)));
+                  setOfferElText(stringEncodeObject(pc.localDescription));
+
+                  selectText(offerEl);
+                },
+                function (answer) {
+
+                },
+                function (error) {
+                  console.log('error', error);
+                  setOfferElText(JSON.stringify(error));
+                  selectText(offerEl);
+                });
+
+              events(pc, {
+                'onsignalingstatechange': function (event) {
+                  console.log('signaling state change', pc.signalingState);
+                },
+
+                'ondatachannel': function(event) {
+                  var channel = event.channel;
+
+                  console.log(channel);
+                }
+              }
             );
           }
 
@@ -185,41 +216,34 @@
             if (i.type === 'offer') {
               var offer = i;
 
+              pc = makeAnswerPeer();
+              // pc = createNewPeerConnection(
+              //   function (offer) {
+              //     // setOfferElText(btoa(JSON.stringify(offer)));
+              //     setOfferElText(stringEncodeObject(pc.localDescription));
 
+              //     selectText(offerEl);
+              //   },
+              //   function (answer) {
 
-              // var newPC = createNewPeerConnection(
-              pc = createNewPeerConnection(
-                function (offer) {
-                  // setOfferElText(btoa(JSON.stringify(offer)));
-                  setOfferElText(stringEncodeObject(pc.localDescription));
-
-                  selectText(offerEl);
-                },
-                function (answer) {
-
-                },
-                function (error) {
-                  console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerEl);
-                });
+              //   },
+              //   function (error) {
+              //     console.log('error', error);
+              //     setOfferElText(JSON.stringify(error));
+              //     selectText(offerEl);
+              //   });
 
               events(pc, {
                 'onsignalingstatechange': function (event) {
                   console.log('signaling state change', pc.signalingState);
                 },
+
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
                   console.log(channel);
                 }
               });
-
-              // newPC.ondatachannel = function(event) {
-              //   var channel = event.channel;
-
-              //   console.log(channel);
-              // };
 
               pc
                 .setRemoteDescription(offer)
