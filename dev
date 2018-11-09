@@ -45,13 +45,13 @@ publish () {
   && mkdir .stage \
   && cd .stage \
   && git init \
-  && checkout gh-pages \
+  && git checkout -b gh-pages \
   && git remote add origin git@github.com:blakelapierre/block \
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
   && cp  -r ../index.html . \
   && git add . \
-  && commit "publish" \
-  && push "gh-pages"
+  && git commit -m "publish" \
+  && git push origin gh-pages
 }
 
 checkout $BRANCH
