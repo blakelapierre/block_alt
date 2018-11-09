@@ -169,6 +169,8 @@
 
           var pc = makeOfferPeer();
 
+          pc.createDataChannel('block');
+
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
 
@@ -268,8 +270,6 @@
             sel.removeAllRanges();
             sel.addRange(range);
           }
-
-          pc.createDataChannel('block');
         }
       }
     </script>
