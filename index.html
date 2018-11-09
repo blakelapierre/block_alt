@@ -174,10 +174,6 @@
             el.appendChild(inputAreaEl);
 
             inputAreaEl.focus();
-
-            inputAreaEl.onkeydown = function (event) {
-              if (event.keyCode === 13) return sendInput(event);
-            };
           }
 
           function makeDataChannelUI (channel) {
@@ -187,6 +183,10 @@
 
             ui.appendChild(messages);
             ui.appendChild(channelInput);
+
+            inputAreaEl.onkeydown = function (event) {
+              if (event.keyCode === 13) return sendInput(event);
+            };
 
             channel.addEventListener('message', function (event) {
               console.log('message', event);
