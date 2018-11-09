@@ -112,7 +112,6 @@
         function startConnection() {
 
           function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
-
             var pc = new RTCPeerConnection(config);
 
             events(pc, {
@@ -134,18 +133,19 @@
             return pc;
           }
 
-          var pc = createNewPeerConnection(function (offer) {
-            setOfferElText(stringEncodeObject(pc.localDescription));
-            selectText(offerEl);
-          }, function (answer) {
+          function makeOfferPeer() {
+            var pc;
+            return (pc = createNewPeerConnection(function (offer) {
+              setOfferElText(stringEncodeObject(pc.localDescription));
+              selectText(offerEl);
+            }, function (answer) {
 
-          }, function (error) {
-            console.log('error', error);
-            setOfferElText(JSON.stringify(error));
-            selectText(offerEl);
-          });
-
-          var el = ConnectionTemplate.createNew();
+            }, function (error) {
+              console.log('error', error);
+              setOfferElText(JSON.stringify(error));
+              selectText(offerEl);
+            }));
+          }
 
           function stringEncodeObject(obj) {
             return JSON.stringify(obj, function (key, value) {
@@ -161,11 +161,14 @@
             });
           }
 
+          var el = ConnectionTemplate.createNew();
+
           space.appendChild(el);
 
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
+          var pc = makeOfferPeer();
 
           inputAreaEl.oninput = function(event) {
             var content = event.target.textContent;
@@ -182,7 +185,10 @@
             if (i.type === 'offer') {
               var offer = i;
 
-              var newPC = createNewPeerConnection(
+
+
+              // var newPC = createNewPeerConnection(
+              pc = createNewPeerConnection(
                 function (offer) {
                   // setOfferElText(btoa(JSON.stringify(offer)));
                   setOfferElText(stringEncodeObject(pc.localDescription));
@@ -198,7 +204,7 @@
                   selectText(offerEl);
                 });
 
-              events(newPC, {
+              events(pc, {
                 'onsignalingstatechange': function (event) {
                   console.log('signaling state change', pc.signalingState);
                 },
@@ -215,9 +221,9 @@
               //   console.log(channel);
               // };
 
-              newPC
+              pc
                 .setRemoteDescription(offer)
-                .then(function() { return newPC.createAnswer(); })
+                .then(function() { return pc.createAnswer(); })
                 .then(function(answer) {
                   console.log('answer', answer, pc);
                     // pc.remoteDescription = answer.sdp;
@@ -249,63 +255,6 @@
 
               console.dir(pc, i);
             }
-
-            // if (i.type === 'offer') {
-            //   var newPC = createNewPeerConnection(
-            //     function (offer) {
-            //       setOfferElText(btoa(JSON.stringify(offer)));
-
-            //       selectText(offerEl);
-            //     },
-            //     function (answer) {
-
-            //     },
-            //     function (error) {
-            //       console.log('error', error);
-            //       setOfferElText(JSON.stringify(error));
-            //       selectText(offerEl);
-            //     });
-
-            //   newPC.ondatachannel = function(event) {
-            //     var channel = event.channel;
-
-            //     console.log(channel);
-            //   };
-
-            //   newPC
-            //     .setRemoteDescription(i)
-            //     .then(function() { return newPC.createAnswer(); })
-            //     .then(function(answer) {
-            //       console.log('answer', answer, pc);
-            //         // pc.remoteDescription = answer.sdp;
-            //       // var enc = btoa(JSON.stringify(pc.remoteDescription));
-            //       var enc = btoa(JSON.stringify(answer.sdp));
-
-            //       setElText(answerEl, enc);
-            //       selectText(answerEl);
-            //     })
-            //     .catch(function(error) {
-            //       console.log('error', error);
-            //     });
-            // }
-            // else if (i.type === 'answer') {
-            //   console.log('sdp', i);
-
-            //   pc
-            //     .setRemoteDescription(i)
-            //     .then(function() {
-            //       console.log('remote description set', pc.remoteDescription);
-            //       setElText(answerEl, btoa(JSON.stringify(pc.remoteDescription)));
-            //       selectText(answerEl);
-            //     })
-            //     .catch(function (error) {
-            //       console.log('answer error', error);
-            //     });
-
-            //   inputAreaEl.remove();
-
-            //   console.dir(pc, i);
-            // }
           };
 
           function setElText (el, text) { el.innerHTML = text; }
