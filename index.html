@@ -101,10 +101,8 @@
               'onnegotiationneeded': function (event) {
                 pc
                   .createOffer()
-                  .then(function(offer) {
-                    pc.setLocalDescription(offer);
-                    receiveOffer(offer);
-                  })
+                  .then(function (offer) { return pc.setLocalDescription(offer), offer; })
+                  .then(function (offer) { return receiveOffer(offer); })
                   .catch(receiveError);
               },
 
