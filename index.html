@@ -167,7 +167,17 @@
           function encode (text) { return btoa(text); }
           function decode (text) { return atob(text); }
 
+          function startDataChannelUi (channel) {
+            var ui = makeDataChannelUI(channel);
 
+            answerEl.remove();
+
+            el.appendChild(ui);
+            el.appendChild(inputAreaEl);
+
+            inputAreaEl.focus();
+
+          }
 
           function makeDataChannelUI (channel) {
             var messages = document.createElement('messages'),
@@ -201,6 +211,8 @@
               });
 
               console.log('channel open', event);
+
+              startDataChannelUi(channel);
             }
           });
 
@@ -245,15 +257,7 @@
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
-                  var ui = makeDataChannelUI(channel);
-
-                  answerEl.remove();
-
-                  el.appendChild(ui);
-                  el.appendChild(inputAreaEl);
-
-                  inputAreaEl.focus();
-
+                  startDataChannelUi(channel);
                   // channel.send('test');
                 }
               });
