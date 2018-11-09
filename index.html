@@ -170,8 +170,6 @@
           function startDataChannelUi (channel) {
             var ui = makeDataChannelUI(channel);
 
-            answerEl.remove();
-
             el.appendChild(ui);
             el.appendChild(inputAreaEl);
 
@@ -255,6 +253,8 @@
 
                 'ondatachannel': function(event) {
                   var channel = event.channel;
+
+                  answerEl.remove();
 
                   startDataChannelUi(channel);
                   // channel.send('test');
