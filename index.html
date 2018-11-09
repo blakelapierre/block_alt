@@ -174,28 +174,6 @@
             el.appendChild(inputAreaEl);
 
             inputAreaEl.focus();
-          }
-
-          function makeDataChannelUI (channel) {
-            var messages = document.createElement('messages'),
-                channelInput = document.createElement('channel-input'),
-                ui = document.createElement('data-channel-' + channel.label + '-ui');
-
-            ui.appendChild(messages);
-            ui.appendChild(channelInput);
-
-            // inputAreaEl.oninput = function (event) {
-            //   var content = event.target.textContent;
-
-            //   channel.send(content);
-
-            // };
-
-            function sendInput (event) {
-              console.log('sending', event.target.textContent);
-              channel.send(event.target.textContent);
-              event.target.textContent = '';
-            }
 
             inputAreaEl.onkeydown = function (event) {
               if (event.keyCode === 13) return sendInput(event);
@@ -209,11 +187,21 @@
 
               messages.appendChild(messageEl);
             });
-            // channel.onmessage = function (message) {
-            //   var messageEl = document.createElement('message');
 
-            //   messageEl.innerText = message;
-            // };
+            function sendInput (event) {
+              console.log('sending', event.target.textContent);
+              channel.send(event.target.textContent);
+              event.target.textContent = '';
+            }
+          }
+
+          function makeDataChannelUI (channel) {
+            var messages = document.createElement('messages'),
+                channelInput = document.createElement('channel-input'),
+                ui = document.createElement('data-channel-' + channel.label + '-ui');
+
+            ui.appendChild(messages);
+            ui.appendChild(channelInput);
 
             return ui;
           }
