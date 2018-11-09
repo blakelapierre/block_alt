@@ -224,6 +224,8 @@
 
                 'ondatachannel': function(event) {
                   var channel = event.channel;
+
+                  channel.send('test');
                 }
               });
             }
