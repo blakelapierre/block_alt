@@ -292,6 +292,7 @@
             }
 
             inputAreaEl.remove();
+            inputAreaEl.removeEventListener('input', connectionInputHandler);
           }
 
           inputAreaEl.oninput = connectionInputHandler;
