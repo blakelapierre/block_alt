@@ -188,7 +188,20 @@
             if (i.type === 'offer') {
               var offer = i;
 
-              pc = makePeer();
+              (pc = makePeer())
+                .setRemoteDescription(offer)
+                .then(function() { return pc.createAnswer(); })
+                .then(function(answer) { return pc.setLocalDescription(answer), answer; })
+                .then(function(answer) {
+                  console.log('answer', answer, pc);
+                  var enc = stringEncodeObject(answer);
+
+                  setElText(answerEl, enc);
+                  selectText(answerEl);
+                })
+                .catch(function(error) {
+                  console.log('error', error);
+                });
 
               events(pc, {
                 'onsignalingstatechange': function (event) {
@@ -205,21 +218,6 @@
                   console.log(channel);
                 }
               });
-
-              pc
-                .setRemoteDescription(offer)
-                .then(function() { return pc.createAnswer(); })
-                .then(function(answer) {
-                  console.log('answer', answer, pc);
-                  var enc = stringEncodeObject(answer);
-                  pc.setLocalDescription(answer);
-
-                  setElText(answerEl, enc);
-                  selectText(answerEl);
-                })
-                .catch(function(error) {
-                  console.log('error', error);
-                });
             }
             else if (i.type === 'answer') {
               var answer = i;
