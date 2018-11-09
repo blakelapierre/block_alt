@@ -216,8 +216,6 @@
 
                 'ondatachannel': function(event) {
                   var channel = event.channel;
-
-                  console.log('chan!!!!!', channel);
                 }
               });
             }
@@ -226,7 +224,6 @@
               pc
                 .setRemoteDescription(answer)
                 .then(function() {
-                  console.log('remote description set', pc.remoteDescription);
                   setElText(answerEl, 'good');
                   selectText(answerEl);
                 })
