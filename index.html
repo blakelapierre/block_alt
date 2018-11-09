@@ -241,6 +241,10 @@
 
                   var ui = makeDataChannelUI(channel);
 
+                  answerEl.remove();
+
+                  el.appendChild(ui);
+
                   // channel.send('test');
                 }
               });
