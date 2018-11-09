@@ -160,8 +160,8 @@
 
           function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
 
-          function stringEncode (obj) { return ifType('string', encode); }
-          function stringDecode (obj) { return ifType('string', decode); }
+          function stringEncode (obj) { return ifType('string', encode)(obj); }
+          function stringDecode (obj) { return ifType('string', decode)(obj); }
 
           function encode (text) { return btoa(text); }
           function decode (text) { return atob(text); }
