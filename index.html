@@ -295,7 +295,8 @@
             inputAreaEl.remove();
           }
 
-          inputAreaEl.oninput = connectionInputHandler;
+          inputAreaEl.addEventListener('input', connectionInputHandler);
+          // inputAreaEl.oninput = connectionInputHandler;
 
           function setElText (el, text) { el.innerHTML = text; }
 
