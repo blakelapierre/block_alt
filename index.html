@@ -192,9 +192,8 @@
               (pc = makePeer())
                 .setRemoteDescription(offer)
                 .then(function() { return pc.createAnswer(); })
-                .then(function(answer) { return (pc.setLocalDescription(answer), answer); })
-                .then(function(answer) {
-                  console.log('answer', answer, pc);
+                .then(function(answer) { return pc.setLocalDescription(answer); })
+                .then(function() {
                   var enc = stringEncodeObject(pc.localDescription);
 
                   setElText(answerEl, enc);
