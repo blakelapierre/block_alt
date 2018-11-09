@@ -135,16 +135,20 @@
 
           function makeOfferPeer() {
             var pc;
-            return (pc = createNewPeerConnection(function (offer) {
-              setOfferElText(stringEncodeObject(pc.localDescription));
-              selectText(offerEl);
-            }, function (answer) {
+            return (
+              pc = createNewPeerConnection(
+                function (offer) {
+                  setOfferElText(stringEncodeObject(pc.localDescription));
+                  selectText(offerEl);
+                }, function (answer) {
 
-            }, function (error) {
-              console.log('error', error);
-              setOfferElText(JSON.stringify(error));
-              selectText(offerEl);
-            }));
+                }, function (error) {
+                  console.log('error', error);
+                  setOfferElText(JSON.stringify(error));
+                  selectText(offerEl);
+                }
+              )
+            );
           }
 
           function stringEncodeObject(obj) {
@@ -160,6 +164,16 @@
               return value;
             });
           }
+
+          function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
+
+          function stringEncode (obj) { return ifType('string', encode); }
+          function stringDecode (obj) { return ifType('string', decode); }
+          // function stringEncode (obj) { return typeof obj === 'string' ? encode(obj) : obj; }
+          // function stringDecode (obj) { return typeof obj === 'string' ? decode(obj) : obj; }
+
+          function encode (text) { return btoa(text); }
+          function decode (text) { return atob(text); }
 
           var el = ConnectionTemplate.createNew();
 
