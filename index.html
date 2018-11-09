@@ -110,7 +110,7 @@
 
               'onicecandidate': function (event) { return deliverOffer(pc.localDescription); },
 
-              'ondatachannel': function (event) { console.log('data!!', event); }
+              'ondatachannel': function (event) { console.log('createNewPeerConnection ondatachannel handler', event); }
             }
           )[0];
         }
