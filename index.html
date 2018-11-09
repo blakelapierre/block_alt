@@ -188,6 +188,7 @@
               var content = event.target.textContent;
 
               channel.send(content);
+              inputAreaEl.textContent = '';
             };
 
             channel.onmessage = function (message) {
