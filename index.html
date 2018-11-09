@@ -291,8 +291,8 @@
                 });
             }
 
-            inputAreaEl.remove();
             inputAreaEl.removeEventListener('input', connectionInputHandler);
+            inputAreaEl.remove();
           }
 
           inputAreaEl.oninput = connectionInputHandler;
