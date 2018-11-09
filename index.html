@@ -157,19 +157,8 @@
                   console.log('error', error);
                   setOfferElText(JSON.stringify(error));
                   selectText(offerEl);
-                });
-
-              events(pc, {
-                'onsignalingstatechange': function (event) {
-                  console.log('signaling state change', pc.signalingState);
-                },
-
-                'ondatachannel': function(event) {
-                  var channel = event.channel;
-
-                  console.log(channel);
                 }
-              }
+              )
             );
           }
 
