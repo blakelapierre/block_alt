@@ -72,6 +72,8 @@
       function events (obj, handlers) {
         console.log('events -- ff not working');
 
+        if (obj === null || obj === undefined) return console.log('oops, no obj for handlers!');
+
         var allEvents = Object.keys(obj.__proto__).filter(function (key) {
           console.log('*', key );
           return key.indexOf('on') === 0 && key.length > 2;
