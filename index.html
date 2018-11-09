@@ -178,6 +178,15 @@
             inputAreaEl.onkeydown = function (event) {
               if (event.keyCode === 13) return sendInput(event);
             };
+          }
+
+          function makeDataChannelUI (channel) {
+            var messages = document.createElement('messages'),
+                channelInput = document.createElement('channel-input'),
+                ui = document.createElement('data-channel-' + channel.label + '-ui');
+
+            ui.appendChild(messages);
+            ui.appendChild(channelInput);
 
             channel.addEventListener('message', function (event) {
               console.log('message', event);
@@ -193,15 +202,6 @@
               channel.send(event.target.textContent);
               event.target.textContent = '';
             }
-          }
-
-          function makeDataChannelUI (channel) {
-            var messages = document.createElement('messages'),
-                channelInput = document.createElement('channel-input'),
-                ui = document.createElement('data-channel-' + channel.label + '-ui');
-
-            ui.appendChild(messages);
-            ui.appendChild(channelInput);
 
             return ui;
           }
