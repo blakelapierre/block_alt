@@ -184,6 +184,18 @@
             ui.appendChild(messages);
             ui.appendChild(channelInput);
 
+            inputAreaEl.oninput = function (event) {
+              var content = event.target.textContent;
+
+              channel.send(content);
+            };
+
+            channel.onmessage = function (message) {
+              var messageEl = document.createElement('message');
+
+              messageEl.innerText = message;
+            };
+
             return ui;
           }
 
