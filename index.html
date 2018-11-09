@@ -201,11 +201,14 @@
               if (event.keyCode === 13) return sendInput(event);
             };
 
-            channel.onmessage = function (message) {
-              var messageEl = document.createElement('message');
+            channel.addEventListener('message', function (event) {
+              console.log('message', event);
+            });
+            // channel.onmessage = function (message) {
+            //   var messageEl = document.createElement('message');
 
-              messageEl.innerText = message;
-            };
+            //   messageEl.innerText = message;
+            // };
 
             return ui;
           }
