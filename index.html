@@ -106,7 +106,9 @@
                   .catch(deliverError);
               },
 
-              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
+              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); },
+
+              'ondatachannel': function (event) { console.log('data!!', event); }
             }
           )[0];
         }
