@@ -88,7 +88,7 @@
       function event(obj, name, handler) {
         obj[name] = function() {
           console.log('#e', name, arguments);
-          handler.call(obj, arguments);
+          handler.apply(obj, arguments);
         };
       }
 
