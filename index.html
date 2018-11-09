@@ -212,6 +212,7 @@
                 .then(function(answer) {
                   console.log('answer', answer, pc);
                   var enc = stringEncodeObject(answer);
+                  pc.setLocalDescription(answer);
 
                   setElText(answerEl, enc);
                   selectText(answerEl);
