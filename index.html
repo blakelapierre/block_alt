@@ -91,7 +91,7 @@
       function load() {
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
-        function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
+        function createNewPeerConnection(deliverOffer, receiveAnswer, receiveError) {
           var pc;
 
           return events(
@@ -102,11 +102,11 @@
                 pc
                   .createOffer()
                   .then(function (offer) { return pc.setLocalDescription(offer), offer; })
-                  .then(function (offer) { return receiveOffer(offer); })
+                  .then(function (offer) { return deliverOffer(pc.localDescription); })
                   .catch(receiveError);
               },
 
-              'onicecandidate': function (event) { return receiveOffer(pc.localDescription); }
+              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
             }
           )[0];
         }
