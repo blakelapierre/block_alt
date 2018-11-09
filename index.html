@@ -146,15 +146,17 @@
 
           function stringEncodeObject(obj) {
             // return JSON.stringify(obj, value);
-            return JSON.stringify(obj, encode);
+            return JSON.stringify(obj, stringEncode);
           }
 
           function stringDecodeObject(obj) {
             // return JSON.parse(obj, value);
-            return JSON.parse(obj, decode);
+            return JSON.parse(obj, stringDecode);
           }
 
           function value(key, value) { return value; }
+          function stingifyEncode(key, value) { return stringEncode(value); }
+          function stingifyDecode(key, value) { return stringDecode(value); }
 
           function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
 
