@@ -43,6 +43,13 @@
 
     </style>
     <script>
+      // var iframe;
+      // space.appendChild((iframe = document.createElement('iframe')));
+      // iframe.src =
+
+
+
+
       var googleSTUN = getGoogleSTUN();
 
       var config = {
@@ -62,13 +69,6 @@
 
       function emptyFn() {}
 
-      function event(obj, name, handler) {
-        obj[name] = function() {
-          console.log('#e', name, arguments);
-          handler.call(arguments);
-        };
-      }
-
       function events (obj, handlers) {
         console.log('events -- ff not working');
 
@@ -81,12 +81,14 @@
           r[key] = event(obj, key, handlers[key] || emptyFn);
           return r;
         }, {})];
-
       }
 
-      // var iframe;
-      // space.appendChild((iframe = document.createElement('iframe')));
-      // iframe.src =
+      function event(obj, name, handler) {
+        obj[name] = function() {
+          console.log('#e', name, arguments);
+          handler.call(arguments);
+        };
+      }
 
       function load() {
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
