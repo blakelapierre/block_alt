@@ -95,6 +95,28 @@
 
         // iframe.src =
 
+        function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
+          var pc = new RTCPeerConnection(config);
+
+          events(pc, {
+            'onsignalingstatechange': function (event) { console.log('signaling state change', pc.signalingState); },
+            'onnegotiationneeded': function (event) {
+              console.log('onneg');
+              pc
+                .createOffer()
+                .then(function(offer) {
+                  pc.setLocalDescription(offer);
+                  receiveOffer(offer);
+                })
+                .catch(receiveError);
+            },
+
+            'onicecandidate': function (event) { return receiveOffer(pc.localDescription); }
+          });
+
+          return pc;
+        }
+
         var ConnectionTemplate = {
           createNew: function() { return getEl('connection', templates).cloneNode(true); }
         };
@@ -103,28 +125,6 @@
         startConnection();
 
         function startConnection() {
-
-          function createNewPeerConnection(receiveOffer, receiveAnswer, receiveError) {
-            var pc = new RTCPeerConnection(config);
-
-            events(pc, {
-              'onsignalingstatechange': function (event) { console.log('signaling state change', pc.signalingState); },
-              'onnegotiationneeded': function (event) {
-                console.log('onneg');
-                pc
-                  .createOffer()
-                  .then(function(offer) {
-                    pc.setLocalDescription(offer);
-                    receiveOffer(offer);
-                  })
-                  .catch(receiveError);
-              },
-
-              'onicecandidate': function (event) { return receiveOffer(pc.localDescription); }
-            });
-
-            return pc;
-          }
 
           function makeOfferPeer() {
             var pc;
