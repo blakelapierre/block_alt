@@ -150,19 +150,15 @@
 
           return events(
             pc = new RTCPeerConnection(config), {
-              'onsignalingstatechange': function (event) { console.log('signaling state change', pc.signalingState); },
-
               'onnegotiationneeded': function (event) {
                 pc
                   .createOffer()
-                  .then(function (offer) { return (pc.setLocalDescription(offer), offer); })
-                  .then(function (offer) { return deliverOffer(pc.localDescription); })
+                  .then(function (offer) { return pc.setLocalDescription(offer); })
+                  .then(function () { return deliverOffer(pc.localDescription); })
                   .catch(deliverError);
               },
 
-              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); },
-
-              'ondatachannel': function (event) { console.log('createNewPeerConnection ondatachannel handler', event); }
+              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
             }
           )[0];
         }
