@@ -245,6 +245,7 @@
               'block': function () { answerEl.remove(); }
             };
 
+            console.log('eee', event.target, event.target.textContent);
 
             processMessage(stringDecodeObject(event.target.textContent));
 
