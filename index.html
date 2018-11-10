@@ -226,12 +226,14 @@
           });
 
           inputAreaEl.addEventListener('input', connectionInputHandler);
+          inputAreaEl.addEventListener('input', function (event) {
+
+          });
 
           function connectionInputHandler (event) {
-            var content = event.target.textContent;
+            inputAreaEl.removeEventListener('input', connectionInputHandler);
+            inputAreaEl.remove();
 
-            var i = stringDecodeObject(content);
-            console.log('i', i);
 
             offerEl.remove();
             setElText(inputAreaEl, '');
@@ -243,48 +245,51 @@
               'block': function () { answerEl.remove(); }
             };
 
-            if (i.type === 'offer') {
-              var offer = i;
-              pc = setupConnection(offer, updateUI);
-            }
-            else if (i.type === 'answer') {
-              var answer = i;
-              pc.setRemoteDescription(answer);
-            }
 
-            inputAreaEl.removeEventListener('input', connectionInputHandler);
-            inputAreaEl.remove();
+            processMessage(stringDecodeObject(event.target.textContent));
 
-            function updateUI (answer) {
-              var enc = stringEncodeObject(answer);
+            function processMessage(message) {
+              if (message.type === 'offer') {
+                var offer = message;
+                pc = setupConnection(offer, updateUI);
+              }
+              else if (message.type === 'answer') {
+                var answer = message;
+                pc.setRemoteDescription(answer);
+              }
 
-              setElText(answerEl, enc);
-              selectText(answerEl);
-            }
 
-            function setupConnection(offer, haveAnswer) {
-              (pc = makePeer())
-                .setRemoteDescription(offer)
-                .then(c(pc, 'createAnswer'))
-                .then(c(pc, 'setLocalDescription'))
-                .then(function() { return haveAnswer(pc.localDescription); })
-                .catch(function(error) {
-                  console.log('error', error);
+              function updateUI (answer) {
+                var enc = stringEncodeObject(answer);
+
+                setElText(answerEl, enc);
+                selectText(answerEl);
+              }
+
+              function setupConnection(offer, haveAnswer) {
+                (pc = makePeer())
+                  .setRemoteDescription(offer)
+                  .then(c(pc, 'createAnswer'))
+                  .then(c(pc, 'setLocalDescription'))
+                  .then(function() { return haveAnswer(pc.localDescription); })
+                  .catch(function(error) {
+                    console.log('error', error);
+                  });
+
+                events(pc, {
+                  'ondatachannel': function(event) {
+                    var channel = event.channel;
+
+                    (ondatachannelHandlers[channel.label] || emptyFn)();
+
+                    events(channel, {
+                      'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+                    });
+                  }
                 });
 
-              events(pc, {
-                'ondatachannel': function(event) {
-                  var channel = event.channel;
-
-                  (ondatachannelHandlers[channel.label] || emptyFn)();
-
-                  events(channel, {
-                    'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-                  });
-                }
-              });
-
-              return pc;
+                return pc;
+              }
             }
           }
 
