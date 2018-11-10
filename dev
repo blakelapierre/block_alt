@@ -51,7 +51,8 @@ publish () {
   && cp  -r ../index.html . \
   && git add . \
   && git commit --no-gpg-sign -m "${1:-publish}" \
-  && git push origin gh-pages
+  && git push origin gh-pages \
+  && checkout
 }
 
 checkout $BRANCH

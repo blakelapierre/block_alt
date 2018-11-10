@@ -5,7 +5,14 @@
     <style>
       body { margin: 0; padding: 0; color: #fff; background-color: #000; }
 
-      space { position: fixed; top: 0; bottom: 0; left: 0; right: 0; display: flex; max-height: 100%; overflow-y: auto; }
+      space {
+        position: fixed;
+        top: 0; bottom: 0; left: 0; right: 0;
+
+        display: flex;
+        max-height: 100%;
+        overflow-y: auto;
+      }
 
       templates { display: none; }
 
@@ -64,12 +71,29 @@
 
     </style>
     <script>
+      function emptyFn() {}
+      function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
+      function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
+
       // var iframe;
+      function encode (text) { return btoa(text); }
+      function decode (text) { return atob(text); }
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
+      var permissioned = false;
+      function notify(message) {
+        if (!permissioned) return Notification.requestPermission(function (result) {
+          if (result === 'granted') {
+            permissioned = true;
+            n(message);
+          }
+        });
 
+        n(message);
 
+        function n (m) { return new Notification(m); }
+      }
 
       var googleSTUN = getGoogleSTUN();
 
@@ -85,7 +109,6 @@
         };
       }
 
-      function emptyFn() {}
 
       function events (obj, handlers) {
         console.log('events -- ff not working');
@@ -176,8 +199,40 @@
           function stringEncode (obj) { return ifType('string', encode)(obj); }
           function stringDecode (obj) { return ifType('string', decode)(obj); }
 
-          function encode (text) { return btoa(text); }
-          function decode (text) { return atob(text); }
+
+          var el = ConnectionTemplate.createNew();
+
+          space.appendChild(el);
+
+          var offerEl = getEl('offer', el),
+              inputAreaEl = getEl('input-area', el);
+
+          var pc = makePeer();
+
+          var channel = pc.createDataChannel('block'),
+              latencyChannel= pc.createDataChannel('latency');
+
+          events(channel, {
+            'onopen': function(event) {
+              events(event.target, {
+                'onmessage': function (message) {
+                  console.log('data message', message);
+                }
+              });
+
+              console.log('channel open', event);
+
+              startDataChannelUi(channel);
+            }
+          });
+
+          events(latencyChannel, {
+            'onopen': function (event) {
+              console.log('latency channel open', event);
+
+              startLatencyChannelUI(latencyChannel);
+            }
+          });
 
           function startDataChannelUi (channel) {
             var ui = makeDataChannelUI(channel);
@@ -186,6 +241,48 @@
             el.appendChild(inputAreaEl);
 
             inputAreaEl.focus();
+
+            function makeDataChannelUI (channel) {
+              var messages = document.createElement('messages'),
+                  channelInput = document.createElement('channel-input'),
+                  ui = document.createElement('data-channel-' + channel.label + '-ui');
+
+              ui.appendChild(messages);
+              ui.appendChild(channelInput);
+
+              inputAreaEl.onkeydown = function (event) {
+                if (event.keyCode === 13) return addInputUI(event.target.textContent), sendInput(event);
+              };
+
+              events(channel, {
+                'onmessage': function (event) {
+                  console.log('message', event);
+                  var messageEl = document.createElement('message');
+
+                  messageEl.innerText = event.data;
+
+                  messages.appendChild(messageEl);
+
+                  if (document.hidden) notify(event.data);
+                }
+              });
+
+              function addInputUI(text) {
+                var messageEl = document.createElement('our-message');
+
+                messageEl.innerText = text;
+
+                messages.appendChild(messageEl);
+              }
+
+              function sendInput (event) {
+                console.log('sending', event);
+                channel.send(event.target.textContent);
+                event.target.textContent = '';
+              }
+
+              return ui;
+            }
           }
 
           function startLatencyChannelUI (channel) {
@@ -248,181 +345,93 @@
             el.insertBefore(ui, el.firstChild);
 
             return ui;
-          }
 
-          function makeLatencyUI (channel, ping, pong, setDiff) {
-            var ui = document.createElement('latency-ui'),
-                button = document.createElement('button'),
-                diffEl = document.createElement('diff');
+            function makeLatencyUI (channel, ping, pong, setDiff) {
+              var ui = document.createElement('latency-ui'),
+                  button = document.createElement('button'),
+                  diffEl = document.createElement('diff');
 
-            button.innerText = 'ping';
+              button.innerText = 'ping';
 
-            ui.appendChild(button);
-            ui.appendChild(diffEl);
+              ui.appendChild(button);
+              ui.appendChild(diffEl);
 
-            button.addEventListener('click', function (event) {
-              ping();
-            });
-
-            setDiff(function (diff) {
-              diffEl.innerText = diff;
-            });
-
-            return ui;
-          }
-
-          function makeDataChannelUI (channel) {
-            var messages = document.createElement('messages'),
-                channelInput = document.createElement('channel-input'),
-                ui = document.createElement('data-channel-' + channel.label + '-ui');
-
-            ui.appendChild(messages);
-            ui.appendChild(channelInput);
-
-            inputAreaEl.onkeydown = function (event) {
-              if (event.keyCode === 13) return addInputUI(event.target.textContent), sendInput(event);
-            };
-
-            events(channel, {
-              'onmessage': function (event) {
-                console.log('message', event);
-                var messageEl = document.createElement('message');
-
-                messageEl.innerText = event.data;
-
-                messages.appendChild(messageEl);
-              }
-            });
-
-            function addInputUI(text) {
-              var messageEl = document.createElement('our-message');
-
-              messageEl.innerText = text;
-
-              messages.appendChild(messageEl);
-            }
-
-            function sendInput (event) {
-              console.log('sending', event);
-              channel.send(event.target.textContent);
-              event.target.textContent = '';
-            }
-
-            return ui;
-          }
-
-          var el = ConnectionTemplate.createNew();
-
-          space.appendChild(el);
-
-          var offerEl = getEl('offer', el),
-              inputAreaEl = getEl('input-area', el);
-
-          var pc = makePeer();
-
-          var channel = pc.createDataChannel('block'),
-              latencyChannel= pc.createDataChannel('latency');
-
-          events(channel, {
-            'onopen': function(event) {
-              events(event.target, {
-                'onmessage': function (message) {
-                  console.log('data message', message);
-                }
+              button.addEventListener('click', function (event) {
+                ping();
               });
 
-              console.log('channel open', event);
+              setDiff(function (diff) {
+                diffEl.innerText = diff;
+              });
 
-              startDataChannelUi(channel);
+              return ui;
             }
-          });
+          }
 
-          events(latencyChannel, {
-            'onopen': function (event) {
-              console.log('latency channel open', event);
-
-              startLatencyChannelUI(latencyChannel);
-            }
-          });
-
-          function connectionInputHandler(event) {
+          function connectionInputHandler (event) {
             var content = event.target.textContent;
 
             offerEl.remove();
             setElText(inputAreaEl, '');
 
-            var i = stringDecodeObject(content);
-            console.log('i', i);
-
             var answerEl = document.createElement('answer');
             el.insertBefore(answerEl, el.firstChild);
 
-            function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
-            function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
+            var ondatachannelHandlers = {
+              'block': function () { answerEl.remove(); }
+            };
+
+            var channelonopenHandlers = {
+              'block': startDataChannelUi,
+              'latency': startLatencyChannelUI
+            };
+
+            var i = stringDecodeObject(content);
+            console.log('i', i);
 
             if (i.type === 'offer') {
               var offer = i;
+              pc = setupConnection(offer, updateUI);
+            }
+            else if (i.type === 'answer') {
+              var answer = i;
+              pc.setRemoteDescription(answer);
+            }
 
+            inputAreaEl.removeEventListener('input', connectionInputHandler);
+            inputAreaEl.remove();
 
+            function updateUI (answer) {
+              var enc = stringEncodeObject(answer);
+
+              setElText(answerEl, enc);
+              selectText(answerEl);
+            }
+
+            function setupConnection(offer, haveAnswer) {
               (pc = makePeer())
                 .setRemoteDescription(offer)
                 .then(c(pc, 'createAnswer'))
                 .then(c(pc, 'setLocalDescription'))
-                .then(function() {
-                  var enc = stringEncodeObject(pc.localDescription);
-
-                  setElText(answerEl, enc);
-                  selectText(answerEl);
-                })
+                .then(function() { return haveAnswer(pc.localDescription); })
                 .catch(function(error) {
                   console.log('error', error);
                 });
 
               events(pc, {
-                'onsignalingstatechange': function (event) {
-                  console.log('signaling state change', pc.signalingState);
-                },
-
-                'onnegotiationneeded': function (event) {
-                  console.log('@@@@@');
-                },
-
                 'ondatachannel': function(event) {
                   var channel = event.channel;
 
-                  if (channel.label === 'block') {
-                    answerEl.remove();
+                  (ondatachannelHandlers[channel.label] || emptyFn)();
 
-                    events(channel, {
-                      'onopen': function (event) {
-                        startDataChannelUi(channel);
-                      }
-                    });
-                  }
-                  else
-                  if (channel.label === 'latency') {
-
-                    events(channel, {
-                      'onopen': function (event) {
-                        console.log('latency channel open');
-                        startLatencyChannelUI(channel);
-                      }
-                    });
-                  }
+                  events(channel, {
+                    'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+                  });
                 }
               });
-            }
-            else if (i.type === 'answer') {
-              var answer = i;
-              pc
-                .setRemoteDescription(answer)
-                .catch(function (error) {
-                  console.log('answer error', error);
-                });
-            }
 
-            inputAreaEl.removeEventListener('input', connectionInputHandler);
-            inputAreaEl.remove();
+              return pc;
+            }
           }
 
           inputAreaEl.addEventListener('input', connectionInputHandler);
