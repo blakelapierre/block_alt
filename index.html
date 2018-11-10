@@ -206,27 +206,6 @@
           });
 
           inputAreaEl.addEventListener('input', connectionInputHandler);
-          inputAreaEl.addEventListener('input', function (event) {
-
-          });
-
-          function makePeer() {
-            console.log('making peer');
-            var pc; return (
-              pc = createNewPeerConnection(
-                function (offer) {
-                  setOfferElText(stringEncodeObject(pc.localDescription));
-                  selectText(offerEl);
-                }, function (answer) {
-
-                }, function (error) {
-                  console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerEl);
-                }
-              )
-            );
-          }
 
           function connectionInputHandler (event) {
             var message = stringDecodeObject(event.target.textContent);
@@ -289,6 +268,24 @@
                 return pc;
               }
             }
+          }
+
+          function makePeer() {
+            console.log('making peer');
+            var pc; return (
+              pc = createNewPeerConnection(
+                function (offer) {
+                  setOfferElText(stringEncodeObject(pc.localDescription));
+                  selectText(offerEl);
+                }, function (answer) {
+
+                }, function (error) {
+                  console.log('error', error);
+                  setOfferElText(JSON.stringify(error));
+                  selectText(offerEl);
+                }
+              )
+            );
           }
 
           function startDataChannelUi (channel) {
