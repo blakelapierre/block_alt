@@ -3,42 +3,37 @@
   <head>
     <meta charset="UTF-8">
     <style>
-      body { margin: 0; padding: 0; }
+      body { margin: 0; padding: 0; color: #fff; background-color: #000; }
 
       space { position: fixed; top: 0; bottom: 0; left: 0; right: 0; display: flex; max-height: 100%; overflow-y: auto; }
 
       templates { display: none; }
 
       offer, answer {
+        flex: 0 0 auto;
+
         word-break: break-all;
         white-space: pre-wrap;
+
+        padding: 1em;
       }
 
       connection {
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
-      }
-
-      connection
-      offer,
-      connection
-      input-area,
-      connection
-      answer {
-        flex: 1 1 auto;
-
-        display: flex;
 
         justify-content: center;
-        align-items: center;
-
-        padding: 1em;
+        align-items: stretch;
       }
 
-      connection
-      input-area {
-        background-color: rgba(0, 0, 0, 0.33);
+      connection input-area {
+        flex: 1 0 auto;
+
+        padding: 1em;
+
+        background-color: rgba(255, 255, 255, 0.33);
+        border: solid 1px rgba(255, 255, 255, 0.75);
       }
 
       data-channel-block-ui {
@@ -52,14 +47,14 @@
       messages {
         width: 100%;
 
-        flex: 1 1 auto;
+        flex: 0 1 auto;
 
         flex-direction: column;
 
         overflow-y: auto;
       }
 
-      message, our-message { display: block; margin: 1em; padding: 1em; border: solid 1px rgba(0, 0, 0, 0.33); }
+      message, our-message { display: block; margin: 1em; padding: 1em; border: solid 1px rgba(255, 255, 255, 0.33); }
 
       our-message {
         text-align: right;
@@ -85,10 +80,7 @@
       function getGoogleSTUN() {
         return {
           urls: [
-            'stun:stun1.l.google.com:19302'/*,
-            'stun:stun2.l.google.com:19302',
-            'stun:stun3.l.google.com:19302',
-            'stun:stun4.l.google.com:19302'*/
+            'stun:stun1.l.google.com:19302' //, 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'
           ]
         };
       }
@@ -365,13 +357,17 @@
             var answerEl = document.createElement('answer');
             el.insertBefore(answerEl, el.firstChild);
 
+            function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
+            function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
+
             if (i.type === 'offer') {
               var offer = i;
 
+
               (pc = makePeer())
                 .setRemoteDescription(offer)
-                .then(function() { return pc.createAnswer(); })
-                .then(function(answer) { return pc.setLocalDescription(answer); })
+                .then(c(pc, 'createAnswer'))
+                .then(c(pc, 'setLocalDescription'))
                 .then(function() {
                   var enc = stringEncodeObject(pc.localDescription);
 

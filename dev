@@ -50,7 +50,7 @@ publish () {
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
   && cp  -r ../index.html . \
   && git add . \
-  && git commit --no-gpg-sign -m "publish" \
+  && git commit --no-gpg-sign -m "${1:-publish}" \
   && git push origin gh-pages
 }
 
@@ -96,7 +96,8 @@ commit_and_reset_comment
         "p")
 
             echo "publishing"
-            publish
+            PUBLISH_COMMENT="$action"
+            publish $PUBLISH_COMMENT
               ;;
 
         "r")

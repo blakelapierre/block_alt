@@ -59,7 +59,11 @@
         overflow-y: auto;
       }
 
-      message { display: block; }
+      message, our-message { display: block; margin: 1em; padding: 1em; border: solid 1px rgba(0, 0, 0, 0.33); }
+
+      our-message {
+        text-align: right;
+      }
 
       input-area { min-height: 3em; }
 
@@ -284,7 +288,7 @@
             ui.appendChild(channelInput);
 
             inputAreaEl.onkeydown = function (event) {
-              if (event.keyCode === 13) return sendInput(event);
+              if (event.keyCode === 13) return addInputUI(event.target.textContent), sendInput(event);
             };
 
             events(channel, {
@@ -298,6 +302,13 @@
               }
             });
 
+            function addInputUI(text) {
+              var messageEl = document.createElement('our-message');
+
+              messageEl.innerText = text;
+
+              messages.appendChild(messageEl);
+            }
 
             function sendInput (event) {
               console.log('sending', event);
