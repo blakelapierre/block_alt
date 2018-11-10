@@ -149,24 +149,6 @@
 
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
-        function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
-          var pc;
-
-          return events(
-            pc = new RTCPeerConnection(config), {
-              'onnegotiationneeded': function (event) {
-                pc
-                  .createOffer()
-                  .then(function (offer) { return pc.setLocalDescription(offer); })
-                  .then(function () { return deliverOffer(pc.localDescription); })
-                  .catch(deliverError);
-              },
-
-              'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
-            }
-          )[0];
-        }
-
         function startConnection() {
           function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
           function stringDecodeObject(obj) { return JSON.parse(obj, value); }
@@ -283,6 +265,24 @@
                 }
               )
             );
+
+            function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
+              var pc;
+
+              return events(
+                pc = new RTCPeerConnection(config), {
+                  'onnegotiationneeded': function (event) {
+                    pc
+                      .createOffer()
+                      .then(function (offer) { return pc.setLocalDescription(offer); })
+                      .then(function () { return deliverOffer(pc.localDescription); })
+                      .catch(deliverError);
+                  },
+
+                  'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
+                }
+              )[0];
+            }
           }
 
           function startDataChannelUi (channel) {
