@@ -228,7 +228,8 @@
 
               console.log('channel open', event);
 
-              startDataChannelUi(channel);
+              // startDataChannelUi(channel);
+              channelonopenHandlers['block'](channel);
             }
           });
 
@@ -236,7 +237,8 @@
             'onopen': function (event) {
               console.log('latency channel open', event);
 
-              startLatencyChannelUI(latencyChannel);
+              // startLatencyChannelUI(latencyChannel);
+              channelonopenHandlers['latency'](channel);
             }
           });
 
