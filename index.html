@@ -218,17 +218,25 @@
           var channel = pc.createDataChannel('block'),
               latencyChannel= pc.createDataChannel('latency');
 
-          events(channel, {
-            'onopen': function(event) {
-              channelonopenHandlers['block'](channel);
-            }
+
+          [channel, latencyChannel].forEach(function (channel) {
+            events(channel, {
+              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+            });
           });
 
-          events(latencyChannel, {
-            'onopen': function (event) {
-              channelonopenHandlers['latency'](latencyChannel);
-            }
-          });
+
+          // events(channel, {
+          //   'onopen': function(event) {
+          //     channelonopenHandlers['block'](channel);
+          //   }
+          // });
+
+          // events(latencyChannel, {
+          //   'onopen': function (event) {
+          //     channelonopenHandlers['latency'](latencyChannel);
+          //   }
+          // });
 
           inputAreaEl.addEventListener('input', connectionInputHandler);
 
