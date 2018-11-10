@@ -207,6 +207,12 @@
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
+
+          var channelonopenHandlers = {
+            'block': startDataChannelUi,
+            'latency': startLatencyChannelUI
+          };
+
           var pc = makePeer();
 
           var channel = pc.createDataChannel('block'),
@@ -214,25 +220,78 @@
 
           events(channel, {
             'onopen': function(event) {
-              events(event.target, {
-                'onmessage': function (message) {
-                  console.log('data message', message);
-                }
-              });
-
-              console.log('channel open', event);
-
-              startDataChannelUi(channel);
+              channelonopenHandlers['block'](channel);
             }
           });
 
           events(latencyChannel, {
             'onopen': function (event) {
-              console.log('latency channel open', event);
-
-              startLatencyChannelUI(latencyChannel);
+              channelonopenHandlers['latency'](channel);
             }
           });
+
+          inputAreaEl.addEventListener('input', connectionInputHandler);
+
+          function connectionInputHandler (event) {
+            var content = event.target.textContent;
+
+            var i = stringDecodeObject(content);
+            console.log('i', i);
+
+            offerEl.remove();
+            setElText(inputAreaEl, '');
+
+            var answerEl = document.createElement('answer');
+            el.insertBefore(answerEl, el.firstChild);
+
+            var ondatachannelHandlers = {
+              'block': function () { answerEl.remove(); }
+            };
+
+            if (i.type === 'offer') {
+              var offer = i;
+              pc = setupConnection(offer, updateUI);
+            }
+            else if (i.type === 'answer') {
+              var answer = i;
+              pc.setRemoteDescription(answer);
+            }
+
+            inputAreaEl.removeEventListener('input', connectionInputHandler);
+            inputAreaEl.remove();
+
+            function updateUI (answer) {
+              var enc = stringEncodeObject(answer);
+
+              setElText(answerEl, enc);
+              selectText(answerEl);
+            }
+
+            function setupConnection(offer, haveAnswer) {
+              (pc = makePeer())
+                .setRemoteDescription(offer)
+                .then(c(pc, 'createAnswer'))
+                .then(c(pc, 'setLocalDescription'))
+                .then(function() { return haveAnswer(pc.localDescription); })
+                .catch(function(error) {
+                  console.log('error', error);
+                });
+
+              events(pc, {
+                'ondatachannel': function(event) {
+                  var channel = event.channel;
+
+                  (ondatachannelHandlers[channel.label] || emptyFn)();
+
+                  events(channel, {
+                    'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+                  });
+                }
+              });
+
+              return pc;
+            }
+          }
 
           function startDataChannelUi (channel) {
             var ui = makeDataChannelUI(channel);
@@ -367,74 +426,6 @@
               return ui;
             }
           }
-
-          function connectionInputHandler (event) {
-            var content = event.target.textContent;
-
-            offerEl.remove();
-            setElText(inputAreaEl, '');
-
-            var answerEl = document.createElement('answer');
-            el.insertBefore(answerEl, el.firstChild);
-
-            var ondatachannelHandlers = {
-              'block': function () { answerEl.remove(); }
-            };
-
-            var channelonopenHandlers = {
-              'block': startDataChannelUi,
-              'latency': startLatencyChannelUI
-            };
-
-            var i = stringDecodeObject(content);
-            console.log('i', i);
-
-            if (i.type === 'offer') {
-              var offer = i;
-              pc = setupConnection(offer, updateUI);
-            }
-            else if (i.type === 'answer') {
-              var answer = i;
-              pc.setRemoteDescription(answer);
-            }
-
-            inputAreaEl.removeEventListener('input', connectionInputHandler);
-            inputAreaEl.remove();
-
-            function updateUI (answer) {
-              var enc = stringEncodeObject(answer);
-
-              setElText(answerEl, enc);
-              selectText(answerEl);
-            }
-
-            function setupConnection(offer, haveAnswer) {
-              (pc = makePeer())
-                .setRemoteDescription(offer)
-                .then(c(pc, 'createAnswer'))
-                .then(c(pc, 'setLocalDescription'))
-                .then(function() { return haveAnswer(pc.localDescription); })
-                .catch(function(error) {
-                  console.log('error', error);
-                });
-
-              events(pc, {
-                'ondatachannel': function(event) {
-                  var channel = event.channel;
-
-                  (ondatachannelHandlers[channel.label] || emptyFn)();
-
-                  events(channel, {
-                    'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-                  });
-                }
-              });
-
-              return pc;
-            }
-          }
-
-          inputAreaEl.addEventListener('input', connectionInputHandler);
 
           function setElText (el, text) { el.innerHTML = text; }
 
