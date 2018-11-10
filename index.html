@@ -81,19 +81,23 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
-      var permissioned = false;
-      function notify(message) {
-        if (!permissioned) return Notification.requestPermission(function (result) {
-          if (result === 'granted') {
-            permissioned = true;
-            n(message);
-          }
-        });
 
-        n(message);
+      var notify = (function () {
+        var permissioned = false;
 
-        function n (m) { return new Notification(m); }
-      }
+        return function notify (message) {
+          if (!permissioned) return Notification.requestPermission(function (result) {
+            if (result === 'granted') {
+              permissioned = true;
+              n(message);
+            }
+          });
+
+          n(message);
+
+          function n (m) { return new Notification(m); }
+        };
+      })();
 
       var googleSTUN = getGoogleSTUN();
 
@@ -227,18 +231,6 @@
                 'offer': function () { pc = setupConnection(message, updateUI); },
                 'answer': function () { pc.setRemoteDescription(message); }
               })[message.type]();
-
-
-              // switch (message.type) {
-              //   case 'offer': pc = setupConnection(message, updateUI); break;
-              //   case 'answer': pc.setRemoteDescription(message); break;
-              // }
-
-              // if (message.type === 'offer')
-              //   pc = setupConnection(message, updateUI);
-
-              // else if (message.type === 'answer')
-              //   pc.setRemoteDescription(message);
 
 
               function updateUI (answer) {
