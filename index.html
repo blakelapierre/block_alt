@@ -223,11 +223,22 @@
 
             function processMessage(message) {
 
-              if (message.type === 'offer')
-                pc = setupConnection(message, updateUI);
+              ({
+                'offer': function () { pc = setupConnection(message, updateUI); },
+                'answer': function () { pc.setRemoteDescription(message); }
+              })[message.type]();
 
-              else if (message.type === 'answer')
-                pc.setRemoteDescription(message);
+
+              // switch (message.type) {
+              //   case 'offer': pc = setupConnection(message, updateUI); break;
+              //   case 'answer': pc.setRemoteDescription(message); break;
+              // }
+
+              // if (message.type === 'offer')
+              //   pc = setupConnection(message, updateUI);
+
+              // else if (message.type === 'answer')
+              //   pc.setRemoteDescription(message);
 
 
               function updateUI (answer) {
