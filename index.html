@@ -213,9 +213,8 @@
             'latency': startLatencyChannelUI
           };
 
-          var pc = makePeer();
-
-          var channel = pc.createDataChannel('block'),
+          var pc = makePeer(),
+              channel = pc.createDataChannel('block'),
               latencyChannel= pc.createDataChannel('latency');
 
 
