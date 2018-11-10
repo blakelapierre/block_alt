@@ -101,6 +101,15 @@
         'iceServers': [googleSTUN]
       };
 
+      var space = getEl('space'),
+          templates = getEl('templates');
+
+      var ConnectionTemplate = {
+        createNew: function() { return getEl('connection', templates).cloneNode(true); }
+      };
+
+      startConnection();
+
       function getGoogleSTUN() {
         return {
           urls: [
@@ -157,15 +166,6 @@
             }
           )[0];
         }
-
-        var space = getEl('space'),
-            templates = getEl('templates');
-
-        var ConnectionTemplate = {
-          createNew: function() { return getEl('connection', templates).cloneNode(true); }
-        };
-
-        startConnection();
 
         function startConnection() {
 
