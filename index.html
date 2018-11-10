@@ -101,15 +101,6 @@
         'iceServers': [googleSTUN]
       };
 
-      var space = getEl('space'),
-          templates = getEl('templates');
-
-      var ConnectionTemplate = {
-        createNew: function() { return getEl('connection', templates).cloneNode(true); }
-      };
-
-      startConnection();
-
       function getGoogleSTUN() {
         return {
           urls: [
@@ -143,6 +134,15 @@
       }
 
       function load() {
+        var space = getEl('space'),
+            templates = getEl('templates');
+
+        var ConnectionTemplate = {
+          createNew: function() { return getEl('connection', templates).cloneNode(true); }
+        };
+
+        startConnection();
+
         function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
         function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
