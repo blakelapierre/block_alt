@@ -222,14 +222,12 @@
             processMessage(message);
 
             function processMessage(message) {
-              if (message.type === 'offer') {
-                var offer = message;
-                pc = setupConnection(offer, updateUI);
-              }
-              else if (message.type === 'answer') {
-                var answer = message;
-                pc.setRemoteDescription(answer);
-              }
+
+              if (message.type === 'offer')
+                pc = setupConnection(message, updateUI);
+
+              else if (message.type === 'answer')
+                pc.setRemoteDescription(message);
 
 
               function updateUI (answer) {
