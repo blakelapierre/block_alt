@@ -220,13 +220,23 @@
 
           events(channel, {
             'onopen': function(event) {
-              channelonopenHandlers['block'](channel);
+              events(event.target, {
+                'onmessage': function (message) {
+                  console.log('data message', message);
+                }
+              });
+
+              console.log('channel open', event);
+
+              startDataChannelUi(channel);
             }
           });
 
           events(latencyChannel, {
             'onopen': function (event) {
-              channelonopenHandlers['latency'](channel);
+              console.log('latency channel open', event);
+
+              startLatencyChannelUI(latencyChannel);
             }
           });
 
