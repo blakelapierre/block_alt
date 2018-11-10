@@ -231,9 +231,10 @@
           });
 
           function connectionInputHandler (event) {
+            var message = stringDecodeObject(event.target.textContent);
+
             inputAreaEl.removeEventListener('input', connectionInputHandler);
             inputAreaEl.remove();
-
 
             offerEl.remove();
             setElText(inputAreaEl, '');
@@ -245,9 +246,7 @@
               'block': function () { answerEl.remove(); }
             };
 
-            console.log('eee', event.target, event.target.textContent);
-
-            processMessage(stringDecodeObject(event.target.textContent));
+            processMessage(message);
 
             function processMessage(message) {
               if (message.type === 'offer') {
