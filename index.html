@@ -310,7 +310,7 @@
               ui.appendChild(channelInput);
 
               inputAreaEl.onkeydown = function (event) {
-                if (event.keyCode === 13) return addInputUI(event.target.textContent), sendInput(event);
+                if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
               };
 
               events(channel, {
@@ -326,7 +326,7 @@
                 }
               });
 
-              function addInputUI(text) {
+              function addOurMessage(text) {
                 var messageEl = document.createElement('our-message');
 
                 messageEl.innerText = text;
