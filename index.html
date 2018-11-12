@@ -231,7 +231,7 @@
               soundButtonEl = document.createElement('sound-button'),
               inputAreaEl = document.createElement('input-area');
 
-          inputAreaEl.setAttribute('content-editable');
+          inputAreaEl.contentEditable = true;
 
           offerEl.appendChild(offerTextEl);
           offerEl.appendChild(soundButtonEl);
