@@ -81,6 +81,15 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
+      navigator
+        .mediaDevices
+          .getUserMedia({'audio': true, 'video': true})
+          .then(function (stream) {
+            console.log('stream', stream);
+          })
+          .catch(function (error) {
+            console.log('error', error);
+          });
 
       var notify = (function () {
         var permissioned = false;
@@ -226,7 +235,7 @@
                 selectText(answerEl);
               }
 
-              function setupConnection(offer, haveAnswer) {
+              function setupConnection(offer, haveAnswerddddddddddddddd) {
                 (pc = makePeer())
                   .setRemoteDescription(offer)
                   .then(c(pc, 'createAnswer'))

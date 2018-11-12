@@ -102,7 +102,12 @@
       var googleSTUN = getGoogleSTUN();
 
       var config = {
-        'iceServers': [googleSTUN]
+        'iceServers': [googleSTUN,
+        {
+          'urls': 'turn:68.183.22.27:3478?transport=udp',
+          'credential': 'anon',
+          'username': 'anon'
+        }]
       };
 
       function getGoogleSTUN() {
@@ -169,7 +174,6 @@
 
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
-
 
           var channelonopenHandlers = {
             'block': startDataChannelUi,

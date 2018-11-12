@@ -29,7 +29,8 @@ host_ws () {
 }
 
 serve_file() {
-  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+ nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+#  nc -l -c "cat <(echo -e $HTTP_OK) $2" $1
 }
 
 serve_ws() {
