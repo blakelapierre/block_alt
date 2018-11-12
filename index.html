@@ -81,6 +81,14 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
+
+      function getDevices() {
+        return new Promise(function (resolve, reject) {
+
+        });
+      }
+
+
       navigator
         .mediaDevices
           .getUserMedia({'audio': true, 'video': true})
