@@ -236,6 +236,7 @@
 
           space.appendChild(el);
 
+
           var offerEl = getEl('offer', el),
               inputAreaEl = getEl('input-area', el);
 
@@ -342,7 +343,7 @@
                   'onnegotiationneeded': function (event) {
                     pc
                       .createOffer()
-                      .then(function (offer) { return pc.setLocalDescription(offer); })
+                      .then(setLocalDescription)
                       .then(function () { return deliverOffer(pc.localDescription); })
                       .catch(deliverError);
                   },
@@ -350,6 +351,8 @@
                   'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
                 }
               )[0];
+
+              function setLocalDescription(offer) { return pc.setLocalDescription(offer); }
             }
           }
 
@@ -510,7 +513,10 @@
     <templates>
 
       <connection>
-        <offer></offer>
+        <offer>
+          <text></text>
+          <button>Play as Sound</button>
+        </offer>
         <input-area contenteditable="true"></input-area>
       </connection>
 
