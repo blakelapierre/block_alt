@@ -84,7 +84,39 @@
 
       function getDevices() {
         return new Promise(function (resolve, reject) {
+          navigator
+            .mediaDevices
+              .getUserMedia({'audio': true, 'video': true})
+              .then(handleAudioVideoStream)
+              .catch(function (error) {
 
+                navigator
+                  .mediaDevices
+                    .getUserMedia({'audio': true})
+                    .then(handleAudioStream)
+                    .catch(function (error) {  });
+
+                navigator
+                  .mediaDevices
+                    .getUserMedia({'video': true})
+                    .then(handleVideoStream)
+                    .catch(function (error) {  });
+
+              });
+
+          function handleAudioVideoStream (stream) {
+            console.log('audiovideo', stream);
+          }
+
+          function handleAudioStream (stream) {
+            console.log('audio', stream);
+
+          }
+
+          function handleVideoStream (stream) {
+            console.log('video', stream);
+
+          }
         });
       }
 
