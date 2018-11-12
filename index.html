@@ -107,16 +107,23 @@
 
           function handleAudioVideoStream (stream) {
             console.log('audiovideo', stream);
+            resolve([stream]);
           }
 
           function handleAudioStream (stream) {
             console.log('audio', stream);
-
+            audio = stream;
+            check();
           }
 
           function handleVideoStream (stream) {
             console.log('video', stream);
+            video = stream;
+            check();
+          }
 
+          function check () {
+            // if (audio && video) resolve({'audio', video]);
           }
         });
       }
