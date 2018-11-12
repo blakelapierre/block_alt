@@ -14,8 +14,6 @@
         overflow-y: auto;
       }
 
-      templates { display: none; }
-
       offer, answer {
         flex: 0 0 auto;
 
@@ -207,12 +205,7 @@
       }
 
       function load() {
-        var space = getEl('space'),
-            templates = getEl('templates');
-
-        var ConnectionTemplate = {
-          createNew: function() { return getEl('connection', templates).cloneNode(true); }
-        };
+        var space = getEl('space');
 
         startConnection();
 
@@ -232,14 +225,19 @@
           function stringDecode (obj) { return ifType('string', decode)(obj); }
 
 
-          var el = ConnectionTemplate.createNew();
+          var el = document.createElement('connection'),
+              offerEl = document.createElement('offer'),
+              offerTextEl = document.createElement('offer-text'),
+              soundButtonEl = document.createElement('sound-button'),
+              inputAreaEl = document.createElement('input-area');
+
+          offerEl.appendChild(offerTextEl);
+          offerEl.appendChild(soundButtonEl);
+
+          el.appendChild(offerEl);
+          el.appendChild(inputAreaEl);
 
           space.appendChild(el);
-
-
-          var offerEl = getEl('offer', el),
-              buttonEl = getEl('button', el),
-              inputAreaEl = getEl('input-area', el);
 
           var channelonopenHandlers = {
             'block': startDataChannelUi,
@@ -510,18 +508,6 @@
   <body onload="load()">
 
     <space></space>
-
-    <templates>
-
-      <connection>
-        <offer>
-          <text></text>
-          <button>Play as Sound</button>
-        </offer>
-        <input-area contenteditable="true"></input-area>
-      </connection>
-
-    </templates>
 
   <body>
 </html>
