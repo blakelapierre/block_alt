@@ -83,6 +83,7 @@
 
 
       function getDevices() {
+        console.log('getting devices');
         return new Promise(function (resolve, reject) {
           navigator
             .mediaDevices
@@ -120,16 +121,23 @@
         });
       }
 
+      getDevices()
+        .then(function (devices) {
+          console.log('getDevices', devices);
+        })
+        .catch(function (error) {
+          console.log('getDevices error', error);
+        });
 
-      navigator
-        .mediaDevices
-          .getUserMedia({'audio': true, 'video': true})
-          .then(function (stream) {
-            console.log('stream', stream);
-          })
-          .catch(function (error) {
-            console.log('error', error);
-          });
+      // navigator
+      //   .mediaDevices
+      //     .getUserMedia({'audio': true, 'video': true})
+      //     .then(function (stream) {
+      //       console.log('stream', stream);
+      //     })
+      //     .catch(function (error) {
+      //       console.log('error', error);
+      //     });
 
       var notify = (function () {
         var permissioned = false;
