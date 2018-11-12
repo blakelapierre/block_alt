@@ -327,13 +327,13 @@
               pc = createNewPeerConnection(
                 function (offer) {
                   setOfferElText(stringEncodeObject(pc.localDescription));
-                  selectText(offerEl);
+                  selectText(offerTextEl);
                 }, function (answer) {
 
                 }, function (error) {
                   console.log('error', error);
                   setOfferElText(JSON.stringify(error));
-                  selectText(offerEl);
+                  selectText(offerTextEl);
                 }
               )
             );
@@ -495,7 +495,7 @@
 
           function setElText (el, text) { el.innerHTML = text; }
 
-          function setOfferElText(text) { setElText(offerEl, text); }
+          function setOfferElText(text) { setElText(offerTextEl, text); }
           function setAnswerElText(text) { setElText(answerEl, text); }
 
           function selectText(el) {
