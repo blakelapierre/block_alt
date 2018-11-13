@@ -82,6 +82,21 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
+      window.addEventListener('storage', function (event) {
+        var key = event.originalEvent.key;
+
+        if (key === 'message') {
+          var value = event.originalEvent.newValue,
+              obj = JSON.parse(value);
+
+          handleStorageMessage(obj);
+        }
+      });
+
+      function handleStorageMessage (message) {
+
+      }
+
       function getDevices() {
         console.log('getting devices');
         return new Promise(function (resolve, reject) {
@@ -229,19 +244,54 @@
               inputAreaEl = e('input-area');
 
           inputAreaEl.contentEditable = true;
+          inputAreaEl.addEventListener('input', connectionInputHandler);
 
           soundButtonEl.innerText = 'Play as Sound';
+          soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
+
 
           offerEmailLink.innerText = 'Send as Email';
           offerEmailLink.target = '__blank';
           offerEmailLink.href = '';
 
-
           answerEmailLink.innerText = 'Send as Email';
           answerEmailLink.target = '__blank';
           answerEmailLink.href = '';
 
-          soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
+
+          offerEl.appendChild(offerTextEl);
+          offerEl.appendChild(soundButtonEl);
+          offerEl.appendChild(offerEmailLink);
+
+          el.appendChild(offerEl);
+          el.appendChild(inputAreaEl);
+
+          space.appendChild(el);
+
+          var channelonopenHandlers = {
+            'block': startDataChannelUi,
+            'latency': startLatencyChannelUI
+          };
+
+          var pc = makePeer(),
+              channel = pc.createDataChannel('block'),
+              latencyChannel= pc.createDataChannel('latency');
+
+
+          [channel, latencyChannel].forEach(function (channel) {
+            events(channel, {
+              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+            });
+          });
+
+
+          var hash = window.location.hash;
+          if (hash.length > 1) {
+            console.log('hash', hash);
+            window.location.hash = '';
+            connectionInputHandler({target:{textContent: atob(hash.substring(1)) }});
+          }
+
 
           var context, binSize = 1000;
           function playAsSound (text) {
@@ -272,39 +322,8 @@
 
           }
 
-          offerEl.appendChild(offerTextEl);
-          offerEl.appendChild(soundButtonEl);
-          offerEl.appendChild(offerEmailLink);
-
-          el.appendChild(offerEl);
-          el.appendChild(inputAreaEl);
-
-          space.appendChild(el);
-
-          var channelonopenHandlers = {
-            'block': startDataChannelUi,
-            'latency': startLatencyChannelUI
-          };
-
-          var pc = makePeer(),
-              channel = pc.createDataChannel('block'),
-              latencyChannel= pc.createDataChannel('latency');
 
 
-          [channel, latencyChannel].forEach(function (channel) {
-            events(channel, {
-              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-            });
-          });
-
-          inputAreaEl.addEventListener('input', connectionInputHandler);
-
-          var hash = window.location.hash;
-          if (hash.length > 1) {
-            console.log('hash', hash);
-            window.location.hash = '';
-            connectionInputHandler({target:{textContent: atob(hash.substring(1)) }});
-          }
 
           function connectionInputHandler (event) {
             var message = stringDecodeObject(event.target.textContent);
