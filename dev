@@ -54,7 +54,9 @@ publish () {
   && commit "${1:-publish}" gh-pages \
   && echo "pushing" \
   && push gh-pages \
-  && checkout
+  && echo "checking out" \
+  && checkout \
+  && echo "publish done"
 }
 
 checkout $BRANCH
