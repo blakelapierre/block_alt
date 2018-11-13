@@ -69,6 +69,13 @@
 
       input-area { min-height: 3em; }
 
+      a {
+        color: #fff;
+        text-decoration: none;
+        text-weight: bold;
+        text-size: large;
+      }
+
     </style>
     <script>
       function emptyFn() {}
@@ -88,6 +95,7 @@
       });
 
       window.addEventListener('storage', function (event) {
+        console.log('storage event', event);
         var key = event.key;
 
         if (key === 'answer') {
