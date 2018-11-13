@@ -82,6 +82,11 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
+      localStorage.removeItem('waitingForOffer');
+      window.addEventListener('beforeunload', function() {
+        localStorage.removeItem('waitingForOffer');
+      });
+
       window.addEventListener('storage', function (event) {
         var key = event.originalEvent.key;
 
@@ -387,6 +392,8 @@ console.log('message', message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
+                  localStorage.setTime('waitingForOffer', true);
+
                   var enc = stringEncodeObject(pc.localDescription);
 
 
