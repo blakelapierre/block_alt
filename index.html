@@ -397,7 +397,7 @@ console.log('waiting', waiting, message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  localStorage.setItem('waitingForOffer', "true");
+                  localStorage.setItem('waitingForOffer', 'true');
 
                   var enc = stringEncodeObject(pc.localDescription);
 
