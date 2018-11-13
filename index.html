@@ -88,10 +88,10 @@
       });
 
       window.addEventListener('storage', function (event) {
-        var key = event.originalEvent.key;
+        var key = event.key;
 
         if (key === 'answer') {
-          var value = event.originalEvent.newValue,
+          var value = event.newValue,
               answer = JSON.parse(value);
 
           pc.setRemoteDescription(answer);
