@@ -56,7 +56,7 @@ publish () {
   && echo "pushing" \
   && push gh-pages \
   && echo "checking out" \
-  && checkout \
+  && checkout "${BRANCH}" \
   && echo "publish done"
 }
 
