@@ -251,7 +251,7 @@
 
             var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 10; });
 
-            var duration = 5;
+            var duration = 10;
             oscillator.frequency.setValueCurveAtTime(f, context.currentTime, duration);
 
             oscillator.start();
