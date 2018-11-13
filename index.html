@@ -88,8 +88,6 @@
       // var iframe;
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
-
-      localStorage.removeItem('waitingForOffer');
       window.addEventListener('beforeunload', function() {
         localStorage.removeItem('waitingForOffer');
       });
