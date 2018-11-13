@@ -51,7 +51,7 @@ publish () {
   && echo "copying" \
   && cp  -r ../index.html . \
   && echo "committing" \
-  && commit "${1:-publish}" \
+  && commit "${1:-publish}" gh-pages \
   && echo "pushing" \
   && push gh-pages \
   && checkout
