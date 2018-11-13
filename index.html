@@ -330,7 +330,14 @@ console.log('message', message);
                 'offer': function () { pc = setupConnection(message, updateUI); },
                 'answer': function () {
                   // check for offer on other tab
-                  pc.setRemoteDescription(message);
+                  var waiting = localStorage.getItem('waitingForOffer');
+
+                  if (waiting === 'true') {
+
+                  }
+                  else {
+                    pc.setRemoteDescription(message);
+                  }
                 }
               })[message.type]();
 
