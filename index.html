@@ -262,8 +262,8 @@
 
             oscillator.start();
 
-            setTimeout(function () { oscillator.stop(); }, text.length, noteLength * text.length);
-            console.log('l', noteLength * text.length);
+            setTimeout(function () { oscillator.stop(); }, noteLength * text.length);
+            console.log('l', text.length, , noteLength * text.length);
           }
 
           offerEl.appendChild(offerTextEl);
