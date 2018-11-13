@@ -249,17 +249,20 @@
             oscillator.connect(context.destination);
 
 
+            var f = text.split('').map(function (c) { return 440 + c.charCodeAt(0); });
 
-            var noteLength = 10 / 1000;
-            for (var i = 0; i < text.length; i++) {
-              var code = text.charCodeAt(i);
+            oscillator.frequency.setValueCurveAtTime(f, context.currentTime, 2);
 
-              var frequency = 440 + code * 10;
+            // var noteLength = 10 / 1000;
+            // for (var i = 0; i < text.length; i++) {
+            //   var code = text.charCodeAt(i);
 
-              oscillator.frequency.setValueAtTime(frequency, context.currentTime + noteLength * i);
+            //   var frequency = 440 + code * 10;
 
-              console.log(code, context.currentTime, noteLength, i);
-            }
+            //   oscillator.frequency.setValueAtTime(frequency, context.currentTime + noteLength * i);
+
+            //   console.log(code, context.currentTime, noteLength, i);
+            // }
 
             oscillator.start();
 
