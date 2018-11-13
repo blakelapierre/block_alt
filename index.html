@@ -254,6 +254,7 @@
             for (var i = 0; i < text.length; i++) {
               var code = text.charCodeAt(i);
 
+              console.log(code);
               var frequency = 440 + code * 10;
 
               oscillator.frequency.setValueAtTime(frequency, context.currentTime + noteLength * i);
@@ -261,7 +262,7 @@
 
             oscillator.start();
 
-            setTimeout(function () { oscillator.stop(); }, noteLength * text.length);
+            setTimeout(function () { oscillator.stop(); }, text.length, noteLength * text.length);
             console.log('l', noteLength * text.length);
           }
 
