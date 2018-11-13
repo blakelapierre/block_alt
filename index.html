@@ -89,24 +89,6 @@
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
 
-      window.addEventListener('beforeunload', function() {
-        localStorage.removeItem('waitingForOffer');
-      });
-
-      window.addEventListener('storage', function (event) {
-        console.log('storage event', event);
-        var key = event.key;
-
-        if (key === 'answer') {
-          var value = event.newValue,
-              answer = JSON.parse(value);
-
-          pc.setRemoteDescription(answer);
-
-          localStorage.removeItem('answer');
-        }
-      });
-
       function getDevices() {
         console.log('getting devices');
         return new Promise(function (resolve, reject) {
@@ -286,6 +268,24 @@
           var pc = makePeer(),
               channel = pc.createDataChannel('block'),
               latencyChannel= pc.createDataChannel('latency');
+
+          window.addEventListener('beforeunload', function() {
+            localStorage.removeItem('waitingForOffer');
+          });
+
+          window.addEventListener('storage', function (event) {
+            console.log('storage event', event);
+            var key = event.key;
+
+            if (key === 'answer') {
+              var value = event.newValue,
+                  answer = JSON.parse(value);
+
+              pc.setRemoteDescription(answer);
+
+              localStorage.removeItem('answer');
+            }
+          });
 
 
           [channel, latencyChannel].forEach(function (channel) {
