@@ -239,10 +239,10 @@
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
-          var context, oscillator;
+          var context;
           function playAsSound (text) {
             context = context || new AudioContext();
-            oscillator = oscillator || context.createOscillator();
+            var oscillator = oscillator || context.createOscillator();
 
             oscillator.type = 'square';
             // oscillator.frequency.setValueAtTime(440, context.currentTime);
