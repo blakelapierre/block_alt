@@ -368,7 +368,7 @@
                 function (offer) {
                   var enc = stringEncodeObject(pc.localDescription);
                   setOfferElText(enc);
-                  emailLinkEl.src = window.location.origin + '?' + encodeURI(enc);
+                  emailLinkEl.href = window.location.origin + '?' + encodeURI(enc);
                   selectText(offerTextEl);
                 }, function (answer) {
 
