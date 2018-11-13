@@ -51,10 +51,8 @@ publish () {
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
   && echo "copying" \
   && cp  -r ../index.html . \
-  && echo "committing" \
+  && echo "committing && pushing" \
   && commit "${1:-publish}" gh-pages \
-  && echo "pushing" \
-  && push gh-pages \
   && echo "checking out" \
   && checkout "${BRANCH}" \
   && echo "publish done"
