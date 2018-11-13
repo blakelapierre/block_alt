@@ -227,11 +227,14 @@
           function stringDecode (obj) { return ifType('string', decode)(obj); }
 
 
-          var el = document.createElement('connection'),
-              offerEl = document.createElement('offer'),
-              offerTextEl = document.createElement('offer-text'),
-              soundButtonEl = document.createElement('sound-button'),
-              inputAreaEl = document.createElement('input-area');
+          function e (name) { return document.createElement(name); }
+
+          var el = e('connection'),
+              offerEl = e('offer'),
+              offerTextEl = e('offer-text'),
+              soundButtonEl = e('sound-button'),
+              emailButtonEl = e('emailButtonEl'),
+              inputAreaEl = e('input-area');
 
           inputAreaEl.contentEditable = true;
 
@@ -270,6 +273,7 @@
 
           offerEl.appendChild(offerTextEl);
           offerEl.appendChild(soundButtonEl);
+          offerEl.appendChild(emailButtonEl);
 
           el.appendChild(offerEl);
           el.appendChild(inputAreaEl);
