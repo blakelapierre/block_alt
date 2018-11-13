@@ -309,7 +309,7 @@
 
           function connectionInputHandler (event) {
             var message = stringDecodeObject(event.target.textContent);
-
+console.log('message', message);
             inputAreaEl.removeEventListener('input', connectionInputHandler);
             inputAreaEl.remove();
 
