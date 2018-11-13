@@ -251,7 +251,7 @@
 
               console.log('oscillator', i);
 
-              oscillator.frequency.setValueCurveAtTime(500 + binSize * i, context.currentTime);
+              oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
               oscillator.type = 'sine';
 
               oscillator.connect(context.destination);
