@@ -241,7 +241,7 @@
           soundButtonEl.innerText = 'Play as Sound';
           emailLinkEl.innerText = 'Send as Email';
 
-          emailLinkEl.href = window.location.origin + '?' + encodeURI('');
+          emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI('');
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
@@ -375,7 +375,7 @@ console.log('message', message);
                 function (offer) {
                   var enc = stringEncodeObject(pc.localDescription);
 
-                  emailLinkEl.href = window.location.origin + '?' + encodeURI(enc);
+                  emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
                   setOfferElText(enc);
                   selectText(offerTextEl);

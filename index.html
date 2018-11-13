@@ -136,15 +136,6 @@
           console.log('getDevices error', error);
         });
 
-      // navigator
-      //   .mediaDevices
-      //     .getUserMedia({'audio': true, 'video': true})
-      //     .then(function (stream) {
-      //       console.log('stream', stream);
-      //     })
-      //     .catch(function (error) {
-      //       console.log('error', error);
-      //     });
 
       var notify = (function () {
         var permissioned = false;
@@ -233,15 +224,22 @@
               offerEl = e('offer'),
               offerTextEl = e('offer-text'),
               soundButtonEl = e('sound-button'),
-              emailLinkEl = e('a'),
+              offerEmailLink = e('a'),
+              answerEmailLink = e('a'),
               inputAreaEl = e('input-area');
 
           inputAreaEl.contentEditable = true;
 
           soundButtonEl.innerText = 'Play as Sound';
-          emailLinkEl.innerText = 'Send as Email';
 
-          emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI('');
+          offerEmailLink.innerText = 'Send as Email';
+          offerEmailLink.target = '__blank';
+          offerEmailLink.href = '';
+
+
+          answerEmailLink.innerText = 'Send as Email';
+          answerEmailLink.target = '__blank';
+          answerEmailLink.href = '';
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
@@ -276,7 +274,7 @@
 
           offerEl.appendChild(offerTextEl);
           offerEl.appendChild(soundButtonEl);
-          offerEl.appendChild(emailLinkEl);
+          offerEl.appendChild(offerEmailLink);
 
           el.appendChild(offerEl);
           el.appendChild(inputAreaEl);
@@ -301,11 +299,11 @@
 
           inputAreaEl.addEventListener('input', connectionInputHandler);
 
-          var search = window.location.search;
-          if (search.length > 1) {
-            console.log('search', search);
-            window.location.search = '';
-            connectionInputHandler({target:{textContent:decodeURI(search.substring(1))}});
+          var hash = window.location.hash;
+          if (hash.length > 1) {
+            console.log('hash', hash);
+            window.location.hash = '';
+            connectionInputHandler({target:{textContent: atob(hash.substring(1)) }});
           }
 
           function connectionInputHandler (event) {
@@ -317,7 +315,12 @@ console.log('message', message);
             offerEl.remove();
             setElText(inputAreaEl, '');
 
-            var answerEl = document.createElement('answer');
+            var answerEl = e('answer'),
+                answerTextEl = e('answer-text');
+
+            answerEl.appendChild(answerTextEl);
+            answerEl.appendChild(answerEmailLink);
+
             el.insertBefore(answerEl, el.firstChild);
 
             var ondatachannelHandlers = {
@@ -337,8 +340,14 @@ console.log('message', message);
               function updateUI (answer) {
                 var enc = stringEncodeObject(answer);
 
-                setElText(answerEl, enc);
-                selectText(answerEl);
+                var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                    body = 'Connect to me at: ' + link,
+                    subject = 'Connect to me';
+
+                answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+
+                setElText(answerTextEl, enc);
+                selectText(answerTextEl);
               }
 
               function setupConnection(offer, haveAnswer) {
@@ -375,7 +384,15 @@ console.log('message', message);
                 function (offer) {
                   var enc = stringEncodeObject(pc.localDescription);
 
-                  emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
+
+                  var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                      body = 'Connect to me at: ' + link,
+                      subject = 'Connect to me';
+
+                  offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                  // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
+
+                  // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
                   setOfferElText(enc);
                   selectText(offerTextEl);
@@ -547,7 +564,7 @@ console.log('message', message);
           function setElText (el, text) { el.innerHTML = text; }
 
           function setOfferElText(text) { setElText(offerTextEl, text); }
-          function setAnswerElText(text) { setElText(answerEl, text); }
+          function setAnswerElText(text) { setElText(answerTextEl, text); }
 
           function selectText(el) {
             if (!el.isConnected) return;
