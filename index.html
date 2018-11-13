@@ -241,7 +241,7 @@
           soundButtonEl.innerText = 'Play as Sound';
           emailLinkEl.innerText = 'Send as Email';
 
-          emailLinkEl.src = window.location.origin + '?' + encodeURI('');
+          emailLinkEl.href = window.location.origin + '?' + encodeURI('');
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
