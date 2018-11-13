@@ -254,10 +254,11 @@
             for (var i = 0; i < text.length; i++) {
               var code = text.charCodeAt(i);
 
-              console.log(code);
               var frequency = 440 + code * 10;
 
               oscillator.frequency.setValueAtTime(frequency, context.currentTime + noteLength * i);
+
+              console.log(code, context.currentTime, noteLength, i);
             }
 
             oscillator.start();
