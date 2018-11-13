@@ -343,7 +343,7 @@ console.log('message', message);
                   var waiting = localStorage.getItem('waitingForOffer');
 console.log('waiting', waiting, message);
                   if (waiting === 'true') {
-                    localStorage.setItem('answer', JSON.parse(message));
+                    localStorage.setItem('answer', message);
                   }
                   else {
                     pc.setRemoteDescription(message);
