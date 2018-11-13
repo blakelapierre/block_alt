@@ -251,8 +251,6 @@
 
             var f = text.split('').map(function (c) { return 440 + c.charCodeAt(0); });
 
-            f.push(0);
-
             oscillator.frequency.setValueCurveAtTime(f, context.currentTime, 2);
 
             // var noteLength = 10 / 1000;
@@ -268,7 +266,7 @@
 
             oscillator.start();
 
-            setTimeout(function () { oscillator.stop(); }, noteLength * text.length);
+            setTimeout(function () { oscillator.stop(); }, 2);
             // console.log('l', text.length, noteLength * text.length);
           }
 
