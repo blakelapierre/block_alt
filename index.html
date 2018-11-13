@@ -251,23 +251,12 @@
 
             var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 10; });
 
-            oscillator.frequency.setValueCurveAtTime(f, context.currentTime, 2);
-
-            // var noteLength = 10 / 1000;
-            // for (var i = 0; i < text.length; i++) {
-            //   var code = text.charCodeAt(i);
-
-            //   var frequency = 440 + code * 10;
-
-            //   oscillator.frequency.setValueAtTime(frequency, context.currentTime + noteLength * i);
-
-            //   console.log(code, context.currentTime, noteLength, i);
-            // }
+            var duration = 5;
+            oscillator.frequency.setValueCurveAtTime(f, context.currentTime, duration);
 
             oscillator.start();
 
-            setTimeout(function () { oscillator.stop(); }, 2 * 1000);
-            // console.log('l', text.length, noteLength * text.length);
+            setTimeout(function () { oscillator.stop(); }, duration * 1000);
           }
 
           offerEl.appendChild(offerTextEl);
