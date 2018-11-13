@@ -246,8 +246,10 @@
             var bins = 8,
                 oscillators = [];
 
-            for (var i = 0; i < oscillators.length; i++) {
+            for (var i = 0; i < binss; i++) {
               var oscillator = context.createOscillator();
+
+              console.log('oscillator', i);
 
               oscillator.frequency.setValueCurveAtTime(500 + binSize * i, context.currentTime);
               oscillator.type = 'sine';
