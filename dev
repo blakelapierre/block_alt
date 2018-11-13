@@ -8,6 +8,7 @@ echo ""
 
 checkout () {
   CHECKING_OUT=1
+  echo "checking out ${1}"
   git checkout -b ${1} 2> /dev/null
   git checkout ${1}
   CHECKING_OUT=0
