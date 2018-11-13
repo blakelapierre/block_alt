@@ -239,7 +239,7 @@
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
-          var context;
+          var context, binSize = 1000;
           function playAsSound (text) {
             context = context || new AudioContext();
 
