@@ -343,7 +343,7 @@ console.log('message', message);
                   var waiting = localStorage.getItem('waitingForOffer');
 console.log('waiting', waiting, message);
                   if (waiting === 'true') {
-                    localStorage.setItem('answer', message);
+                    localStorage.setItem('answer', JSON.parse(message));
                   }
                   else {
                     pc.setRemoteDescription(message);
@@ -397,7 +397,7 @@ console.log('waiting', waiting, message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  localStorage.setItem('waitingForOffer', true);
+                  localStorage.setItem('waitingForOffer', "true");
 
                   var enc = stringEncodeObject(pc.localDescription);
 
