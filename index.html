@@ -233,13 +233,15 @@
               offerEl = e('offer'),
               offerTextEl = e('offer-text'),
               soundButtonEl = e('sound-button'),
-              emailButtonEl = e('emailButtonEl'),
+              emailLinkEl = e('a'),
               inputAreaEl = e('input-area');
 
           inputAreaEl.contentEditable = true;
 
           soundButtonEl.innerText = 'Play as Sound';
-          emailButtonEl.innerText = 'Send as Email';
+          emailLinkEl.innerText = 'Send as Email';
+
+          emailLinkEl.src = window.location.origin + '?' + encodeURI('');
 
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
@@ -364,7 +366,9 @@
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  setOfferElText(stringEncodeObject(pc.localDescription));
+                  var enc = stringEncodeObject(pc.localDescription);
+                  setOfferElText(enc);
+                  emailLinkEl.src = window.location.origin + '?' + encodeURI(enc);
                   selectText(offerTextEl);
                 }, function (answer) {
 
