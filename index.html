@@ -372,6 +372,7 @@ console.log('message', message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
+                  console.dir(offerTextEl);
                   var enc = stringEncodeObject(pc.localDescription);
                   setOfferElText(enc);
                   emailLinkEl.href = window.location.origin + '?' + encodeURI(enc);
