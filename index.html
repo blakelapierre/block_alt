@@ -281,7 +281,10 @@
               var value = event.newValue,
                   answer = JSON.parse(value);
 
-              pc.setRemoteDescription(answer);
+              pc.setRemoteDescription(answer)
+                .catch(function (error) {
+                  console.log('didn\'t work; error', error);
+                });
 
               localStorage.removeItem('answer');
             }
