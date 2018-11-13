@@ -75,12 +75,12 @@
       function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
       function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
 
-      // var iframe;
       function encode (text) { return btoa(text); }
       function decode (text) { return atob(text); }
+
+      // var iframe;
       // space.appendChild((iframe = document.createElement('iframe')));
       // iframe.src =
-
 
       function getDevices() {
         console.log('getting devices');
