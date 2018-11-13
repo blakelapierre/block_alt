@@ -90,11 +90,13 @@
       window.addEventListener('storage', function (event) {
         var key = event.originalEvent.key;
 
-        if (key === 'message') {
+        if (key === 'answer') {
           var value = event.originalEvent.newValue,
-              obj = JSON.parse(value);
+              answer = JSON.parse(value);
 
-          handleStorageMessage(obj);
+          pc.setRemoteDescription(answer);
+
+          localStorage.removeItem('answer');
         }
       });
 
@@ -338,7 +340,7 @@ console.log('message', message);
                   var waiting = localStorage.getItem('waitingForOffer');
 
                   if (waiting === 'true') {
-
+                    localStorage.setItem('answer', message);
                   }
                   else {
                     pc.setRemoteDescription(message);
