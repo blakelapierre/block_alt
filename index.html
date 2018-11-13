@@ -372,10 +372,10 @@ console.log('message', message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  console.dir(offerTextEl);
+                  emailLinkEl.href = window.location.origin + '?' + encodeURI(enc);
+
                   var enc = stringEncodeObject(pc.localDescription);
                   setOfferElText(enc);
-                  emailLinkEl.href = window.location.origin + '?' + encodeURI(enc);
                   selectText(offerTextEl);
                 }, function (answer) {
 
@@ -548,6 +548,8 @@ console.log('message', message);
           function setAnswerElText(text) { setElText(answerEl, text); }
 
           function selectText(el) {
+            if (!el.isConnected) return;
+
             var range = document.createRange();
             range.selectNodeContents(el);
             var sel = window.getSelection();
