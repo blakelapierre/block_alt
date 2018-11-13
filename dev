@@ -48,8 +48,11 @@ publish () {
   && git checkout -b gh-pages \
   && git remote add origin git@github.com:blakelapierre/block \
   && ((git pull origin gh-pages && git rm -r .) || echo "new gh-pages") \
+  && echo "copying" \
   && cp  -r ../index.html . \
+  && echo "committing" \
   && commit "${1:-publish}" \
+  && echo "pushing" \
   && push gh-pages \
   && checkout
 }
