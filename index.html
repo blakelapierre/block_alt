@@ -242,23 +242,28 @@
           var context;
           function playAsSound (text) {
             context = context || new AudioContext();
-            var oscillator = oscillator || context.createOscillator();
 
-            oscillator.type = 'square';
-            // oscillator.frequency.setValueAtTime(440, context.currentTime);
-            oscillator.connect(context.destination);
+            var bins = 8,
+                oscillators = [];
+
+            for (var i = 0; i < oscillators.length; i++) {
+              var oscillator = context.createOscillator();
+
+              oscillator.frequency.setValueCurveAtTime(500 + binSize * i, context.currentTime);
+              oscillator.type = 'sine';
+
+              oscillator.connect(context.destination);
+
+              oscillator.start();
+
+              setTimeout(function () { oscillator.stop(); }, 1000);
+
+              oscillators.push(oscillator);
+            }
 
 
             var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
 
-            console.log(f);
-
-            var duration = 0.5;
-            oscillator.frequency.setValueCurveAtTime(f, context.currentTime, duration);
-
-            oscillator.start();
-
-            setTimeout(function () { oscillator.stop(); }, duration * 1000);
           }
 
           offerEl.appendChild(offerTextEl);
