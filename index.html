@@ -342,7 +342,7 @@ console.log('message', message);
                 'answer': function () {
                   // check for offer on other tab
                   var waiting = localStorage.getItem('waitingForOffer');
-
+console.log('waiting', waiting, message);
                   if (waiting === 'true') {
                     localStorage.setItem('answer', message);
                   }
