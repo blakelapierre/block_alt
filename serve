@@ -66,6 +66,9 @@ kill_serves () {
 
   kill -9 $(echo $HOST_FILE_PID)
   kill -9 $(echo $HOST_WS_PID)
+
+  wait $(echo $HOST_FILE_PID)
+  wait $(echo $HOST_WS_PID)
 }
 
 # (host_file $PORT $FILE) &
