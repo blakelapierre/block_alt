@@ -62,8 +62,11 @@ serve () {
 
   (serve_file $PORT $FILE) &
   HOST_FILE_PID=$!
+  echo $HOST_FILE_PID
+
   (serve_ws $UPDATES_PORT .updates) &
   HOST_WS_PID=$!
+  echo $HOST_WS_PID
 }
 
 # (host_file $PORT $FILE) &
