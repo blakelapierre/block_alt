@@ -49,6 +49,7 @@ serve_ws () {
 }
 
 watch () {
+  serve &
   (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat < /dev/null) |
     while read path action file; do
       echo ">>inotifywait $read $path $action $file"
@@ -85,4 +86,4 @@ serve () {
 # watch
 
 
-serve & watch
+serve
