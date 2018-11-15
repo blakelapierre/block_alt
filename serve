@@ -79,12 +79,12 @@ watch () {
   (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat < /dev/null) |
     while read path action file; do
       echo ">>inotifywait $read $path $action $file"
-  echo "killing $HOST_FILE_PID"
-  echo "killing $HOST_WS_PID"
+  echo ">i killing $HOST_FILE_PID"
+  echo ">i killing $HOST_WS_PID"
       kill
       serve
-  echo $HOST_FILE_PID
-  echo $HOST_WS_PID
+  echo ">i $HOST_FILE_PID"
+  echo ">i $HOST_WS_PID"
     done
 }
 
