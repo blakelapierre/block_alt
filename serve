@@ -79,12 +79,12 @@ watch () {
     serve &
     while read path action file; do
       echo ">>inotifywait $read $path $action $file"
-  echo ">i killing $HOST_FILE_PID"
-  echo ">i killing $HOST_WS_PID"
+    echo ">i killing $HOST_FILE_PID"
+    echo ">i killing $HOST_WS_PID"
       kill_serves
       serve
-  echo ">i $HOST_FILE_PID"
-  echo ">i $HOST_WS_PID"
+    echo ">i $HOST_FILE_PID"
+    echo ">i $HOST_WS_PID"
     done
   )
 }
