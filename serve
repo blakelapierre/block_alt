@@ -38,12 +38,27 @@ host_ws () {
 
 serve_file() {
  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
-#  nc -l -c "cat <(echo -e $HTTP_OK) $2" $1
 }
 
 serve_ws() {
   nc -l $1 < <(cat <(echo -e "$WS_UPGRADE") $2)
 }
 
+watch () {
+  (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat) |
+    while read path action file; do
+      kill $HOST_FILE_PID
+      kill $HOST_WS_PID
+
+      (host_file $PORT $FILE) &
+      HOST_FILE_PID=$! &
+      (host_ws $UPDATES_PORT .updates) &
+      HOST_WS_PID=$! &
+    done
+}
+
 (host_file $PORT $FILE) &
-(host_ws $UPDATES_PORT .updates)
+HOST_FILE_PID=$! &
+(host_ws $UPDATES_PORT .updates) &
+HOST_WS_PID=$! &
+watch
