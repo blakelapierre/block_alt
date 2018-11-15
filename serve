@@ -54,11 +54,14 @@ watch () {
 }
 
 serve () {
+  echo $HOST_FILE_PID
+  echo $HOST_WS_PID
+
   kill $(echo $HOST_FILE_PID)
   kill $(echo $HOST_WS_PID)
 
   (serve_file $PORT $FILE) &
-  HOST_FILE_PID=$! &
+  HOST_FILE_PID=$!
   (serve_ws $UPDATES_PORT .updates) &
   HOST_WS_PID=$!
 }
