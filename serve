@@ -81,7 +81,7 @@ watch () {
       echo ">>inotifywait $read $path $action $file"
   echo ">i killing $HOST_FILE_PID"
   echo ">i killing $HOST_WS_PID"
-      kill
+      kill_serves
       serve
   echo ">i $HOST_FILE_PID"
   echo ">i $HOST_WS_PID"
