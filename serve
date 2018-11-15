@@ -45,7 +45,7 @@ serve_ws() {
 }
 
 watch () {
-  (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat) |
+  (inotifywait -m ./ -e CLOSE_WRITE -e CREATE) |
     while read path action file; do
       kill $HOST_FILE_PID
       kill $HOST_WS_PID
