@@ -50,11 +50,15 @@ watch () {
       kill $HOST_FILE_PID
       kill $HOST_WS_PID
 
-      (host_file $PORT $FILE) &
-      HOST_FILE_PID=$! &
-      (host_ws $UPDATES_PORT .updates) &
-      HOST_WS_PID=$!
+      serve
     done
+}
+
+serve () {
+  (serve_file $PORT $FILE) &
+  HOST_FILE_PID=$! &
+  (serve_file $UPDATES_PORT .updates) &
+  HOST_WS_PID=$!
 }
 
 # (host_file $PORT $FILE) &
@@ -64,8 +68,4 @@ watch () {
 # watch
 
 
-(serve_file $PORT $FILE) &
-HOST_FILE_PID=$! &
-(serve_ws $UPDATES_PORT .updates) &
-HOST_WS_PID=$! &
-watch
+serve & watch
