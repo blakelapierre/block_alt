@@ -54,8 +54,8 @@ watch () {
 }
 
 serve () {
-  echo $HOST_FILE_PID
-  echo $HOST_WS_PID
+  echo "killing $HOST_FILE_PID"
+  echo "killing $HOST_WS_PID"
 
   kill $(echo $HOST_FILE_PID)
   kill $(echo $HOST_WS_PID)
