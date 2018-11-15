@@ -57,8 +57,15 @@ watch () {
     done
 }
 
-(host_file $PORT $FILE) &
+# (host_file $PORT $FILE) &
+# HOST_FILE_PID=$! &
+# (host_ws $UPDATES_PORT .updates) &
+# HOST_WS_PID=$! &
+# watch
+
+
+(serve_file $PORT $FILE) &
 HOST_FILE_PID=$! &
-(host_ws $UPDATES_PORT .updates) &
+(serve_ws $UPDATES_PORT .updates) &
 HOST_WS_PID=$! &
 watch
