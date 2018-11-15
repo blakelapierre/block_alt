@@ -85,6 +85,7 @@ watch () {
     echo ">i killing $HOST_FILE_PID"
     echo ">i killing $HOST_WS_PID"
       kill_serves
+      sleep 1
       serve
     echo ">i $HOST_FILE_PID"
     echo ">i $HOST_WS_PID"
