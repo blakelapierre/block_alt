@@ -58,7 +58,7 @@ serve () {
 
   (serve_file $PORT $FILE) &
   HOST_FILE_PID=$! &
-  (serve_file $UPDATES_PORT .updates) &
+  (serve_ws $UPDATES_PORT .updates) &
   HOST_WS_PID=$!
 }
 
