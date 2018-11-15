@@ -11,8 +11,8 @@ HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
 WS_HEADER="Connection: Upgrade\r\nUpgrade: websocket\r\n"
 WS_UPGRADE="$HTTP 101 Switching Protocols\r\n$WS_HEADER\r\n"
 
-HOST_FILE_PID=
-HOST_WS_PID=
+HOST_FILE_PID=-1
+HOST_WS_PID=-1
 
 rm .updates 2> /dev/null; mkfifo .updates
 
