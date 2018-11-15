@@ -54,8 +54,8 @@ watch () {
 }
 
 serve () {
-  kill $HOST_FILE_PID
-  kill $HOST_WS_PID
+  kill $(echo $HOST_FILE_PID)
+  kill $(echo $HOST_WS_PID)
 
   (serve_file $PORT $FILE) &
   HOST_FILE_PID=$! &
