@@ -40,8 +40,9 @@ serve_file() {
  nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
 }
 
-serve_ws() {
+serve_ws () {
   nc -l $1 < <(cat <(echo -e "$WS_UPGRADE") $2)
+  # nc -l -k $1 < <(cat <(echo -e "$HTTP $STATUS\r\n$KA\r\n") $2)
 }
 
 watch () {
