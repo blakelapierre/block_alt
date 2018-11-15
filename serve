@@ -55,6 +55,8 @@ watch () {
   echo "killing $HOST_FILE_PID"
   echo "killing $HOST_WS_PID"
       serve
+  echo $HOST_FILE_PID
+  echo $HOST_WS_PID
     done
 }
 
