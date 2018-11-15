@@ -75,7 +75,8 @@ kill_serves () {
 # watch
 
 watch () {
-  (serve & inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat < /dev/null) |
+  (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat < /dev/null) | (
+    serve &
     while read path action file; do
       echo ">>inotifywait $read $path $action $file"
   echo ">i killing $HOST_FILE_PID"
@@ -85,6 +86,7 @@ watch () {
   echo ">i $HOST_FILE_PID"
   echo ">i $HOST_WS_PID"
     done
+  )
 }
 
 
