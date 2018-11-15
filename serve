@@ -47,14 +47,15 @@ serve_ws() {
 watch () {
   (inotifywait -m ./ -e CLOSE_WRITE -e CREATE & cat < /dev/null) |
     while read path action file; do
-      kill $HOST_FILE_PID
-      kill $HOST_WS_PID
-
+      echo ">>inotifywait $read $path $action $file"
       serve
     done
 }
 
 serve () {
+  kill $HOST_FILE_PID
+  kill $HOST_WS_PID
+
   (serve_file $PORT $FILE) &
   HOST_FILE_PID=$! &
   (serve_file $UPDATES_PORT .updates) &
