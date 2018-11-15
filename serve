@@ -53,7 +53,7 @@ watch () {
       (host_file $PORT $FILE) &
       HOST_FILE_PID=$! &
       (host_ws $UPDATES_PORT .updates) &
-      HOST_WS_PID=$! &
+      HOST_WS_PID=$!
     done
 }
 
