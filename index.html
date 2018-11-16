@@ -17,11 +17,13 @@
         document.body.appendChild(iframe);
 
         function makeHTML (style, script) {
-          return '<!DOCTYPE html><html><head><style>' +
-                  style +
-                  '</style><script>' +
-                  script +
-                 '</script></head><body></body></html>';
+          return [
+            '<!DOCTYPE html><html><head><style>',
+            style,
+            '</style><script>',
+            script,
+            '<','/script></head><body></body></html>'
+          ].join('');
         }
 
         function makeiframe (source) {
