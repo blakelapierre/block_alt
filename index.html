@@ -10,11 +10,19 @@
 
     <script>
       function load () {
-        var html = '<!DOCTYPE html><html></html>';
+        var html = makeHTML('', '');
 
         var iframe = makeiframe(html);
 
         document.body.appendChild(iframe);
+
+        function makeHTML (style, script) {
+          return '<!DOCTYPE html><html><head><style>' +
+                  style +
+                  '</style><script>' +
+                  script +
+                 '</script></head><body></body></html>';
+        }
 
         function makeiframe (source) {
           var iframe = document.createElement('iframe');
