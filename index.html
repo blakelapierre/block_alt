@@ -30,6 +30,7 @@
           var iframe = document.createElement('iframe');
 
           iframe.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(source);
+          iframe.frameborder = 0;
 
           return iframe;
         }
