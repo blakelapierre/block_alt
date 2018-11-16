@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <script>
       function load () {
-        var iframe;
-        space.appendChild((iframe = document.createElement('iframe')));
-        iframe.src = '';
+        var html = '<!DOCTYPE html><html></html>';
+
+        var iframe = makeiframe(html);
+
+        document.body.appendChild(iframe);
+
+        function makeiframe (source) {
+          var iframe = document.createElement('iframe');
+
+          iframe.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(source);
+
+          return iframe;
+        }
       }
     </script>
   </head>
