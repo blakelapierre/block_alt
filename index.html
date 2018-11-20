@@ -80,25 +80,6 @@
     <script>
       var script = document.createElement('script');
 
-      var iframe;
-
-      document.body.appendChild((iframe = document.createElement('iframe')));
-
-      iframe.src =
-        'data:text/html;charset=utf-8,' +
-          encodeURIComponent(
-            '<!DOCTYPE html>' +
-            '<html>' +
-            '<head>' +
-              document.getElementsByTagName('style')[0].outerHTML +
-            '</head>' +
-            '<body>' +
-              '<script>' +
-              '</script>' +
-            '</body>' +
-            '</html>'
-          );
-
       function emptyFn() {}
       function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
       function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
