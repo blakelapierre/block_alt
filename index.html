@@ -161,13 +161,14 @@
 
       var googleSTUN = getGoogleSTUN();
 
+      var turn = {
+        'urls': 'turn:68.183.22.27:3478?transport=udp',
+        'credential': 'anon',
+        'username': 'anon'
+      };
+
       var config = {
-        'iceServers': [googleSTUN,
-        {
-          'urls': 'turn:68.183.22.27:3478?transport=udp',
-          'credential': 'anon',
-          'username': 'anon'
-        }]
+        'iceServers': [googleSTUN, turn]
       };
 
       function getGoogleSTUN() {
