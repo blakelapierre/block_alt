@@ -7,7 +7,7 @@ HTTP="HTTP/1.1"
 STATUS="200"
 HEADER="Server: custom\r\n"
 KA="Connection: keep-alive\r\n"
-HTTP_OK="$HTTP $STATUS\r\n$HEADER\r\n"
+HTTP_OK="$HTTP $STATUS\r\n$HEADER"
 WS_HEADER="Connection: Upgrade\r\nUpgrade: websocket\r\n"
 WS_UPGRADE="$HTTP 101 Switching Protocols\r\n$WS_HEADER\r\n"
 
@@ -40,7 +40,9 @@ host_ws () {
 }
 
 serve_file() {
- nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+ #nc -l $1 < <(cat <(echo -e "$HTTP_OK") $2)
+ # nc -k -l -c "cat <(echo -e '$HTTP_OK') $2" $1
+ nc -k -l -c "echo -e '$HTTP_OK'; cat $2" $1
 }
 
 serve_ws () {
@@ -94,4 +96,6 @@ watch () {
 }
 
 
-watch
+# watch
+
+serve_file $PORT $FILE

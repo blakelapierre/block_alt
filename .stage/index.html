@@ -69,18 +69,23 @@
 
       input-area { min-height: 3em; }
 
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: large;
+      }
+
     </style>
     <script>
+      var script = document.createElement('script');
+
       function emptyFn() {}
       function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
       function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
 
-      // var iframe;
       function encode (text) { return btoa(text); }
       function decode (text) { return atob(text); }
-      // space.appendChild((iframe = document.createElement('iframe')));
-      // iframe.src =
-
 
       function getDevices() {
         console.log('getting devices');
@@ -136,15 +141,6 @@
           console.log('getDevices error', error);
         });
 
-      // navigator
-      //   .mediaDevices
-      //     .getUserMedia({'audio': true, 'video': true})
-      //     .then(function (stream) {
-      //       console.log('stream', stream);
-      //     })
-      //     .catch(function (error) {
-      //       console.log('error', error);
-      //     });
 
       var notify = (function () {
         var permissioned = false;
@@ -233,50 +229,29 @@
               offerEl = e('offer'),
               offerTextEl = e('offer-text'),
               soundButtonEl = e('sound-button'),
-              emailLinkEl = e('a'),
+              offerEmailLink = e('a'),
+              answerEmailLink = e('a'),
               inputAreaEl = e('input-area');
 
           inputAreaEl.contentEditable = true;
+          inputAreaEl.addEventListener('input', connectionInputHandler);
 
           soundButtonEl.innerText = 'Play as Sound';
-          emailLinkEl.innerText = 'Send as Email';
-
-          emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI('');
-
           soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
-          var context, binSize = 1000;
-          function playAsSound (text) {
-            context = context || new AudioContext();
 
-            var bins = 8,
-                oscillators = [];
+          offerEmailLink.innerText = 'Send as Email';
+          offerEmailLink.target = '__blank';
+          offerEmailLink.href = '';
 
-            for (var i = 0; i < bins; i++) {
-              var oscillator = context.createOscillator();
+          answerEmailLink.innerText = 'Send as Email';
+          answerEmailLink.target = '__blank';
+          answerEmailLink.href = '';
 
-              console.log('oscillator', i);
-
-              oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
-              oscillator.type = 'sine';
-
-              oscillator.connect(context.destination);
-
-              oscillator.start();
-
-              setTimeout(function () { oscillator.stop(); }, 1000);
-
-              oscillators.push(oscillator);
-            }
-
-
-            var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
-
-          }
 
           offerEl.appendChild(offerTextEl);
           offerEl.appendChild(soundButtonEl);
-          offerEl.appendChild(emailLinkEl);
+          offerEl.appendChild(offerEmailLink);
 
           el.appendChild(offerEl);
           el.appendChild(inputAreaEl);
@@ -292,6 +267,27 @@
               channel = pc.createDataChannel('block'),
               latencyChannel= pc.createDataChannel('latency');
 
+          window.addEventListener('beforeunload', function() {
+            localStorage.removeItem('waitingForOffer');
+          });
+
+          window.addEventListener('storage', function (event) {
+            console.log('storage event', event);
+            var key = event.key;
+
+            if (key === 'answer') {
+              var value = event.newValue,
+                  answer = JSON.parse(value);
+
+              pc.setRemoteDescription(answer)
+                .catch(function (error) {
+                  console.log('didn\'t work; error', error);
+                });
+
+              localStorage.removeItem('answer');
+            }
+          });
+
 
           [channel, latencyChannel].forEach(function (channel) {
             events(channel, {
@@ -299,14 +295,22 @@
             });
           });
 
-          inputAreaEl.addEventListener('input', connectionInputHandler);
 
-          var search = window.location.search;
-          if (search.length > 1) {
-            console.log('search', search);
-            window.location.search = '';
-            connectionInputHandler({target:{textContent:decodeURI(search.substring(1))}});
+          var hash = window.location.hash;
+          if (hash.length > 1) {
+            console.log('hash', hash);
+
+            window.location.hash = '';
+
+            connectionInputHandler({
+              target: {
+                textContent: atob(hash.substring(1))
+              }
+            });
           }
+
+
+
 
           function connectionInputHandler (event) {
             var message = stringDecodeObject(event.target.textContent);
@@ -317,7 +321,12 @@ console.log('message', message);
             offerEl.remove();
             setElText(inputAreaEl, '');
 
-            var answerEl = document.createElement('answer');
+            var answerEl = e('answer'),
+                answerTextEl = e('answer-text');
+
+            answerEl.appendChild(answerTextEl);
+            answerEl.appendChild(answerEmailLink);
+
             el.insertBefore(answerEl, el.firstChild);
 
             var ondatachannelHandlers = {
@@ -330,15 +339,32 @@ console.log('message', message);
 
               ({
                 'offer': function () { pc = setupConnection(message, updateUI); },
-                'answer': function () { pc.setRemoteDescription(message); }
+                'answer': function () {
+                  // check for offer on other tab
+                  var waiting = localStorage.getItem('waitingForOffer');
+console.log('waiting', waiting, message);
+                  if (waiting === 'true') {
+
+                    localStorage.setItem('answer', JSON.stringify(message));
+                  }
+                  else {
+                    pc.setRemoteDescription(message);
+                  }
+                }
               })[message.type]();
 
 
               function updateUI (answer) {
                 var enc = stringEncodeObject(answer);
 
-                setElText(answerEl, enc);
-                selectText(answerEl);
+                var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                    body = 'Connect to me at: ' + link,
+                    subject = 'Connect to me';
+
+                answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+
+                setElText(answerTextEl, enc);
+                selectText(answerTextEl);
               }
 
               function setupConnection(offer, haveAnswer) {
@@ -373,9 +399,19 @@ console.log('message', message);
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
+                  localStorage.setItem('waitingForOffer', 'true');
+
                   var enc = stringEncodeObject(pc.localDescription);
 
-                  emailLinkEl.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
+
+                  var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                      body = 'Connect to me at: ' + link,
+                      subject = 'Connect to me';
+
+                  offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                  // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
+
+                  // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
                   setOfferElText(enc);
                   selectText(offerTextEl);
@@ -547,7 +583,7 @@ console.log('message', message);
           function setElText (el, text) { el.innerHTML = text; }
 
           function setOfferElText(text) { setElText(offerTextEl, text); }
-          function setAnswerElText(text) { setElText(answerEl, text); }
+          function setAnswerElText(text) { setElText(answerTextEl, text); }
 
           function selectText(el) {
             if (!el.isConnected) return;
@@ -557,6 +593,36 @@ console.log('message', message);
             var sel = window.getSelection();
             sel.removeAllRanges();
             sel.addRange(range);
+          }
+
+
+          var context, binSize = 1000;
+          function playAsSound (text) {
+            context = context || new AudioContext();
+
+            var bins = 8,
+                oscillators = [];
+
+            for (var i = 0; i < bins; i++) {
+              var oscillator = context.createOscillator();
+
+              console.log('oscillator', i);
+
+              oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
+              oscillator.type = 'sine';
+
+              oscillator.connect(context.destination);
+
+              oscillator.start();
+
+              setTimeout(function () { oscillator.stop(); }, 1000);
+
+              oscillators.push(oscillator);
+            }
+
+
+            var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
+
           }
         }
       }
