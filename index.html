@@ -228,7 +228,7 @@
             function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
             function value(key, value) { return value; }
-            function stingifyEncode(key, value) { return stringEncode(value); }
+            function stringifyEncode(key, value) { return stringEncode(value); }
             function parseDecode(key, value) { return stringDecode(value); }
 
             function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }

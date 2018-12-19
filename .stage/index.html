@@ -23,6 +23,14 @@
         padding: 1em;
       }
 
+      offer {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+      }
+
       connection {
         flex: 1 1 auto;
         display: flex;
@@ -133,13 +141,13 @@
         });
       }
 
-      getDevices()
-        .then(function (devices) {
-          console.log('getDevices', devices);
-        })
-        .catch(function (error) {
-          console.log('getDevices error', error);
-        });
+      // getDevices()
+      //   .then(function (devices) {
+      //     console.log('getDevices', devices);
+      //   })
+      //   .catch(function (error) {
+      //     console.log('getDevices error', error);
+      //   });
 
 
       var notify = (function () {
@@ -161,13 +169,14 @@
 
       var googleSTUN = getGoogleSTUN();
 
+      var turn = {
+        'urls': 'turn:68.183.22.27:3478?transport=udp',
+        'credential': 'anon',
+        'username': 'anon'
+      };
+
       var config = {
-        'iceServers': [googleSTUN,
-        {
-          'urls': 'turn:68.183.22.27:3478?transport=udp',
-          'credential': 'anon',
-          'username': 'anon'
-        }]
+        'iceServers': [googleSTUN, turn]
       };
 
       function getGoogleSTUN() {
@@ -203,426 +212,430 @@
       }
 
       function load() {
-        var space = getEl('space');
 
-        startConnection();
+        setup();
 
-        function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
+        function setup () {
 
-        function startConnection() {
-          function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
-          function stringDecodeObject(obj) { return JSON.parse(obj, value); }
+          var space = getEl('space');
 
-          function value(key, value) { return value; }
-          function stingifyEncode(key, value) { return stringEncode(value); }
-          function parseDecode(key, value) { return stringDecode(value); }
+          startConnection();
 
-          function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
+          function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
-          function stringEncode (obj) { return ifType('string', encode)(obj); }
-          function stringDecode (obj) { return ifType('string', decode)(obj); }
+          function startConnection() {
+            function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
+            function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
+            function value(key, value) { return value; }
+            function stingifyEncode(key, value) { return stringEncode(value); }
+            function parseDecode(key, value) { return stringDecode(value); }
 
-          function e (name) { return document.createElement(name); }
+            function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
 
-          var el = e('connection'),
-              offerEl = e('offer'),
-              offerTextEl = e('offer-text'),
-              soundButtonEl = e('sound-button'),
-              offerEmailLink = e('a'),
-              answerEmailLink = e('a'),
-              inputAreaEl = e('input-area');
-
-          inputAreaEl.contentEditable = true;
-          inputAreaEl.addEventListener('input', connectionInputHandler);
-
-          soundButtonEl.innerText = 'Play as Sound';
-          soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
+            function stringEncode (obj) { return ifType('string', encode)(obj); }
+            function stringDecode (obj) { return ifType('string', decode)(obj); }
 
 
-          offerEmailLink.innerText = 'Send as Email';
-          offerEmailLink.target = '__blank';
-          offerEmailLink.href = '';
+            function e (name) { return document.createElement(name); }
 
-          answerEmailLink.innerText = 'Send as Email';
-          answerEmailLink.target = '__blank';
-          answerEmailLink.href = '';
+            var el = e('connection'),
+                offerEl = e('offer'),
+                offerTextEl = e('offer-text'),
+                soundButtonEl = e('sound-button'),
+                offerEmailLink = e('a'),
+                answerEmailLink = e('a'),
+                inputAreaEl = e('input-area');
 
+            inputAreaEl.contentEditable = true;
+            inputAreaEl.addEventListener('input', connectionInputHandler);
 
-          offerEl.appendChild(offerTextEl);
-          offerEl.appendChild(soundButtonEl);
-          offerEl.appendChild(offerEmailLink);
-
-          el.appendChild(offerEl);
-          el.appendChild(inputAreaEl);
-
-          space.appendChild(el);
-
-          var channelonopenHandlers = {
-            'block': startDataChannelUi,
-            'latency': startLatencyChannelUI
-          };
-
-          var pc = makePeer(),
-              channel = pc.createDataChannel('block'),
-              latencyChannel= pc.createDataChannel('latency');
-
-          window.addEventListener('beforeunload', function() {
-            localStorage.removeItem('waitingForOffer');
-          });
-
-          window.addEventListener('storage', function (event) {
-            console.log('storage event', event);
-            var key = event.key;
-
-            if (key === 'answer') {
-              var value = event.newValue,
-                  answer = JSON.parse(value);
-
-              pc.setRemoteDescription(answer)
-                .catch(function (error) {
-                  console.log('didn\'t work; error', error);
-                });
-
-              localStorage.removeItem('answer');
-            }
-          });
+            soundButtonEl.innerText = 'Play as Sound';
+            soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
 
 
-          [channel, latencyChannel].forEach(function (channel) {
-            events(channel, {
-              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-            });
-          });
+            offerEmailLink.innerText = 'Send as Email';
+            offerEmailLink.target = '__blank';
+            offerEmailLink.href = '';
+
+            answerEmailLink.innerText = 'Send as Email';
+            answerEmailLink.target = '__blank';
+            answerEmailLink.href = '';
 
 
-          var hash = window.location.hash;
-          if (hash.length > 1) {
-            console.log('hash', hash);
+            offerEl.appendChild(offerTextEl);
+            // offerEl.appendChild(soundButtonEl);
+            offerEl.appendChild(offerEmailLink);
 
-            window.location.hash = '';
+            el.appendChild(offerEl);
+            el.appendChild(inputAreaEl);
 
-            connectionInputHandler({
-              target: {
-                textContent: atob(hash.substring(1))
-              }
-            });
-          }
+            space.appendChild(el);
 
-
-
-
-          function connectionInputHandler (event) {
-            var message = stringDecodeObject(event.target.textContent);
-console.log('message', message);
-            inputAreaEl.removeEventListener('input', connectionInputHandler);
-            inputAreaEl.remove();
-
-            offerEl.remove();
-            setElText(inputAreaEl, '');
-
-            var answerEl = e('answer'),
-                answerTextEl = e('answer-text');
-
-            answerEl.appendChild(answerTextEl);
-            answerEl.appendChild(answerEmailLink);
-
-            el.insertBefore(answerEl, el.firstChild);
-
-            var ondatachannelHandlers = {
-              'block': function () { answerEl.remove(); }
+            var channelonopenHandlers = {
+              'block': startDataChannelUi,
+              'latency': startLatencyChannelUI
             };
 
-            processMessage(message);
+            var pc = makePeer(),
+                channel = pc.createDataChannel('block'),
+                latencyChannel= pc.createDataChannel('latency');
 
-            function processMessage(message) {
+            window.addEventListener('beforeunload', function() {
+              localStorage.removeItem('waitingForOffer');
+            });
 
-              ({
-                'offer': function () { pc = setupConnection(message, updateUI); },
-                'answer': function () {
-                  // check for offer on other tab
-                  var waiting = localStorage.getItem('waitingForOffer');
-console.log('waiting', waiting, message);
-                  if (waiting === 'true') {
+            window.addEventListener('storage', function (event) {
+              console.log('storage event', event);
+              var key = event.key;
 
-                    localStorage.setItem('answer', JSON.stringify(message));
-                  }
-                  else {
-                    pc.setRemoteDescription(message);
-                  }
-                }
-              })[message.type]();
+              if (key === 'answer') {
+                var value = event.newValue,
+                    answer = JSON.parse(value);
 
-
-              function updateUI (answer) {
-                var enc = stringEncodeObject(answer);
-
-                var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
-                    body = 'Connect to me at: ' + link,
-                    subject = 'Connect to me';
-
-                answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-
-                setElText(answerTextEl, enc);
-                selectText(answerTextEl);
-              }
-
-              function setupConnection(offer, haveAnswer) {
-                (pc = makePeer())
-                  .setRemoteDescription(offer)
-                  .then(c(pc, 'createAnswer'))
-                  .then(c(pc, 'setLocalDescription'))
-                  .then(function() { return haveAnswer(pc.localDescription); })
-                  .catch(function(error) {
-                    console.log('error', error);
+                pc.setRemoteDescription(answer)
+                  .catch(function (error) {
+                    console.log('didn\'t work; error', error);
                   });
 
-                events(pc, {
-                  'ondatachannel': function(event) {
-                    var channel = event.channel;
-
-                    (ondatachannelHandlers[channel.label] || emptyFn)();
-
-                    events(channel, {
-                      'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-                    });
-                  }
-                });
-
-                return pc;
+                localStorage.removeItem('answer');
               }
+            });
+
+
+            [channel, latencyChannel].forEach(function (channel) {
+              events(channel, {
+                'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+              });
+            });
+
+
+            var hash = window.location.hash;
+            if (hash.length > 1) {
+              console.log('hash', hash);
+
+              window.location.hash = '';
+
+              connectionInputHandler({
+                target: {
+                  textContent: atob(hash.substring(1))
+                }
+              });
             }
-          }
 
-          function makePeer() {
-            console.log('making peer');
-            var pc; return (
-              pc = createNewPeerConnection(
-                function (offer) {
-                  localStorage.setItem('waitingForOffer', 'true');
 
-                  var enc = stringEncodeObject(pc.localDescription);
 
+
+            function connectionInputHandler (event) {
+              var message = stringDecodeObject(event.target.textContent);
+  console.log('message', message);
+              inputAreaEl.removeEventListener('input', connectionInputHandler);
+              inputAreaEl.remove();
+
+              offerEl.remove();
+              setElText(inputAreaEl, '');
+
+              var answerEl = e('answer'),
+                  answerTextEl = e('answer-text');
+
+              answerEl.appendChild(answerTextEl);
+              answerEl.appendChild(answerEmailLink);
+
+              el.insertBefore(answerEl, el.firstChild);
+
+              var ondatachannelHandlers = {
+                'block': function () { answerEl.remove(); }
+              };
+
+              processMessage(message);
+
+              function processMessage(message) {
+
+                ({
+                  'offer': function () { pc = setupConnection(message, updateUI); },
+                  'answer': function () {
+                    // check for offer on other tab
+                    var waiting = localStorage.getItem('waitingForOffer');
+
+                    if (waiting === 'true') {
+                      localStorage.setItem('answer', JSON.stringify(message));
+                    }
+                    else {
+                      pc.setRemoteDescription(message);
+                    }
+                  }
+                })[message.type]();
+
+
+                function updateUI (answer) {
+                  var enc = stringEncodeObject(answer);
 
                   var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
                       body = 'Connect to me at: ' + link,
                       subject = 'Connect to me';
 
-                  offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-                  // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
+                  answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
 
-                  // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
-
-                  setOfferElText(enc);
-                  selectText(offerTextEl);
-                }, function (answer) {
-
-                }, function (error) {
-                  console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerTextEl);
+                  setElText(answerTextEl, enc);
+                  selectText(answerTextEl);
                 }
-              )
-            );
 
-            function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
-              var pc;
+                function setupConnection(offer, haveAnswer) {
+                  (pc = makePeer())
+                    .setRemoteDescription(offer)
+                    .then(c(pc, 'createAnswer'))
+                    .then(c(pc, 'setLocalDescription'))
+                    .then(function() { return haveAnswer(pc.localDescription); })
+                    .catch(function(error) {
+                      console.log('error', error);
+                    });
 
-              return events(
-                pc = new RTCPeerConnection(config), {
-                  'onnegotiationneeded': function (event) {
-                    pc
-                      .createOffer()
-                      .then(setLocalDescription)
-                      .then(function () { return deliverOffer(pc.localDescription); })
-                      .catch(deliverError);
-                  },
+                  events(pc, {
+                    'ondatachannel': function(event) {
+                      var channel = event.channel;
 
-                  'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
+                      (ondatachannelHandlers[channel.label] || emptyFn)();
+
+                      events(channel, {
+                        'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+                      });
+                    }
+                  });
+
+                  return pc;
                 }
-              )[0];
-
-              function setLocalDescription(offer) { return pc.setLocalDescription(offer); }
+              }
             }
-          }
 
-          function startDataChannelUi (channel) {
-            var ui = makeDataChannelUI(channel);
+            function makePeer() {
+              console.log('making peer');
+              var pc; return (
+                pc = createNewPeerConnection(
+                  function (offer) {
+                    localStorage.setItem('waitingForOffer', 'true');
 
-            el.appendChild(ui);
-            el.appendChild(inputAreaEl);
+                    var enc = stringEncodeObject(pc.localDescription);
 
-            inputAreaEl.focus();
 
-            function makeDataChannelUI (channel) {
-              var messages = document.createElement('messages'),
-                  channelInput = document.createElement('channel-input'),
-                  ui = document.createElement('data-channel-' + channel.label + '-ui');
+                    var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                        body = 'Connect to me at: ' + link,
+                        subject = 'Connect to me';
 
-              ui.appendChild(messages);
-              ui.appendChild(channelInput);
+                    offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                    // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
 
-              inputAreaEl.onkeydown = function (event) {
-                if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
-              };
+                    // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
-              events(channel, {
-                'onmessage': function (event) {
-                  console.log('message', event);
-                  var messageEl = document.createElement('message');
+                    setOfferElText(enc);
+                    selectText(offerTextEl);
+                  }, function (answer) {
 
-                  messageEl.innerText = event.data;
+                  }, function (error) {
+                    console.log('error', error);
+                    setOfferElText(JSON.stringify(error));
+                    selectText(offerTextEl);
+                  }
+                )
+              );
+
+              function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
+                var pc;
+
+                return events(
+                  pc = new RTCPeerConnection(config), {
+                    'onnegotiationneeded': function (event) {
+                      pc
+                        .createOffer()
+                        .then(setLocalDescription)
+                        .then(function () { return deliverOffer(pc.localDescription); })
+                        .catch(deliverError);
+                    },
+
+                    'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
+                  }
+                )[0];
+
+                function setLocalDescription(offer) { return pc.setLocalDescription(offer); }
+              }
+            }
+
+            function startDataChannelUi (channel) {
+              var ui = makeDataChannelUI(channel);
+
+              el.appendChild(ui);
+              el.appendChild(inputAreaEl);
+
+              inputAreaEl.focus();
+
+              function makeDataChannelUI (channel) {
+                var messages = document.createElement('messages'),
+                    channelInput = document.createElement('channel-input'),
+                    ui = document.createElement('data-channel-' + channel.label + '-ui');
+
+                ui.appendChild(messages);
+                ui.appendChild(channelInput);
+
+                inputAreaEl.onkeydown = function (event) {
+                  if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
+                };
+
+                events(channel, {
+                  'onmessage': function (event) {
+                    console.log('message', event);
+                    var messageEl = document.createElement('message');
+
+                    messageEl.innerText = event.data;
+
+                    messages.appendChild(messageEl);
+
+                    if (document.hidden) notify(event.data);
+                  }
+                });
+
+                function addOurMessage(text) {
+                  var messageEl = document.createElement('our-message');
+
+                  messageEl.innerText = text;
 
                   messages.appendChild(messageEl);
+                }
 
-                  if (document.hidden) notify(event.data);
+                function sendInput (event) {
+                  console.log('sending', event);
+                  channel.send(event.target.textContent);
+                  event.target.textContent = '';
+                }
+
+                return ui;
+              }
+            }
+
+            function startLatencyChannelUI (channel) {
+              var latencyChannel = channel;
+
+              function ping() {
+                console.log('pinging');
+                latencyChannel.send(new Date().getTime());
+              }
+
+              function pong(message) {
+                console.log('pong');
+
+                var parts = message.split(' ');
+                var theirTime, diff;
+                var ourTime = new Date().getTime();
+
+                if (parts.length > 1) {
+                  var ourOldTime = parseInt(parts[0], 10);
+
+                  theirTime = parseInt(parts[1], 10);
+
+                  diff = ourTime - ourOldTime;
+                }
+                else {
+                  theirTime = parseInt(parts[0]);
+
+                  latencyChannel.send(theirTime + ' ' + ourTime);
+
+                  diff = undefined;
+                }
+
+                console.log('diff', diff);
+
+                return diff;
+              }
+
+              var diffListener;
+              function setDiff(diff) {
+                if (diffListener) diffListener(diff);
+              }
+
+              function getDiff(fn) {
+                diffListener = fn;
+              }
+
+              events(latencyChannel, {
+                'onmessage': function (event) {
+                  console.log('latency message', event.data);
+                  var diff = pong(event.data);
+
+                  if (diff !== undefined) setDiff(diff);
                 }
               });
 
-              function addOurMessage(text) {
-                var messageEl = document.createElement('our-message');
+              ping();
 
-                messageEl.innerText = text;
+              var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
 
-                messages.appendChild(messageEl);
-              }
-
-              function sendInput (event) {
-                console.log('sending', event);
-                channel.send(event.target.textContent);
-                event.target.textContent = '';
-              }
+              el.insertBefore(ui, el.firstChild);
 
               return ui;
-            }
-          }
 
-          function startLatencyChannelUI (channel) {
-            var latencyChannel = channel;
+              function makeLatencyUI (channel, ping, pong, setDiff) {
+                var ui = document.createElement('latency-ui'),
+                    button = document.createElement('button'),
+                    diffEl = document.createElement('diff');
 
-            function ping() {
-              console.log('pinging');
-              latencyChannel.send(new Date().getTime());
-            }
+                button.innerText = 'ping';
 
-            function pong(message) {
-              console.log('pong');
+                ui.appendChild(button);
+                ui.appendChild(diffEl);
 
-              var parts = message.split(' ');
-              var theirTime, diff;
-              var ourTime = new Date().getTime();
+                button.addEventListener('click', function (event) {
+                  ping();
+                });
 
-              if (parts.length > 1) {
-                var ourOldTime = parseInt(parts[0], 10);
+                setDiff(function (diff) {
+                  diffEl.innerText = diff;
+                });
 
-                theirTime = parseInt(parts[1], 10);
-
-                diff = ourTime - ourOldTime;
+                return ui;
               }
-              else {
-                theirTime = parseInt(parts[0]);
+            }
 
-                latencyChannel.send(theirTime + ' ' + ourTime);
+            function setElText (el, text) { el.innerHTML = text; }
 
-                diff = undefined;
+            function setOfferElText(text) { setElText(offerTextEl, text); }
+            function setAnswerElText(text) { setElText(answerTextEl, text); }
+
+            function selectText(el) {
+              if (!el.isConnected) return;
+
+              var range = document.createRange();
+              range.selectNodeContents(el);
+              var sel = window.getSelection();
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+
+
+            var context, binSize = 1000;
+            function playAsSound (text) {
+              context = context || new AudioContext();
+
+              var bins = 8,
+                  oscillators = [];
+
+              for (var i = 0; i < bins; i++) {
+                var oscillator = context.createOscillator();
+
+                console.log('oscillator', i);
+
+                oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
+                oscillator.type = 'sine';
+
+                oscillator.connect(context.destination);
+
+                oscillator.start();
+
+                setTimeout(function () { oscillator.stop(); }, 1000);
+
+                oscillators.push(oscillator);
               }
 
-              console.log('diff', diff);
 
-              return diff;
+              var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
             }
-
-            var diffListener;
-            function setDiff(diff) {
-              if (diffListener) diffListener(diff);
-            }
-
-            function getDiff(fn) {
-              diffListener = fn;
-            }
-
-            events(latencyChannel, {
-              'onmessage': function (event) {
-                console.log('latency message', event.data);
-                var diff = pong(event.data);
-
-                if (diff !== undefined) setDiff(diff);
-              }
-            });
-
-            ping();
-
-            var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
-
-            el.insertBefore(ui, el.firstChild);
-
-            return ui;
-
-            function makeLatencyUI (channel, ping, pong, setDiff) {
-              var ui = document.createElement('latency-ui'),
-                  button = document.createElement('button'),
-                  diffEl = document.createElement('diff');
-
-              button.innerText = 'ping';
-
-              ui.appendChild(button);
-              ui.appendChild(diffEl);
-
-              button.addEventListener('click', function (event) {
-                ping();
-              });
-
-              setDiff(function (diff) {
-                diffEl.innerText = diff;
-              });
-
-              return ui;
-            }
-          }
-
-          function setElText (el, text) { el.innerHTML = text; }
-
-          function setOfferElText(text) { setElText(offerTextEl, text); }
-          function setAnswerElText(text) { setElText(answerTextEl, text); }
-
-          function selectText(el) {
-            if (!el.isConnected) return;
-
-            var range = document.createRange();
-            range.selectNodeContents(el);
-            var sel = window.getSelection();
-            sel.removeAllRanges();
-            sel.addRange(range);
-          }
-
-
-          var context, binSize = 1000;
-          function playAsSound (text) {
-            context = context || new AudioContext();
-
-            var bins = 8,
-                oscillators = [];
-
-            for (var i = 0; i < bins; i++) {
-              var oscillator = context.createOscillator();
-
-              console.log('oscillator', i);
-
-              oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
-              oscillator.type = 'sine';
-
-              oscillator.connect(context.destination);
-
-              oscillator.start();
-
-              setTimeout(function () { oscillator.stop(); }, 1000);
-
-              oscillators.push(oscillator);
-            }
-
-
-            var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
-
           }
         }
       }
