@@ -278,14 +278,14 @@
                   'offer': function () { pc = setupConnection(message, updateUI); },
                   'answer': function () {
                     // check for offer on other tab
-                    var waiting = localStorage.getItem('waitingForOffer');
+                    // var waiting = localStorage.getItem('waitingForOffer');
 
-                    if (waiting === 'true') {
-                      localStorage.setItem('answer', JSON.stringify(message));
-                    }
-                    else {
+                    // if (waiting === 'true') {
+                    //   localStorage.setItem('answer', JSON.stringify(message));
+                    // }
+                    // else {
                       pc.setRemoteDescription(message);
-                    }
+                    // }
                   }
                 })[message.type]();
 
@@ -345,9 +345,7 @@
                         subject = 'Connect to me';
 
                     offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-                    // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
 
-                    // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
                     setOfferElText(enc);
                     selectText(offerTextEl);
