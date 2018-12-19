@@ -95,77 +95,6 @@
       function encode (text) { return btoa(text); }
       function decode (text) { return atob(text); }
 
-      function getDevices() {
-        console.log('getting devices');
-        return new Promise(function (resolve, reject) {
-          navigator
-            .mediaDevices
-              .getUserMedia({'audio': true, 'video': true})
-              .then(handleAudioVideoStream)
-              .catch(function (error) {
-
-                navigator
-                  .mediaDevices
-                    .getUserMedia({'audio': true})
-                    .then(handleAudioStream)
-                    .catch(function (error) {  });
-
-                navigator
-                  .mediaDevices
-                    .getUserMedia({'video': true})
-                    .then(handleVideoStream)
-                    .catch(function (error) {  });
-
-              });
-
-          function handleAudioVideoStream (stream) {
-            console.log('audiovideo', stream);
-            resolve([stream]);
-          }
-
-          function handleAudioStream (stream) {
-            console.log('audio', stream);
-            audio = stream;
-            check();
-          }
-
-          function handleVideoStream (stream) {
-            console.log('video', stream);
-            video = stream;
-            check();
-          }
-
-          function check () {
-            // if (audio && video) resolve({'audio', video]);
-          }
-        });
-      }
-
-      // getDevices()
-      //   .then(function (devices) {
-      //     console.log('getDevices', devices);
-      //   })
-      //   .catch(function (error) {
-      //     console.log('getDevices error', error);
-      //   });
-
-
-      var notify = (function () {
-        var permissioned = false;
-
-        return function notify (message) {
-          if (!permissioned) return Notification.requestPermission(function (result) {
-            if (result === 'granted') {
-              permissioned = true;
-              n(message);
-            }
-          });
-
-          n(message);
-
-          function n (m) { return new Notification(m); }
-        };
-      })();
 
       var googleSTUN = getGoogleSTUN();
 
@@ -228,7 +157,7 @@
             function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
             function value(key, value) { return value; }
-            function stingifyEncode(key, value) { return stringEncode(value); }
+            function stringifyEncode(key, value) { return stringEncode(value); }
             function parseDecode(key, value) { return stringDecode(value); }
 
             function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
@@ -242,17 +171,12 @@
             var el = e('connection'),
                 offerEl = e('offer'),
                 offerTextEl = e('offer-text'),
-                soundButtonEl = e('sound-button'),
                 offerEmailLink = e('a'),
                 answerEmailLink = e('a'),
                 inputAreaEl = e('input-area');
 
             inputAreaEl.contentEditable = true;
             inputAreaEl.addEventListener('input', connectionInputHandler);
-
-            soundButtonEl.innerText = 'Play as Sound';
-            soundButtonEl.addEventListener('click', function () { playAsSound(JSON.stringify(pc.localDescription)); });
-
 
             offerEmailLink.innerText = 'Send as Email';
             offerEmailLink.target = '__blank';
@@ -264,7 +188,6 @@
 
 
             offerEl.appendChild(offerTextEl);
-            // offerEl.appendChild(soundButtonEl);
             offerEl.appendChild(offerEmailLink);
 
             el.appendChild(offerEl);
@@ -355,14 +278,14 @@
                   'offer': function () { pc = setupConnection(message, updateUI); },
                   'answer': function () {
                     // check for offer on other tab
-                    var waiting = localStorage.getItem('waitingForOffer');
+                    // var waiting = localStorage.getItem('waitingForOffer');
 
-                    if (waiting === 'true') {
-                      localStorage.setItem('answer', JSON.stringify(message));
-                    }
-                    else {
+                    // if (waiting === 'true') {
+                    //   localStorage.setItem('answer', JSON.stringify(message));
+                    // }
+                    // else {
                       pc.setRemoteDescription(message);
-                    }
+                    // }
                   }
                 })[message.type]();
 
@@ -422,9 +345,7 @@
                         subject = 'Connect to me';
 
                     offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-                    // offerEmailLink.href = 'mailto:?subject=' + encodeURI(subject) + '&body=' + encodeURI(body);
 
-                    // offerEmailLink.href = window.location.origin + window.location.pathname + '?' + encodeURI(enc);
 
                     setOfferElText(enc);
                     selectText(offerTextEl);
@@ -606,35 +527,6 @@
               var sel = window.getSelection();
               sel.removeAllRanges();
               sel.addRange(range);
-            }
-
-
-            var context, binSize = 1000;
-            function playAsSound (text) {
-              context = context || new AudioContext();
-
-              var bins = 8,
-                  oscillators = [];
-
-              for (var i = 0; i < bins; i++) {
-                var oscillator = context.createOscillator();
-
-                console.log('oscillator', i);
-
-                oscillator.frequency.setValueAtTime(500 + binSize * i, context.currentTime);
-                oscillator.type = 'sine';
-
-                oscillator.connect(context.destination);
-
-                oscillator.start();
-
-                setTimeout(function () { oscillator.stop(); }, 1000);
-
-                oscillators.push(oscillator);
-              }
-
-
-              var f = text.split('').map(function (c) { return 440 + (c.charCodeAt(0) - 32) * 20; });
             }
           }
         }
