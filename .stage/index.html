@@ -95,7 +95,6 @@
       function encode (text) { return btoa(text); }
       function decode (text) { return atob(text); }
 
-
       var googleSTUN = getGoogleSTUN();
 
       var turn = {
@@ -107,38 +106,6 @@
       var config = {
         'iceServers': [googleSTUN, turn]
       };
-
-      function getGoogleSTUN() {
-        return {
-          urls: [
-            'stun:stun1.l.google.com:19302' //, 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'
-          ]
-        };
-      }
-
-
-      function events (obj, handlers) {
-        console.log('events -- ff not working');
-
-        if (obj === null || obj === undefined) return console.log('oops, no obj for handlers!');
-
-        var allEvents = Object.keys(Object.getPrototypeOf(obj)).filter(function (key) {
-          console.log('*', key );
-          return key.indexOf('on') === 0 && key.length > 2;
-        });
-
-        return [obj, allEvents.reduce(function (r, key) {
-          r[key] = event(obj, key, handlers[key] || emptyFn);
-          return r;
-        }, {})];
-      }
-
-      function event(obj, name, handler) {
-        obj[name] = function() {
-          console.log('#e', name, arguments);
-          handler.apply(obj, arguments);
-        };
-      }
 
       function load() {
 
@@ -173,6 +140,8 @@
                 offerTextEl = e('offer-text'),
                 offerEmailLink = e('a'),
                 answerEmailLink = e('a'),
+                offerCopyLink = e('a'),
+                answerCopyLink = e('a'),
                 inputAreaEl = e('input-area');
 
             inputAreaEl.contentEditable = true;
@@ -186,9 +155,21 @@
             answerEmailLink.target = '__blank';
             answerEmailLink.href = '';
 
+            offerCopyLink.innerText = 'Copy As Link';
+            offerCopyLink.target = '__blank';
+            offerCopyLink.addEventListener('click', preventDefault);
+
+            answerCopyLink.innerText = 'Copy As Link';
+            answerCopyLink.target = '__blank';
+            answerCopyLink.addEventListener('click', preventDefault);
+
+            function preventDefault (event) {
+              event.preventDefault();
+            }
 
             offerEl.appendChild(offerTextEl);
             offerEl.appendChild(offerEmailLink);
+            offerEl.appendChild(offerCopyLink);
 
             el.appendChild(offerEl);
             el.appendChild(inputAreaEl);
@@ -232,7 +213,6 @@
               });
             });
 
-
             var hash = window.location.hash;
             if (hash.length > 1) {
               console.log('hash', hash);
@@ -246,12 +226,31 @@
               });
             }
 
+            window.addEventListener('hashchange', function (event) {
+              console.log('hashchange', event);
+              console.log('hash', window.location.hash);
+
+              hash = window.location.hash;
+
+              if (hash.length > 1) {
+                console.log('hash', hash);
+
+                window.location.hash = '';
+
+                connectionInputHandler({
+                  target: {
+                    textContent: atob(hash.substring(1))
+                  }
+                });
+              }
+            });
+
 
 
 
             function connectionInputHandler (event) {
               var message = stringDecodeObject(event.target.textContent);
-  console.log('message', message);
+  console.log('cih message', message);
               inputAreaEl.removeEventListener('input', connectionInputHandler);
               inputAreaEl.remove();
 
@@ -263,6 +262,7 @@
 
               answerEl.appendChild(answerTextEl);
               answerEl.appendChild(answerEmailLink);
+              answerEl.appendChild(answerCopyLink);
 
               el.insertBefore(answerEl, el.firstChild);
 
@@ -284,7 +284,10 @@
                     //   localStorage.setItem('answer', JSON.stringify(message));
                     // }
                     // else {
-                      pc.setRemoteDescription(message);
+                      pc.setRemoteDescription(message)
+                        .catch(function (error) {
+                          console.log('error!', error);
+                        });
                     // }
                   }
                 })[message.type]();
@@ -298,6 +301,7 @@
                       subject = 'Connect to me';
 
                   answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                  answerCopyLink.href = link;
 
                   setElText(answerTextEl, enc);
                   selectText(answerTextEl);
@@ -345,7 +349,7 @@
                         subject = 'Connect to me';
 
                     offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-
+                    offerCopyLink.href = link;
 
                     setOfferElText(enc);
                     selectText(offerTextEl);
@@ -530,6 +534,38 @@
             }
           }
         }
+      }
+
+      function getGoogleSTUN() {
+        return {
+          urls: [
+            'stun:stun1.l.google.com:19302' //, 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'
+          ]
+        };
+      }
+
+
+      function events (obj, handlers) {
+        console.log('events -- ff not working');
+
+        if (obj === null || obj === undefined) return console.log('oops, no obj for handlers!');
+
+        var allEvents = Object.keys(Object.getPrototypeOf(obj)).filter(function (key) {
+          console.log('*', key );
+          return key.indexOf('on') === 0 && key.length > 2;
+        });
+
+        return [obj, allEvents.reduce(function (r, key) {
+          r[key] = event(obj, key, handlers[key] || emptyFn);
+          return r;
+        }, {})];
+      }
+
+      function event(obj, name, handler) {
+        obj[name] = function() {
+          console.log('#e', name, arguments);
+          handler.apply(obj, arguments);
+        };
       }
     </script>
   </head>
