@@ -35,7 +35,7 @@ merge () {
   checkout master
   git merge --no-gpg-sign $BRANCH
   push master
-  checkout $BRANCH
+  BRANCH="master"
 }
 
 delete () { git branch -d ${1}                    ;}
