@@ -466,8 +466,7 @@
 
                 button.innerText = 'ping';
 
-                ui.appendChild(button);
-                ui.appendChild(diffEl);
+                append(ui, [button, diffEl]);
 
                 button.addEventListener('click', function (event) {
                   ping();
