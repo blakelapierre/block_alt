@@ -240,11 +240,11 @@
             });
 
 
-
-
             function connectionInputHandler (event) {
               var message = stringDecodeObject(event.target.textContent);
+
   console.log('cih message', message);
+
               inputAreaEl.removeEventListener('input', connectionInputHandler);
               inputAreaEl.remove();
 
@@ -301,18 +301,10 @@
                 ({
                   'offer': function () { pc = setupConnection(message, updateUI); },
                   'answer': function () {
-                    // check for offer on other tab
-                    // var waiting = localStorage.getItem('waitingForOffer');
-
-                    // if (waiting === 'true') {
-                    //   localStorage.setItem('answer', JSON.stringify(message));
-                    // }
-                    // else {
-                      pc.setRemoteDescription(message)
-                        .catch(function (error) {
-                          console.log('error!', error);
-                        });
-                    // }
+                    pc.setRemoteDescription(message)
+                      .catch(function (error) {
+                        console.log('error!', error);
+                      });
                   }
                 })[message.type]();
 
