@@ -164,15 +164,18 @@
 
             append(space, [el]);
 
+            function link (e, text, target, href) {
+              e.innerText = text;
+              e.target = target;
+              e.href = href;
+            }
+
             function emailLink (e) {
-              e.innerText = 'Send as Email';
-              e.target = '__blank';
-              e.href = '';
+              link(e, 'Send as Email', '__blank', '');
             }
 
             function copyLink (e) {
-              e.innerText = 'Copy As Link';
-              e.target = '__blank';
+              link(e, 'Copy As Link', '__blank', '');
             }
 
             var channelonopenHandlers = {
