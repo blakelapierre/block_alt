@@ -158,15 +158,9 @@
 
             offerCopyLink.innerText = 'Copy As Link';
             offerCopyLink.target = '__blank';
-            offerCopyLink.addEventListener('click', preventDefault);
 
             answerCopyLink.innerText = 'Copy As Link';
             answerCopyLink.target = '__blank';
-            answerCopyLink.addEventListener('click', preventDefault);
-
-            function preventDefault (event) {
-              event.preventDefault();
-            }
 
             offerEl.appendChild(offerTextEl);
             offerEl.appendChild(offerEmailLink);
