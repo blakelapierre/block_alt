@@ -86,7 +86,7 @@
 
     </style>
     <script>
-      var script = document.createElement('script');
+      var script = e('script');
 
       function emptyFn() {}
       function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
@@ -362,9 +362,9 @@
               inputAreaEl.focus();
 
               function makeDataChannelUI (channel) {
-                var messages = document.createElement('messages'),
-                    channelInput = document.createElement('channel-input'),
-                    ui = document.createElement('data-channel-' + channel.label + '-ui');
+                var messages = e('messages'),
+                    channelInput = e('channel-input'),
+                    ui = e('data-channel-' + channel.label + '-ui');
 
                 append(ui, [messages, channelInput]);
 
@@ -374,7 +374,7 @@
 
                 events(channel, {
                   'onmessage': function (event) {
-                    var messageEl = document.createElement('message');
+                    var messageEl = e('message');
 
                     messageEl.innerText = event.data;
 
@@ -385,7 +385,7 @@
                 });
 
                 function addOurMessage(text) {
-                  var messageEl = document.createElement('our-message');
+                  var messageEl = e('our-message');
 
                   messageEl.innerText = text;
 
