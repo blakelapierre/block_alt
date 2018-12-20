@@ -99,6 +99,7 @@
 
       var turn = {
         'urls': 'turn:68.183.22.27:3478?transport=udp',
+        'credentialType': 'password',
         'credential': 'anon',
         'username': 'anon'
       };
@@ -206,7 +207,6 @@
               }
             });
 
-
             [channel, latencyChannel].forEach(function (channel) {
               events(channel, {
                 'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
@@ -270,7 +270,37 @@
                 'block': function () { answerEl.remove(); }
               };
 
+              events(pc, {
+                'oniceconnectionstatechange': function (event) {
+                  console.log('connection state', pc.iceConnectionState);
+                  if (pc.iceConnectionState === 'connected') {
+                    answerEl.remove();
+                  }
+                }//,
+
+                // 'onicecandidate': function (event) { updateUI(pc.localDescription); }
+              });
+
+              pc.addEventListener('icecandidate', function (event) {
+                console.log('icecandidate!!!');
+                updateUI(pc.localDescription);
+              })
+
               processMessage(message);
+
+              function updateUI (answer) {
+                var enc = stringEncodeObject(answer);
+
+                var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                    body = 'Connect to me at: ' + link,
+                    subject = 'Connect to me';
+
+                answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                answerCopyLink.href = link;
+
+                setElText(answerTextEl, enc);
+                selectText(answerTextEl);
+              }
 
               function processMessage(message) {
 
@@ -292,21 +322,6 @@
                   }
                 })[message.type]();
 
-
-                function updateUI (answer) {
-                  var enc = stringEncodeObject(answer);
-
-                  var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
-                      body = 'Connect to me at: ' + link,
-                      subject = 'Connect to me';
-
-                  answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
-                  answerCopyLink.href = link;
-
-                  setElText(answerTextEl, enc);
-                  selectText(answerTextEl);
-                }
-
                 function setupConnection(offer, haveAnswer) {
                   (pc = makePeer())
                     .setRemoteDescription(offer)
@@ -326,7 +341,16 @@
                       events(channel, {
                         'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
                       });
-                    }
+                    },
+
+                    'oniceconnectionstatechange': function(event) {
+                      console.log('connection state', pc.iceConnectionState);
+                      if (pc.iceConnectionState === 'connected') {
+                        answerEl.remove();
+                      }
+                    },
+
+                    'onicecandidate': function (event) { updateUI(pc.localDescription); }
                   });
 
                   return pc;
@@ -339,6 +363,7 @@
               var pc; return (
                 pc = createNewPeerConnection(
                   function (offer) {
+                    console.log('deliveroffer', offer);
                     localStorage.setItem('waitingForOffer', 'true');
 
                     var enc = stringEncodeObject(pc.localDescription);
