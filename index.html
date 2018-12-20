@@ -356,8 +356,7 @@
             function startDataChannelUi (channel) {
               var ui = makeDataChannelUI(channel);
 
-              el.appendChild(ui);
-              el.appendChild(inputAreaEl);
+              append(el, [ui, inputAreaEl]);
 
               inputAreaEl.focus();
 
