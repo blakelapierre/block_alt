@@ -366,8 +366,7 @@
                     channelInput = document.createElement('channel-input'),
                     ui = document.createElement('data-channel-' + channel.label + '-ui');
 
-                ui.appendChild(messages);
-                ui.appendChild(channelInput);
+                append(ui, [messages, channelInput]);
 
                 inputAreaEl.onkeydown = function (event) {
                   if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
