@@ -108,33 +108,30 @@
         'iceServers': [googleSTUN, turn]
       };
 
+      function e (name) { return document.createElement(name); }
+
       function load() {
 
         setup();
 
         function setup () {
 
-          var space = getEl('space');
+          var space = e('space');
+
+          append(document.body, [space]);
 
           startConnection();
-
-          function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
           function startConnection() {
             function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
             function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
             function value(key, value) { return value; }
-            function stringifyEncode(key, value) { return stringEncode(value); }
-            function parseDecode(key, value) { return stringDecode(value); }
 
             function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
 
             function stringEncode (obj) { return ifType('string', encode)(obj); }
             function stringDecode (obj) { return ifType('string', decode)(obj); }
-
-
-            function e (name) { return document.createElement(name); }
 
             var el = e('connection'),
                 offerEl = e('offer'),
@@ -148,28 +145,35 @@
             inputAreaEl.contentEditable = true;
             inputAreaEl.addEventListener('input', connectionInputHandler);
 
-            offerEmailLink.innerText = 'Send as Email';
-            offerEmailLink.target = '__blank';
-            offerEmailLink.href = '';
+            emailLink(offerEmailLink);
+            emailLink(answerEmailLink);
 
-            answerEmailLink.innerText = 'Send as Email';
-            answerEmailLink.target = '__blank';
-            answerEmailLink.href = '';
+            copyLink(offerCopyLink);
+            copyLink(answerCopyLink);
 
-            offerCopyLink.innerText = 'Copy As Link';
-            offerCopyLink.target = '__blank';
+            append(offerEl, [
+              offerTextEl,
+              offerEmailLink,
+              offerCopyLink
+            ]);
 
-            answerCopyLink.innerText = 'Copy As Link';
-            answerCopyLink.target = '__blank';
+            append(el, [
+              offerEl,
+              inputAreaEl
+            ]);
 
-            offerEl.appendChild(offerTextEl);
-            offerEl.appendChild(offerEmailLink);
-            offerEl.appendChild(offerCopyLink);
+            append(space, [el]);
 
-            el.appendChild(offerEl);
-            el.appendChild(inputAreaEl);
+            function emailLink (e) {
+              e.innerText = 'Send as Email';
+              e.target = '__blank';
+              e.href = '';
+            }
 
-            space.appendChild(el);
+            function copyLink (e) {
+              e.innerText = 'Copy As Link';
+              e.target = '__blank';
+            }
 
             var channelonopenHandlers = {
               'block': startDataChannelUi,
@@ -180,27 +184,6 @@
                 channel = pc.createDataChannel('block'),
                 latencyChannel= pc.createDataChannel('latency');
 
-            window.addEventListener('beforeunload', function() {
-              localStorage.removeItem('waitingForOffer');
-            });
-
-            window.addEventListener('storage', function (event) {
-              console.log('storage event', event);
-              var key = event.key;
-
-              if (key === 'answer') {
-                var value = event.newValue,
-                    answer = JSON.parse(value);
-
-                pc.setRemoteDescription(answer)
-                  .catch(function (error) {
-                    console.log('didn\'t work; error', error);
-                  });
-
-                localStorage.removeItem('answer');
-              }
-            });
-
             [channel, latencyChannel].forEach(function (channel) {
               events(channel, {
                 'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
@@ -209,8 +192,6 @@
 
             var hash = window.location.hash;
             if (hash.length > 1) {
-              console.log('hash', hash);
-
               window.location.hash = '';
 
               connectionInputHandler({
@@ -221,14 +202,9 @@
             }
 
             window.addEventListener('hashchange', function (event) {
-              console.log('hashchange', event);
-              console.log('hash', window.location.hash);
-
               hash = window.location.hash;
 
               if (hash.length > 1) {
-                console.log('hash', hash);
-
                 window.location.hash = '';
 
                 connectionInputHandler({
@@ -242,8 +218,6 @@
 
             function connectionInputHandler (event) {
               var message = stringDecodeObject(event.target.textContent);
-
-  console.log('cih message', message);
 
               inputAreaEl.removeEventListener('input', connectionInputHandler);
               inputAreaEl.remove();
@@ -330,7 +304,6 @@
                     },
 
                     'oniceconnectionstatechange': function(event) {
-                      console.log('connection state', pc.iceConnectionState);
                       if (pc.iceConnectionState === 'connected') {
                         answerEl.remove();
                       }
@@ -345,13 +318,9 @@
             }
 
             function makePeer() {
-              console.log('making peer');
               var pc; return (
                 pc = createNewPeerConnection(
                   function (offer) {
-                    console.log('deliveroffer', offer);
-                    localStorage.setItem('waitingForOffer', 'true');
-
                     var enc = stringEncodeObject(pc.localDescription);
 
 
@@ -417,7 +386,6 @@
 
                 events(channel, {
                   'onmessage': function (event) {
-                    console.log('message', event);
                     var messageEl = document.createElement('message');
 
                     messageEl.innerText = event.data;
@@ -437,7 +405,6 @@
                 }
 
                 function sendInput (event) {
-                  console.log('sending', event);
                   channel.send(event.target.textContent);
                   event.target.textContent = '';
                 }
@@ -450,13 +417,10 @@
               var latencyChannel = channel;
 
               function ping() {
-                console.log('pinging');
                 latencyChannel.send(new Date().getTime());
               }
 
               function pong(message) {
-                console.log('pong');
-
                 var parts = message.split(' ');
                 var theirTime, diff;
                 var ourTime = new Date().getTime();
@@ -578,11 +542,11 @@
           handler.apply(obj, arguments);
         };
       }
+
+      function append (p, c) {
+        c.forEach(function (e) { p.appendChild(e); });
+      }
     </script>
   </head>
-  <body onload="load()">
-
-    <space></space>
-
-  <body>
+  <body onload="load()"></body>
 </html>
