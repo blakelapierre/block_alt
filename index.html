@@ -436,7 +436,7 @@
 
                     messageEl.innerText = event.data;
 
-                    messages.appendChild(messageEl);
+                    messages.prepend(messageEl);
 
                     if (document.hidden) notify(event.data);
                   }
@@ -447,7 +447,7 @@
 
                   messageEl.innerText = text;
 
-                  messages.appendChild(messageEl);
+                  messages.prepend(messageEl);
                 }
 
                 function sendInput (event) {
