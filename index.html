@@ -433,17 +433,12 @@
               }
 
               var diffListener;
-              function setDiff(diff) {
-                if (diffListener) diffListener(diff);
-              }
+              function setDiff(diff) { if (diffListener) diffListener(diff); }
 
-              function getDiff(fn) {
-                diffListener = fn;
-              }
+              function getDiff(fn) { diffListener = fn; }
 
               events(latencyChannel, {
                 'onmessage': function (event) {
-                  console.log('latency message', event.data);
                   var diff = pong(event.data);
 
                   if (diff !== undefined) setDiff(diff);
@@ -467,13 +462,9 @@
 
                 append(ui, [button, diffEl]);
 
-                button.addEventListener('click', function (event) {
-                  ping();
-                });
+                button.addEventListener('click', function (event) { ping(); });
 
-                setDiff(function (diff) {
-                  diffEl.innerText = diff;
-                });
+                setDiff(function (diff) { diffEl.innerText = diff; });
 
                 return ui;
               }
