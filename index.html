@@ -151,27 +151,20 @@
             copyLink(offerCopyLink);
             copyLink(answerCopyLink);
 
-            append(offerEl, [
-              offerTextEl,
-              offerEmailLink,
-              offerCopyLink
-            ]);
+            append(offerEl, [offerTextEl, offerEmailLink, offerCopyLink ]);
 
-            append(el, [
-              offerEl,
-              inputAreaEl
-            ]);
+            append(el, [offerEl, inputAreaEl]);
 
             append(space, [el]);
+
+            function emailLink (e) { link(e, 'Send as Email', '__blank', ''); }
+            function copyLink (e)  { link(e, 'Copy As Link', '__blank', ''); }
 
             function link (e, text, target, href) {
               e.innerText = text;
               e.target = target;
               e.href = href;
             }
-
-            function emailLink (e) { link(e, 'Send as Email', '__blank', ''); }
-            function copyLink (e)  { link(e, 'Copy As Link', '__blank', ''); }
 
             var channelonopenHandlers = {
               'block': startDataChannelUi,
