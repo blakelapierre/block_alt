@@ -460,9 +460,9 @@
               return ui;
 
               function makeLatencyUI (channel, ping, pong, setDiff) {
-                var ui = document.createElement('latency-ui'),
-                    button = document.createElement('button'),
-                    diffEl = document.createElement('diff');
+                var ui = ('latency-ui'),
+                    button = e('button'),
+                    diffEl = e('diff');
 
                 button.innerText = 'ping';
 
