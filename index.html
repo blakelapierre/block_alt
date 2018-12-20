@@ -219,9 +219,7 @@
               var answerEl = e('answer'),
                   answerTextEl = e('answer-text');
 
-              answerEl.appendChild(answerTextEl);
-              answerEl.appendChild(answerEmailLink);
-              answerEl.appendChild(answerCopyLink);
+              append(answerEl, [answerTextEl, answerEmailLink, answerCopyLink]);
 
               el.insertBefore(answerEl, el.firstChild);
 
