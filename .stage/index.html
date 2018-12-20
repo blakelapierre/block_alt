@@ -86,7 +86,7 @@
 
     </style>
     <script>
-      var script = document.createElement('script');
+      var script = e('script');
 
       function emptyFn() {}
       function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
@@ -108,33 +108,30 @@
         'iceServers': [googleSTUN, turn]
       };
 
+      function e (name) { return document.createElement(name); }
+
       function load() {
 
         setup();
 
         function setup () {
 
-          var space = getEl('space');
+          var space = e('space');
+
+          append(document.body, [space]);
 
           startConnection();
-
-          function getEl(tagName, el) { return (el || document).getElementsByTagName(tagName)[0]; }
 
           function startConnection() {
             function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
             function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
             function value(key, value) { return value; }
-            function stringifyEncode(key, value) { return stringEncode(value); }
-            function parseDecode(key, value) { return stringDecode(value); }
 
             function ifType(typeName, fn) { return function (obj) { return typeof obj === typeName ? fn(obj) : obj; }; }
 
             function stringEncode (obj) { return ifType('string', encode)(obj); }
             function stringDecode (obj) { return ifType('string', decode)(obj); }
-
-
-            function e (name) { return document.createElement(name); }
 
             var el = e('connection'),
                 offerEl = e('offer'),
@@ -148,28 +145,26 @@
             inputAreaEl.contentEditable = true;
             inputAreaEl.addEventListener('input', connectionInputHandler);
 
-            offerEmailLink.innerText = 'Send as Email';
-            offerEmailLink.target = '__blank';
-            offerEmailLink.href = '';
+            emailLink(offerEmailLink);
+            emailLink(answerEmailLink);
 
-            answerEmailLink.innerText = 'Send as Email';
-            answerEmailLink.target = '__blank';
-            answerEmailLink.href = '';
+            copyLink(offerCopyLink);
+            copyLink(answerCopyLink);
 
-            offerCopyLink.innerText = 'Copy As Link';
-            offerCopyLink.target = '__blank';
+            append(offerEl, [offerTextEl, offerEmailLink, offerCopyLink ]);
 
-            answerCopyLink.innerText = 'Copy As Link';
-            answerCopyLink.target = '__blank';
+            append(el, [offerEl, inputAreaEl]);
 
-            offerEl.appendChild(offerTextEl);
-            offerEl.appendChild(offerEmailLink);
-            offerEl.appendChild(offerCopyLink);
+            append(space, [el]);
 
-            el.appendChild(offerEl);
-            el.appendChild(inputAreaEl);
+            function emailLink (e) { link(e, 'Send as Email', '__blank', ''); }
+            function copyLink (e)  { link(e, 'Copy As Link', '__blank', ''); }
 
-            space.appendChild(el);
+            function link (e, text, target, href) {
+              e.innerText = text;
+              e.target = target;
+              e.href = href;
+            }
 
             var channelonopenHandlers = {
               'block': startDataChannelUi,
@@ -180,27 +175,6 @@
                 channel = pc.createDataChannel('block'),
                 latencyChannel= pc.createDataChannel('latency');
 
-            window.addEventListener('beforeunload', function() {
-              localStorage.removeItem('waitingForOffer');
-            });
-
-            window.addEventListener('storage', function (event) {
-              console.log('storage event', event);
-              var key = event.key;
-
-              if (key === 'answer') {
-                var value = event.newValue,
-                    answer = JSON.parse(value);
-
-                pc.setRemoteDescription(answer)
-                  .catch(function (error) {
-                    console.log('didn\'t work; error', error);
-                  });
-
-                localStorage.removeItem('answer');
-              }
-            });
-
             [channel, latencyChannel].forEach(function (channel) {
               events(channel, {
                 'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
@@ -209,8 +183,6 @@
 
             var hash = window.location.hash;
             if (hash.length > 1) {
-              console.log('hash', hash);
-
               window.location.hash = '';
 
               connectionInputHandler({
@@ -221,14 +193,9 @@
             }
 
             window.addEventListener('hashchange', function (event) {
-              console.log('hashchange', event);
-              console.log('hash', window.location.hash);
-
               hash = window.location.hash;
 
               if (hash.length > 1) {
-                console.log('hash', hash);
-
                 window.location.hash = '';
 
                 connectionInputHandler({
@@ -243,8 +210,6 @@
             function connectionInputHandler (event) {
               var message = stringDecodeObject(event.target.textContent);
 
-  console.log('cih message', message);
-
               inputAreaEl.removeEventListener('input', connectionInputHandler);
               inputAreaEl.remove();
 
@@ -254,9 +219,7 @@
               var answerEl = e('answer'),
                   answerTextEl = e('answer-text');
 
-              answerEl.appendChild(answerTextEl);
-              answerEl.appendChild(answerEmailLink);
-              answerEl.appendChild(answerCopyLink);
+              append(answerEl, [answerTextEl, answerEmailLink, answerCopyLink]);
 
               el.insertBefore(answerEl, el.firstChild);
 
@@ -330,7 +293,6 @@
                     },
 
                     'oniceconnectionstatechange': function(event) {
-                      console.log('connection state', pc.iceConnectionState);
                       if (pc.iceConnectionState === 'connected') {
                         answerEl.remove();
                       }
@@ -345,13 +307,9 @@
             }
 
             function makePeer() {
-              console.log('making peer');
               var pc; return (
                 pc = createNewPeerConnection(
                   function (offer) {
-                    console.log('deliveroffer', offer);
-                    localStorage.setItem('waitingForOffer', 'true');
-
                     var enc = stringEncodeObject(pc.localDescription);
 
 
@@ -364,9 +322,9 @@
 
                     setOfferElText(enc);
                     selectText(offerTextEl);
-                  }, function (answer) {
-
-                  }, function (error) {
+                  },
+                  function (answer) { },
+                  function (error) {
                     console.log('error', error);
                     setOfferElText(JSON.stringify(error));
                     selectText(offerTextEl);
@@ -398,18 +356,16 @@
             function startDataChannelUi (channel) {
               var ui = makeDataChannelUI(channel);
 
-              el.appendChild(ui);
-              el.appendChild(inputAreaEl);
+              append(el, [ui, inputAreaEl]);
 
               inputAreaEl.focus();
 
               function makeDataChannelUI (channel) {
-                var messages = document.createElement('messages'),
-                    channelInput = document.createElement('channel-input'),
-                    ui = document.createElement('data-channel-' + channel.label + '-ui');
+                var messages = e('messages'),
+                    channelInput = e('channel-input'),
+                    ui = e('data-channel-' + channel.label + '-ui');
 
-                ui.appendChild(messages);
-                ui.appendChild(channelInput);
+                append(ui, [messages, channelInput]);
 
                 inputAreaEl.onkeydown = function (event) {
                   if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
@@ -417,8 +373,7 @@
 
                 events(channel, {
                   'onmessage': function (event) {
-                    console.log('message', event);
-                    var messageEl = document.createElement('message');
+                    var messageEl = e('message');
 
                     messageEl.innerText = event.data;
 
@@ -429,7 +384,7 @@
                 });
 
                 function addOurMessage(text) {
-                  var messageEl = document.createElement('our-message');
+                  var messageEl = e('our-message');
 
                   messageEl.innerText = text;
 
@@ -437,7 +392,6 @@
                 }
 
                 function sendInput (event) {
-                  console.log('sending', event);
                   channel.send(event.target.textContent);
                   event.target.textContent = '';
                 }
@@ -450,13 +404,10 @@
               var latencyChannel = channel;
 
               function ping() {
-                console.log('pinging');
                 latencyChannel.send(new Date().getTime());
               }
 
               function pong(message) {
-                console.log('pong');
-
                 var parts = message.split(' ');
                 var theirTime, diff;
                 var ourTime = new Date().getTime();
@@ -482,17 +433,12 @@
               }
 
               var diffListener;
-              function setDiff(diff) {
-                if (diffListener) diffListener(diff);
-              }
+              function setDiff(diff) { if (diffListener) diffListener(diff); }
 
-              function getDiff(fn) {
-                diffListener = fn;
-              }
+              function getDiff(fn) { diffListener = fn; }
 
               events(latencyChannel, {
                 'onmessage': function (event) {
-                  console.log('latency message', event.data);
                   var diff = pong(event.data);
 
                   if (diff !== undefined) setDiff(diff);
@@ -508,22 +454,17 @@
               return ui;
 
               function makeLatencyUI (channel, ping, pong, setDiff) {
-                var ui = document.createElement('latency-ui'),
-                    button = document.createElement('button'),
-                    diffEl = document.createElement('diff');
+                var ui = e('latency-ui'),
+                    button = e('button'),
+                    diffEl = e('diff');
 
                 button.innerText = 'ping';
 
-                ui.appendChild(button);
-                ui.appendChild(diffEl);
+                append(ui, [button, diffEl]);
 
-                button.addEventListener('click', function (event) {
-                  ping();
-                });
+                button.addEventListener('click', function (event) { ping(); });
 
-                setDiff(function (diff) {
-                  diffEl.innerText = diff;
-                });
+                setDiff(function (diff) { diffEl.innerText = diff; });
 
                 return ui;
               }
@@ -578,11 +519,11 @@
           handler.apply(obj, arguments);
         };
       }
+
+      function append (p, c) {
+        c.forEach(function (e) { p.appendChild(e); });
+      }
     </script>
   </head>
-  <body onload="load()">
-
-    <space></space>
-
-  <body>
+  <body onload="load()"></body>
 </html>
