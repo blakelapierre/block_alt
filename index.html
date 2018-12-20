@@ -322,9 +322,9 @@
 
                     setOfferElText(enc);
                     selectText(offerTextEl);
-                  }, function (answer) {
-
-                  }, function (error) {
+                  },
+                  function (answer) { },
+                  function (error) {
                     console.log('error', error);
                     setOfferElText(JSON.stringify(error));
                     selectText(offerTextEl);
