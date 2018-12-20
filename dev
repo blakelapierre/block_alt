@@ -28,6 +28,7 @@ commit_and_reset_comment() {
 branch () {
   checkout ${1}
   push ${1}
+  BRANCH=${1}
 }
 
 merge () {
