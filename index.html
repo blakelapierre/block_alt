@@ -210,7 +210,7 @@
             };
 
             events(pc, {
-              'oniceconnectionstatechange': onIceConnectionState('connected', answerEl.remove.bind(answerEl)) // !
+              'oniceconnectionstatechange': onIceConnectionState('connected', function () { answerEl.remove(); } // !
               // 'oniceconnectionstatechange': function (event) {
               //   if (pc.iceConnectionState === 'connected') answerEl.remove();
 
