@@ -148,8 +148,15 @@
             emailLink(offerEmailLink);
             emailLink(answerEmailLink);
 
-            copyLink(offerCopyLink);
-            copyLink(answerCopyLink);
+
+            z(copyLink, [offerCopyLink, answerCopyLink]);
+
+            function z (a, bs) {
+              bs.forEach(function (b) { a(b); });
+            }
+
+            // copyLink(offerCopyLink);
+            // copyLink(answerCopyLink);
 
             append(space, [
               append(el, [
