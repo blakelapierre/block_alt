@@ -344,7 +344,7 @@
               append(ui, [messages, channelInput]);
 
               inputAreaEl.onkeydown = function (event) {
-                if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
+                if (event.keyCode === 13) return addMessage('our-message', event.target.textContent), sendInput(event);
               };
 
               events(channel, {
@@ -354,10 +354,6 @@
                   if (document.hidden) notify(event.data);
                 }
               });
-
-              function addOurMessage(text) {
-                addMessage('our-message', text);
-              }
 
               function addMessage(type, text) {
                 var el = e(type);
