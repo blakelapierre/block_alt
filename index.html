@@ -352,8 +352,6 @@
 
               events(channel, {
                 'onmessage': function (event) {
-                  console.log('message', event.data);
-
                   addMessage('message', event.data);
 
                   if (document.hidden) notify(event.data);
@@ -367,8 +365,7 @@
               }
 
               function sendInput (event) {
-                console.log(event.target.textContent);
-                channel.send(event.target.textContent);
+                channel.send(event.target.textContent); // doesn't send empty strings, seems
                 event.target.textContent = '';
               }
 
