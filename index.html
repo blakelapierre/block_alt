@@ -365,6 +365,7 @@
               }
 
               function sendInput (event) {
+                console.log(event.target.textContent);
                 channel.send(event.target.textContent);
                 event.target.textContent = '';
               }
