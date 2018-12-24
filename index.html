@@ -372,6 +372,23 @@
 
           function startLatencyChannelUI (channel) {
             var latencyChannel = channel;
+            var diffListener;
+
+            events(latencyChannel, {
+              'onmessage': function (event) {
+                var diff = pong(event.data);
+
+                if (diff !== undefined) setDiff(diff);
+              }
+            });
+
+            ping();
+
+            var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
+
+            el.insertBefore(ui, el.firstChild);
+
+            return ui;
 
             function ping() {
               latencyChannel.send(new Date().getTime());
@@ -400,25 +417,8 @@
               return diff;
             }
 
-            var diffListener;
             function getDiff(fn) { diffListener = fn; }
             function setDiff(diff) { if (diffListener) diffListener(diff); }
-
-            events(latencyChannel, {
-              'onmessage': function (event) {
-                var diff = pong(event.data);
-
-                if (diff !== undefined) setDiff(diff);
-              }
-            });
-
-            ping();
-
-            var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
-
-            el.insertBefore(ui, el.firstChild);
-
-            return ui;
 
             function makeLatencyUI (channel, ping, pong, setDiff) {
               var ui = e('latency-ui'),
