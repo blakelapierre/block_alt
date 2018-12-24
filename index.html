@@ -421,8 +421,7 @@
             function setDiff(diff) { if (diffListener) diffListener(diff); }
 
             function makeLatencyUI (channel, ping, pong, setDiff) {
-              var ui = e('latency-ui'),
-                  button = e('button'),
+              var button = e('button'),
                   diffEl = e('diff');
 
               button.innerText = 'ping';
@@ -431,7 +430,7 @@
 
               setDiff(function (diff) { diffEl.innerText = diff; });
 
-              return append(ui, [button, diffEl]);
+              return append(e('latency-ui'), [button, diffEl]);
             }
           }
 
