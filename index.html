@@ -210,11 +210,8 @@
             };
 
             events(pc, {
-              'oniceconnectionstatechange': onIceConnectionState('connected', answerEl.remove.bind(answerEl)) // !
-              // 'oniceconnectionstatechange': function (event) {
-              //   if (pc.iceConnectionState === 'connected') answerEl.remove();
-
-              // }
+              'oniceconnectionstatechange':
+                onIceConnectionState('connected', answerEl.remove.bind(answerEl))
             });
 
             function onIceConnectionState (state, action) {
@@ -292,9 +289,8 @@
             var pc; return (
               pc = createNewPeerConnection(
                 function (offer) {
-                  var enc = stringEncodeObject(pc.localDescription);
-
-                  var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                  var enc = stringEncodeObject(pc.localDescription),
+                      link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
                       body = 'Connect to me at: ' + link,
                       subject = 'Connect to me';
 
@@ -338,9 +334,9 @@
           }
 
           function startDataChannelUi (channel) {
-            var ui = makeDataChannelUI(channel);
+            var ui;
 
-            append(el, [ui, inputAreaEl]);
+            append(el, [ui = makeDataChannelUI(channel), inputAreaEl]);
 
             inputAreaEl.focus();
 
