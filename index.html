@@ -133,30 +133,43 @@
             function stringEncode (obj) { return ifType('string', encode)(obj); }
             function stringDecode (obj) { return ifType('string', decode)(obj); }
 
-            var el = e('connection'),
-                offerEl = e('offer'),
-                offerTextEl = e('offer-text'),
-                offerEmailLink = e('a'),
+            var el,
+                offerEl,
+                offerTextEl,
+                offerEmailLink,
                 answerEmailLink = e('a'),
-                offerCopyLink = e('a'),
+                offerCopyLink,
                 answerCopyLink = e('a'),
-                inputAreaEl = e('input-area');
+                inputAreaEl;
+
+
+            append(space, [
+              el = append(e('connection'), [
+                offerEl = append(e('offer'), [
+                  offerTextEl = e('offer-text'),
+                  offerEmailLink = e('a'),
+                  offerCopyLink = e('a')
+                ]),
+                inputAreaEl = e('input-area')
+              ])
+            ]);
 
             y(inputAreaEl, connectionInputHandler);
 
             z(emailLink, [offerEmailLink, answerEmailLink]);
             z(copyLink, [offerCopyLink, answerCopyLink]);
 
-            append(space, [
-              append(el, [
-                append(offerEl, [
-                  offerTextEl,
-                  offerEmailLink,
-                  offerCopyLink
-                ]),
-                inputAreaEl
-              ])
-            ]);
+
+            // append(space, [
+            //   append(el, [
+            //     append(offerEl, [
+            //       offerTextEl,
+            //       offerEmailLink,
+            //       offerCopyLink
+            //     ]),
+            //     inputAreaEl
+            //   ])
+            // ]);
 
             function emailLink (e) { link(e, 'Send as Email'); }
             function copyLink (e)  { link(e, 'Copy As Link'); }
