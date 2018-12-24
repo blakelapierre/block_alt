@@ -110,19 +110,15 @@
 
       function e (name) { return document.createElement(name); }
 
-      function load() {
+      function load () {
 
         setup();
 
         function setup () {
 
-          var space;
+          append(document.body, [startConnection(e('space'))]);
 
-          append(document.body, [space = e('space')]);
-
-          startConnection();
-
-          function startConnection() {
+          function startConnection(space) {
             function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
             function stringDecodeObject(obj) { return JSON.parse(obj, value); }
 
@@ -143,33 +139,8 @@
 
             y(inputAreaEl, connectionInputHandler);
 
-            // z needs to be modified slightly for something like the following to work...
-            // z(z, [
-            //   [emailLink, [offerEmailLink, answerEmailLink = e('a')]],
-            //   [copyLink, [offerCopyLink, answerCopyLink = e('a')]],
-            // ]);
-
             z(emailLink, [offerEmailLink, answerEmailLink = e('a')]);
             z(copyLink, [offerCopyLink, answerCopyLink = e('a')]);
-
-            function emailLink (e) { link(e, 'Send as Email'); }
-            function copyLink (e)  { link(e, 'Copy As Link'); }
-
-            function link (e, text, target, href) {
-              e.innerText = text;
-              e.target = target || '__blank';
-              e.href = href || '';
-            }
-
-            function y (e, h) {
-              e.contentEditable = true;
-              e.addEventListener('input', h);
-              return e;
-            }
-
-            function z (a, bs) {
-              bs.forEach(function (b) { a(b); });
-            }
 
             var channelonopenHandlers = {
               'block': startDataChannelUi,
@@ -189,6 +160,27 @@
             go(window.location.hash);
 
             window.addEventListener('hashchange', function (event) { go(window.location.hash); });
+
+            return space;
+
+            function emailLink (e) { link(e, 'Send as Email'); }
+            function copyLink (e)  { link(e, 'Copy As Link'); }
+
+            function link (e, text, target, href) {
+              e.innerText = text;
+              e.target = target || '__blank';
+              e.href = href || '';
+            }
+
+            function y (e, h) {
+              e.contentEditable = true;
+              e.addEventListener('input', h);
+              return e;
+            }
+
+            function z (a, bs) {
+              bs.forEach(function (b) { a(b); });
+            }
 
             function go (hash) {
               if (hash.length > 1) {
