@@ -427,13 +427,13 @@
 
               button.innerText = 'ping';
 
-              append(ui, [button, diffEl]);
-
               button.addEventListener('click', function (event) { ping(); });
 
               setDiff(function (diff) { diffEl.innerText = diff; });
 
               return ui;
+
+              return append(ui, [button, diffEl]);
             }
           }
 
