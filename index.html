@@ -341,11 +341,10 @@
             inputAreaEl.focus();
 
             function makeDataChannelUI (channel) {
-              var messages = e('messages'),
-                  channelInput = e('channel-input'),
+              var messages, channelInput,
                   ui = e('data-channel-' + channel.label + '-ui');
 
-              append(ui, [messages, channelInput]);
+              append(ui, [messages = e('messages'), channelInput = e('channel-input')]);
 
               inputAreaEl.onkeydown = function (event) {
                 if (event.keyCode === 13) return addMessage('our-message', event.target.textContent), sendInput(event);
