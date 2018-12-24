@@ -210,13 +210,16 @@
             };
 
             events(pc, {
-              'oniceconnectionstatechange': function (event) {
-                console.log('connection state', pc.iceConnectionState);
-                if (pc.iceConnectionState === 'connected') {
-                  answerEl.remove();
-                }
-              }
+              'oniceconnectionstatechange': onIceConnectionState('connected', answerEl.remove) // !
+              // 'oniceconnectionstatechange': function (event) {
+              //   if (pc.iceConnectionState === 'connected') answerEl.remove();
+
+              // }
             });
+
+            function onIceConnectionState (state, action) {
+              if (pc.iceConnectionState === state) action();
+            }
 
             pc.addEventListener('icecandidate', function (event) { updateUI(pc.localDescription); })
 
