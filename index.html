@@ -144,18 +144,8 @@
 
             y(inputAreaEl, connectionInputHandler);
 
-            function y (e, h) {
-              e.contentEditable = true;
-              e.addEventListener('input', h);
-              return e;
-            }
-
             z(emailLink, [offerEmailLink, answerEmailLink]);
             z(copyLink, [offerCopyLink, answerCopyLink]);
-
-            function z (a, bs) {
-              bs.forEach(function (b) { a(b); });
-            }
 
             append(space, [
               append(el, [
@@ -175,6 +165,16 @@
               e.innerText = text;
               e.target = target || '__blank';
               e.href = href || '';
+            }
+
+            function y (e, h) {
+              e.contentEditable = true;
+              e.addEventListener('input', h);
+              return e;
+            }
+
+            function z (a, bs) {
+              bs.forEach(function (b) { a(b); });
             }
 
             var channelonopenHandlers = {
