@@ -142,8 +142,13 @@
                 answerCopyLink = e('a'),
                 inputAreaEl = e('input-area');
 
-            inputAreaEl.contentEditable = true;
-            inputAreaEl.addEventListener('input', connectionInputHandler);
+            y(inputAreaEl, connectionInputHandler);
+
+            function y (e, h) {
+              e.contentEditable = true;
+              e.addEventListener('input', h);
+              return e;
+            }
 
             z(emailLink, [offerEmailLink, answerEmailLink]);
             z(copyLink, [offerCopyLink, answerCopyLink]);
