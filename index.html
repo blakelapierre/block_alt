@@ -148,6 +148,12 @@
 
             y(inputAreaEl, connectionInputHandler);
 
+            // z needs to be modified slightly for something like the following to work...
+            // z(z, [
+            //   [emailLink, [offerEmailLink, answerEmailLink = e('a')]],
+            //   [copyLink, [offerCopyLink, answerCopyLink = e('a')]],
+            // ]);
+
             z(emailLink, [offerEmailLink, answerEmailLink = e('a')]);
             z(copyLink, [offerCopyLink, answerCopyLink = e('a')]);
 
