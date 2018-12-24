@@ -198,10 +198,10 @@
             offerEl.remove();
             setElText(inputAreaEl, '');
 
-            var answerEl = e('answer'),
-                answerTextEl = e('answer-text');
+            var answerEl,
+                answerTextEl;
 
-            append(answerEl, [answerTextEl, answerEmailLink, answerCopyLink]);
+            answerEl = append(e('answer'), [answerTextEl = e('answer-text'), answerEmailLink, answerCopyLink]);
 
             el.insertBefore(answerEl, el.firstChild);
 
