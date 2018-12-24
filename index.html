@@ -148,7 +148,7 @@
 
           [channel, latencyChannel].forEach(function (channel) {
             events(channel, {
-              'onopen': function (event) { channelonopenHandlers[channel.label](channel, el); }
+              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
             });
           });
 
@@ -329,6 +329,123 @@
             }
           }
 
+          function startDataChannelUi (channel) {
+            var ui = makeDataChannelUI(channel);
+
+            append(el, [ui, inputAreaEl]);
+
+            inputAreaEl.focus();
+
+            function makeDataChannelUI (channel) {
+              var messages = e('messages'),
+                  channelInput = e('channel-input'),
+                  ui = e('data-channel-' + channel.label + '-ui');
+
+              append(ui, [messages, channelInput]);
+
+              inputAreaEl.onkeydown = function (event) {
+                if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
+              };
+
+              events(channel, {
+                'onmessage': function (event) {
+                  var messageEl = e('message');
+
+                  messageEl.innerText = event.data;
+
+                  messages.prepend(messageEl);
+
+                  if (document.hidden) notify(event.data);
+                }
+              });
+
+              function addOurMessage(text) {
+                var messageEl = e('our-message');
+
+                messageEl.innerText = text;
+
+                messages.prepend(messageEl);
+              }
+
+              function sendInput (event) {
+                channel.send(event.target.textContent);
+                event.target.textContent = '';
+              }
+
+              return ui;
+            }
+          }
+
+          function startLatencyChannelUI (channel) {
+            var latencyChannel = channel;
+
+            function ping() {
+              latencyChannel.send(new Date().getTime());
+            }
+
+            function pong(message) {
+              var parts = message.split(' ');
+              var theirTime, diff;
+              var ourTime = new Date().getTime();
+
+              if (parts.length > 1) {
+                var ourOldTime = parseInt(parts[0], 10);
+
+                theirTime = parseInt(parts[1], 10);
+
+                diff = ourTime - ourOldTime;
+              }
+              else {
+                theirTime = parseInt(parts[0]);
+
+                latencyChannel.send(theirTime + ' ' + ourTime);
+
+                diff = undefined;
+              }
+
+              console.log('diff', diff);
+
+              return diff;
+            }
+
+            var diffListener;
+            function setDiff(diff) { if (diffListener) diffListener(diff); }
+
+            function getDiff(fn) { diffListener = fn; }
+
+            events(latencyChannel, {
+              'onmessage': function (event) {
+                var diff = pong(event.data);
+
+                if (diff !== undefined) setDiff(diff);
+              }
+            });
+
+            ping();
+
+            var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
+
+            el.insertBefore(ui, el.firstChild);
+
+            return ui;
+
+            function makeLatencyUI (channel, ping, pong, setDiff) {
+              var ui = e('latency-ui'),
+                  button = e('button'),
+                  diffEl = e('diff');
+
+              button.innerText = 'ping';
+
+              append(ui, [button, diffEl]);
+
+              button.addEventListener('click', function (event) { ping(); });
+
+              setDiff(function (diff) { diffEl.innerText = diff; });
+
+              return ui;
+            }
+          }
+
           function setElText (el, text) { el.innerHTML = text; }
 
           function setOfferElText(text) { setElText(offerTextEl, text); }
@@ -343,123 +460,6 @@
             sel.removeAllRanges();
             sel.addRange(range);
           }
-        }
-      }
-
-      function startDataChannelUi (channel, el) {
-        var ui = makeDataChannelUI(channel);
-
-        append(el, [ui, inputAreaEl]);
-
-        inputAreaEl.focus();
-
-        function makeDataChannelUI (channel) {
-          var messages = e('messages'),
-              channelInput = e('channel-input'),
-              ui = e('data-channel-' + channel.label + '-ui');
-
-          append(ui, [messages, channelInput]);
-
-          inputAreaEl.onkeydown = function (event) {
-            if (event.keyCode === 13) return addOurMessage(event.target.textContent), sendInput(event);
-          };
-
-          events(channel, {
-            'onmessage': function (event) {
-              var messageEl = e('message');
-
-              messageEl.innerText = event.data;
-
-              messages.prepend(messageEl);
-
-              if (document.hidden) notify(event.data);
-            }
-          });
-
-          function addOurMessage(text) {
-            var messageEl = e('our-message');
-
-            messageEl.innerText = text;
-
-            messages.prepend(messageEl);
-          }
-
-          function sendInput (event) {
-            channel.send(event.target.textContent);
-            event.target.textContent = '';
-          }
-
-          return ui;
-        }
-      }
-
-      function startLatencyChannelUI (channel, el) {
-        var latencyChannel = channel;
-
-        function ping() {
-          latencyChannel.send(new Date().getTime());
-        }
-
-        function pong(message) {
-          var parts = message.split(' ');
-          var theirTime, diff;
-          var ourTime = new Date().getTime();
-
-          if (parts.length > 1) {
-            var ourOldTime = parseInt(parts[0], 10);
-
-            theirTime = parseInt(parts[1], 10);
-
-            diff = ourTime - ourOldTime;
-          }
-          else {
-            theirTime = parseInt(parts[0]);
-
-            latencyChannel.send(theirTime + ' ' + ourTime);
-
-            diff = undefined;
-          }
-
-          console.log('diff', diff);
-
-          return diff;
-        }
-
-        var diffListener;
-        function setDiff(diff) { if (diffListener) diffListener(diff); }
-
-        function getDiff(fn) { diffListener = fn; }
-
-        events(latencyChannel, {
-          'onmessage': function (event) {
-            var diff = pong(event.data);
-
-            if (diff !== undefined) setDiff(diff);
-          }
-        });
-
-        ping();
-
-        var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
-
-        el.insertBefore(ui, el.firstChild);
-
-        return ui;
-
-        function makeLatencyUI (channel, ping, pong, setDiff) {
-          var ui = e('latency-ui'),
-              button = e('button'),
-              diffEl = e('diff');
-
-          button.innerText = 'ping';
-
-          append(ui, [button, diffEl]);
-
-          button.addEventListener('click', function (event) { ping(); });
-
-          setDiff(function (diff) { diffEl.innerText = diff; });
-
-          return ui;
         }
       }
 
