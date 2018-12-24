@@ -151,19 +151,31 @@
             copyLink(offerCopyLink);
             copyLink(answerCopyLink);
 
-            append(offerEl, [offerTextEl, offerEmailLink, offerCopyLink ]);
+            append(space, [
+              append(el, [
+                append(offerEl, [
+                  offerTextEl,
+                  offerEmailLink,
+                  offerCopyLink
+                ]),
+                inputAreaEl
+              ])
+            ]);
 
-            append(el, [offerEl, inputAreaEl]);
 
-            append(space, [el]);
+            // append(offerEl, [offerTextEl, offerEmailLink, offerCopyLink ]);
 
-            function emailLink (e) { link(e, 'Send as Email', '__blank', ''); }
-            function copyLink (e)  { link(e, 'Copy As Link', '__blank', ''); }
+            // append(el, [offerEl, inputAreaEl]);
+
+            // append(space, [el]);
+
+            function emailLink (e) { link(e, 'Send as Email'); }
+            function copyLink (e)  { link(e, 'Copy As Link'); }
 
             function link (e, text, target, href) {
               e.innerText = text;
-              e.target = target;
-              e.href = href;
+              e.target = target || '__blank';
+              e.href = href || '';
             }
 
             var channelonopenHandlers = {
@@ -181,20 +193,11 @@
               });
             });
 
-            var hash = window.location.hash;
-            if (hash.length > 1) {
-              window.location.hash = '';
+            go(window.location.hash);
 
-              connectionInputHandler({
-                target: {
-                  textContent: atob(hash.substring(1))
-                }
-              });
-            }
+            window.addEventListener('hashchange', function (event) { go(window.location.hash); });
 
-            window.addEventListener('hashchange', function (event) {
-              hash = window.location.hash;
-
+            function go (hash) {
               if (hash.length > 1) {
                 window.location.hash = '';
 
@@ -204,8 +207,7 @@
                   }
                 });
               }
-            });
-
+            }
 
             function connectionInputHandler (event) {
               var message = stringDecodeObject(event.target.textContent);
@@ -233,15 +235,10 @@
                   if (pc.iceConnectionState === 'connected') {
                     answerEl.remove();
                   }
-                }//,
-
-                // 'onicecandidate': function (event) { updateUI(pc.localDescription); }
+                }
               });
 
-              pc.addEventListener('icecandidate', function (event) {
-                console.log('icecandidate!!!');
-                updateUI(pc.localDescription);
-              })
+              pc.addEventListener('icecandidate', function (event) { updateUI(pc.localDescription); })
 
               processMessage(message);
 
@@ -311,7 +308,6 @@
                 pc = createNewPeerConnection(
                   function (offer) {
                     var enc = stringEncodeObject(pc.localDescription);
-
 
                     var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
                         body = 'Connect to me at: ' + link,
@@ -522,6 +518,7 @@
 
       function append (p, c) {
         c.forEach(function (e) { p.appendChild(e); });
+        return p;
       }
     </script>
   </head>
