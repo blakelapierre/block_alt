@@ -349,22 +349,20 @@
 
               events(channel, {
                 'onmessage': function (event) {
-                  var messageEl = e('message');
-
-                  messageEl.innerText = event.data;
-
-                  messages.prepend(messageEl);
+                  addMessage('message', event.data);
 
                   if (document.hidden) notify(event.data);
                 }
               });
 
               function addOurMessage(text) {
-                var messageEl = e('our-message');
+                addMessage('our-message', text);
+              }
 
-                messageEl.innerText = text;
-
-                messages.prepend(messageEl);
+              function addMessage(type, text) {
+                var el = e(type);
+                el.innerText = text;
+                messages.prepend(el);
               }
 
               function sendInput (event) {
