@@ -145,15 +145,15 @@
             inputAreaEl.contentEditable = true;
             inputAreaEl.addEventListener('input', connectionInputHandler);
 
-            // emailLink(offerEmailLink);
-            // emailLink(answerEmailLink);
-
             z(emailLink, [offerEmailLink, answerEmailLink]);
             z(copyLink, [offerCopyLink, answerCopyLink]);
 
             function z (a, bs) {
               bs.forEach(function (b) { a(b); });
             }
+
+            // emailLink(offerEmailLink);
+            // emailLink(answerEmailLink);
 
             // copyLink(offerCopyLink);
             // copyLink(answerCopyLink);
