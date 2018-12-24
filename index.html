@@ -133,15 +133,7 @@
             function stringEncode (obj) { return ifType('string', encode)(obj); }
             function stringDecode (obj) { return ifType('string', decode)(obj); }
 
-            var el,
-                offerEl,
-                offerTextEl,
-                offerEmailLink,
-                answerEmailLink = e('a'),
-                offerCopyLink,
-                answerCopyLink = e('a'),
-                inputAreaEl;
-
+            var el, offerEl, offerTextEl, offerEmailLink, inputAreaEl, offerCopyLink, answerEmailLink, answerCopyLink;
 
             append(space, [
               el = append(e('connection'), [
@@ -156,20 +148,8 @@
 
             y(inputAreaEl, connectionInputHandler);
 
-            z(emailLink, [offerEmailLink, answerEmailLink]);
-            z(copyLink, [offerCopyLink, answerCopyLink]);
-
-
-            // append(space, [
-            //   append(el, [
-            //     append(offerEl, [
-            //       offerTextEl,
-            //       offerEmailLink,
-            //       offerCopyLink
-            //     ]),
-            //     inputAreaEl
-            //   ])
-            // ]);
+            z(emailLink, [offerEmailLink, answerEmailLink = e('a')]);
+            z(copyLink, [offerCopyLink, answerCopyLink = e('a')]);
 
             function emailLink (e) { link(e, 'Send as Email'); }
             function copyLink (e)  { link(e, 'Copy As Link'); }
