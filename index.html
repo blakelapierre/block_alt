@@ -296,17 +296,20 @@
                   offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
                   offerCopyLink.href = link;
 
-                  setOfferElText(enc);
-                  selectText(offerTextEl);
+                  updateOfferElText(enc);
                 },
                 function (answer) { },
                 function (error) {
                   console.log('error', error);
-                  setOfferElText(JSON.stringify(error));
-                  selectText(offerTextEl);
+                  updateOfferElText(JSON.stringify(error));
                 }
               )
             );
+
+            function updateOfferElText (text) {
+              setOfferElText(text);
+              selectText(offerTextEl);
+            }
 
             function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
               var pc;
