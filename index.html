@@ -352,6 +352,8 @@
 
               events(channel, {
                 'onmessage': function (event) {
+                  console.log('message', event.data);
+
                   addMessage('message', event.data);
 
                   if (document.hidden) notify(event.data);
