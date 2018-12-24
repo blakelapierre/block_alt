@@ -210,7 +210,7 @@
             };
 
             events(pc, {
-              'oniceconnectionstatechange': onIceConnectionState('connected', function () { answerEl.remove(); } // !
+              'oniceconnectionstatechange': onIceConnectionState('connected', answerEl.remove.bind(answerEl)) // !
               // 'oniceconnectionstatechange': function (event) {
               //   if (pc.iceConnectionState === 'connected') answerEl.remove();
 
@@ -218,7 +218,9 @@
             });
 
             function onIceConnectionState (state, action) {
-              if (pc.iceConnectionState === state) action();
+              return function () {
+                if (pc.iceConnectionState === state) action();
+              };
             }
 
             pc.addEventListener('icecandidate', function (event) { updateUI(pc.localDescription); })
