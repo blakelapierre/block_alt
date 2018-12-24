@@ -403,9 +403,8 @@
             }
 
             var diffListener;
-            function setDiff(diff) { if (diffListener) diffListener(diff); }
-
             function getDiff(fn) { diffListener = fn; }
+            function setDiff(diff) { if (diffListener) diffListener(diff); }
 
             events(latencyChannel, {
               'onmessage': function (event) {
