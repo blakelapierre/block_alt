@@ -28,7 +28,7 @@
               while (state.value.indexOf('@') === 0)
                 state = states[state.value.substr(1)];
 
-              node.innerHTML = state.value;
+                node.innerHTML = '<' + state.name + '>' + state.value + '</' + state.name + '>';
             })(document.body);
 
           })(states['init'] || states[Object.keys(states)[0]]);
