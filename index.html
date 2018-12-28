@@ -39,7 +39,7 @@
         display: inline-block;
       }
 
-      textMessage a {
+      textMessage a.twitter {
         height: 2em;
         padding: 0.25em;
 
@@ -106,9 +106,11 @@
               `<textarea
                 oninput="console.log(event), event.target.nextSibling.href = 'https://twitter.com/intent/tweet?text='' + encodeURI(event.target.value)"></textarea>
               <a
+                class="twitter"
                 target="__blank"
                 onclick="console.log('click', event.target.href)"><i></i>Tweet</a>
               <a
+                class="p2p"
                 href="#"
                 onclick="console.log('click p2p')">P2P</a>`
           })
