@@ -131,7 +131,7 @@
 
             'textMessage':
               `<textarea
-                oninput="console.log(event), event.target.nextSibling.firstChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value)"></textarea>
+                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value)"></textarea>
               <actions>
                 <a
                   class="twitter"
