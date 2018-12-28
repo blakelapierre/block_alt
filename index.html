@@ -12,13 +12,23 @@
       function load () {
         (function (states) {
           (function (state) {
-            alert(state);
+
+            (function (node) {
+              document.body.childNodes.forEach(function (c) {
+                node.appendChild(c);
+              });
+            })(document.createElement('node'));
+
+            (function (node) {
+              node.innerHTML = state;
+            })(document.body);
+
           })(states['init'] || states[Object.keys(states)[0]]);
         })({
-          //'init': 'textMessage',
+          'init': 'textMessage',
 
           'textMessage':
-            ''
+            '<textarea></textarea>'
         });
       }
     </script>
