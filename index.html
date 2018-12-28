@@ -37,7 +37,8 @@
 
         })(
           (function (states) {
-            return Object.keys(states).reduce(function (state, states) {
+          console.log(states)
+            return Object.keys(states).reduce(function (states, state) {
               states[state] = {name: state, value: states[state]};
               return states;
             }, states);
