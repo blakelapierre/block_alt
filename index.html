@@ -29,6 +29,7 @@
                 state = states[state.value.substr(1)];
 
                 node.innerHTML = '<' + state.name + '>' + state.value + '</' + state.name + '>';
+
             })(document.body);
 
           })(states['init'] || states[Object.keys(states)[0]]);
