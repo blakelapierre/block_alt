@@ -11,6 +11,7 @@
     <script>
       function load () {
         (function (states) {
+
           (function (state) {
 
             (function (node) {
@@ -20,12 +21,18 @@
             })(document.createElement('node'));
 
             (function (node) {
-              node.innerHTML = state;
+              if (state.indexOf('@') === 0) {
+
+              }
+              else {
+                node.innerHTML = state;
+              }
             })(document.body);
 
           })(states['init'] || states[Object.keys(states)[0]]);
+
         })({
-          //'init': 'textMessage',
+          'init': '@textMessage',
 
           'textMessage':
             '<textarea></textarea>'
