@@ -5,17 +5,26 @@
   <head>
 
     <style>
-      body { margin: 0; padding: 0; }
+      body {
+        margin: 0; padding: 0;
 
+        background-color: #000;
+        color: #fff;
+      }
 
+      textMessage {
 
+      }
 
+      textMessage textarea {
+
+      }
     </style>
 
     <script>
       function load () {
         (function (states) {
-        console.log(states);
+          console.log(states);
           (function (state) {
 
             (function (node) {
@@ -25,10 +34,11 @@
             })(document.createElement('node'));
 
             (function (node) {
+
               while (state.value.indexOf('@') === 0)
                 state = states[state.value.substr(1)];
 
-                node.innerHTML = '<' + state.name + '>' + state.value + '</' + state.name + '>';
+              node.innerHTML = '<' + state.name + '>' + state.value + '</' + state.name + '>';
 
             })(document.body);
 
@@ -36,7 +46,7 @@
 
         })(
           (function (states) {
-          console.log(states)
+            console.log(states);
             return Object.keys(states).reduce(function (states, state) {
               states[state] = {name: state, value: states[state]};
               return states;
