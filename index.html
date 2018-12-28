@@ -11,8 +11,6 @@
 
         background-color: #000;
         color: #fff;
-
-
       }
 
       body {
@@ -36,6 +34,14 @@
 
         vertical-align: middle;
         text-align: center;
+      }
+
+      textMessage new-message {
+        display: none;
+      }
+
+      textMessage new-message.show {
+        display: block;
       }
 
       textMessage textarea {
@@ -131,8 +137,9 @@
             'init': '@textMessage',
 
             'textMessage':
-              `<textarea
-                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value)"></textarea>
+              `<new-message class=""></new-message>
+               <textarea
+                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), event.target.previousElementSibling.classList.toggle('show')"></textarea>
               <actions>
                 <a
                   class="twitter"
