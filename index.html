@@ -6,6 +6,10 @@
 
     <style>
       body { margin: 0; padding: 0; }
+
+
+
+
     </style>
 
     <script>
@@ -21,22 +25,29 @@
             })(document.createElement('node'));
 
             (function (node) {
-              if (state.indexOf('@') === 0) {
+              if (state.value.indexOf('@') === 0) {
 
               }
               else {
-                node.innerHTML = state;
+                node.innerHTML = state.value;
               }
             })(document.body);
 
           })(states['init'] || states[Object.keys(states)[0]]);
 
-        })({
-          'init': '@textMessage',
+        })(
+          (function (states) {
+            return Object.keys(states).reduce(function (state, states) {
+              states[state] = {name: state, value: states[state]};
+              return states;
+            }, states);
+          })({
+            'init': '@textMessage',
 
-          'textMessage':
-            '<textarea></textarea>'
-        });
+            'textMessage':
+              '<textarea></textarea>'
+          })
+        );
       }
     </script>
 
