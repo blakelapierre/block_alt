@@ -25,12 +25,10 @@
             })(document.createElement('node'));
 
             (function (node) {
-              if (state.value.indexOf('@') === 0) {
+              while (state.value.indexOf('@') === 0)
+                state = states[state.value.substr(1)];
 
-              }
-              else {
-                node.innerHTML = state.value;
-              }
+              node.innerHTML = state.value;
             })(document.body);
 
           })(states['init'] || states[Object.keys(states)[0]]);
