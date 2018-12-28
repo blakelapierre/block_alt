@@ -113,7 +113,17 @@
 
     <script>
       function load () {
-        (function (states) {
+        init({
+          'states': {},
+          'actions': {}
+        });
+
+        function init (config) {
+
+        }
+
+
+        (function (config) {
           console.log(states);
           (function (state) {
 
@@ -132,34 +142,41 @@
 
             })(document.body);
 
-          })(states['init'] || states[Object.keys(states)[0]]);
+          })(config.states['init'] || config.states[Object.keys(states)[0]]);
 
         })(
-          (function (states) {
-            console.log(states);
-            return Object.keys(states).reduce(function (states, state) {
+          (function (config) {
+            console.log(config);
+            Object.keys(config.states).reduce(function (states, state) {
               states[state] = {name: state, value: states[state]};
               return states;
-            }, states);
-          })({
-            'init': '@textMessage',
+            }, config.states);
 
-            'textMessage':
-              `<new-message class="" onclick="event.target.after(document.createElement('textarea'))">New Message</new-message>
-               <textarea
-                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), event.target.value !== '' ? event.target.previousElementSibling.classList.add('show') : event.target.previousElementSibling.classList.remove('show')"></textarea>
-              <actions>
+            return config;
+          })({
+            'states': {
+              'init': '@textMessage',
+
+              'textMessage':
+                `<new-message class="" onclick="event.target.after(document.createElement('textarea'))">New Message</new-message>
+                 <textarea
+                  oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), event.target.value !== '' ? event.target.previousElementSibling.classList.add('show') : event.target.previousElementSibling.classList.remove('show')"></textarea>
+                <actions>
+                  <a
+                    class="twitter"
+                    title="Send as Tweet"
+                    target="__blank"
+                    onclick="console.log('click', event.target.href)"><i></i>Tweet</a>
+                </actions>
                 <a
-                  class="twitter"
-                  title="Send as Tweet"
-                  target="__blank"
-                  onclick="console.log('click', event.target.href)"><i></i>Tweet</a>
-              </actions>
-              <a
-                class="p2p"
-                title="Send via P2P"
-                href="#"
-                onclick="console.log('click p2p')">P2P</a>`
+                  class="p2p"
+                  title="Send via P2P"
+                  href="#"
+                  onclick="console.log('click p2p')">P2P</a>`
+            },
+            'actions': {
+
+            }
           })
         );
       }
