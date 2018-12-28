@@ -139,7 +139,7 @@
             'textMessage':
               `<new-message class="">New Message</new-message>
                <textarea
-                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), (event.target.value !== '' ? event.target.previousElementSibling.classList.add : event.target.previousElementSibling.classList.remove)('show')"></textarea>
+                oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), event.target.value !== '' ? event.target.previousElementSibling.classList.add('show') : event.target.previousElementSibling.classList.remove('show')"></textarea>
               <actions>
                 <a
                   class="twitter"
