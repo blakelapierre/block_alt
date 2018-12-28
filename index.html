@@ -145,7 +145,7 @@
             'init': '@textMessage',
 
             'textMessage':
-              `<new-message class="" onclick="event.target.after(document.createElement('textarea')">New Message</new-message>
+              `<new-message class="" onclick="event.target.after(document.createElement('textarea'))">New Message</new-message>
                <textarea
                 oninput="console.log(event), event.target.nextElementSibling.firstElementChild.href = 'https://twitter.com/intent/tweet?text=' + encodeURI(event.target.value), event.target.value !== '' ? event.target.previousElementSibling.classList.add('show') : event.target.previousElementSibling.classList.remove('show')"></textarea>
               <actions>
