@@ -75,7 +75,7 @@
             'init': '@textMessage',
 
             'textMessage':
-              '<textarea oninput="console.log(event), event.target.nextSibling.href = `https://twitter.com/intent/tweet?text=` + encodeURI(event.target.innerText)"></textarea><a target="__blank">Tweet</a>'
+              '<textarea oninput="console.log(event), event.target.nextSibling.href = `https://twitter.com/intent/tweet?text=` + encodeURI(event.target.value)"></textarea><a target="__blank">Tweet</a>'
           })
         );
       }
