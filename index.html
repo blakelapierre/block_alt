@@ -10,7 +10,14 @@
 
     <script>
       function load () {
-        alert('load');
+        (function (states) {
+          (function (state) {
+            alert(state);
+          })(states['init'] || states[Object.keys(states)[0]]);
+        })({
+          'init': 'textMessage',
+          'textMessage': {}
+        });
       }
     </script>
 
