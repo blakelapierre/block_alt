@@ -125,15 +125,14 @@
 
         (config => {
           console.log(config.states);
-          (function (state) {
+          (state => {
 
-            (function (node) {
-              document.body.childNodes.forEach(function (c) {
-                node.appendChild(c);
-              });
-            })(document.createElement('node'));
+            (node =>
+              document.body.childNodes.forEach(c =>
+                node.appendChild(c))
+            )(document.createElement('node'));
 
-            (function (node) {
+            (node => {
 
               while (state.value.indexOf('@') === 0)
                 state = config.states[state.value.substr(1)];
