@@ -145,7 +145,7 @@
           })(config.states['init'] || config.states[Object.keys(states)[0]]);
 
         })(
-          (function (config) {
+          (config => {
             console.log(config);
             Object.keys(config.states).reduce(function (states, state) {
               states[state] = {name: state, value: states[state]};
