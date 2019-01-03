@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -z "$1" ]
+  then
+    ls index.html.*
+  else
+    cp index.html index.html.bak
+    cp "index.html.$1" index.html
+fi
