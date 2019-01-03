@@ -93,6 +93,11 @@ commit_and_reset_comment
             delete
               ;;
 
+        "h")
+            echo "help"
+            echo "~ b c d h m p r"
+              ;;
+
         "m")
 
             echo "MMM merging"
