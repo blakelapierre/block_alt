@@ -1,0 +1,513 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <style>
+      body { margin: 0; padding: 0; color: #fff; background-color: #000; }
+
+      space {
+        position: fixed;
+        top: 0; bottom: 0; left: 0; right: 0;
+
+        display: flex;
+        max-height: 100%;
+        overflow-y: auto;
+      }
+
+      offer, answer {
+        flex: 0 0 auto;
+
+        word-break: break-all;
+        white-space: pre-wrap;
+
+        padding: 1em;
+      }
+
+      offer, answer {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+      }
+
+      connection {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+
+        justify-content: center;
+        align-items: stretch;
+      }
+
+      connection input-area {
+        flex: 1 0 auto;
+
+        padding: 1em;
+
+        background-color: rgba(255, 255, 255, 0.33);
+        border: solid 1px rgba(255, 255, 255, 0.75);
+      }
+
+      sound-button { cursor: pointer; }
+
+      data-channel-block-ui {
+        flex: 1 1 auto;
+
+        display: flex;
+
+        overflow-y: auto;
+      }
+
+      messages {
+        width: 100%;
+
+        flex: 0 1 auto;
+
+        flex-direction: column;
+
+        overflow-y: auto;
+      }
+
+      message, our-message { display: block; margin: 1em; padding: 1em; border: solid 1px rgba(255, 255, 255, 0.33); }
+
+      our-message {
+        text-align: right;
+      }
+
+      input-area { min-height: 3em; }
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: large;
+      }
+
+    </style>
+    <script>
+      var script = e('script');
+
+      function emptyFn() {}
+      function b (fn, t) { return function () { return fn.apply(t, arguments); }; }
+      function c (t, fn) { return function () { return t[fn].apply(t, arguments); }; }
+
+      function encode (text) { return btoa(text); }
+      function decode (text) { return atob(text); }
+
+      var googleSTUN = getGoogleSTUN();
+
+      var turn = {
+        'urls': 'turn:68.183.22.27:3478?transport=udp',
+        'credentialType': 'password',
+        'credential': 'anon',
+        'username': 'anon'
+      };
+
+      var config = {
+        'iceServers': [googleSTUN, turn]
+      };
+
+      function e (name) { return document.createElement(name); }
+
+      function load () {
+        append(document.body, [startConnection(e('space'))]);
+
+        function startConnection(space) {
+          function stringEncodeObject(obj) { return JSON.stringify(obj, value); }
+          function stringDecodeObject(obj) { return JSON.parse(obj, value); }
+
+          function value(key, value) { return value; }
+
+          var el, offerEl, offerTextEl, offerEmailLink, inputAreaEl, offerCopyLink, answerEmailLink, answerCopyLink;
+
+          append(space, [
+            el = append(e('connection'), [
+              offerEl = append(e('offer'), [
+                offerTextEl = e('offer-text'),
+                offerEmailLink = e('a'),
+                offerCopyLink = e('a')
+              ]),
+              inputAreaEl = e('input-area')
+            ])
+          ]);
+
+          y(inputAreaEl, connectionInputHandler);
+
+          z(emailLink, [offerEmailLink, answerEmailLink = e('a')]);
+          z(copyLink, [offerCopyLink, answerCopyLink = e('a')]);
+
+          var pc = makePeer(),
+              channel = pc.createDataChannel('block'),
+              latencyChannel= pc.createDataChannel('latency'),
+              channelonopenHandlers = {
+                                        'block': startDataChannelUi,
+                                        'latency': startLatencyChannelUI
+                                      };
+
+          z(setupChannel, [channel, latencyChannel]);
+
+          go(window.location.hash);
+
+          window.addEventListener('hashchange', function (event) { go(window.location.hash); });
+
+          return space;
+
+          function setupChannel(channel) {
+            events(channel, {
+              'onopen': function () { channelonopenHandlers[channel.label](channel); }
+            })
+          }
+
+          function emailLink (e) { link(e, 'Send as Email'); }
+          function copyLink (e)  { link(e, 'Copy As Link'); }
+
+          function link (e, text, target, href) {
+            e.innerText = text;
+            e.target = target || '__blank';
+            e.href = href || '';
+          }
+
+          function y (e, h) {
+            e.contentEditable = true;
+            e.addEventListener('input', h);
+            return e;
+          }
+
+          function z (a, bs) {
+            bs.forEach(function (b) { a(b); });
+          }
+
+          function go (hash) {
+            if (hash.length > 1) {
+              window.location.hash = '';
+
+              connectionInputHandler({
+                target: {
+                  textContent: atob(hash.substring(1))
+                }
+              });
+            }
+          }
+
+          function connectionInputHandler (event) {
+            var message = stringDecodeObject(event.target.textContent);
+
+            inputAreaEl.removeEventListener('input', connectionInputHandler);
+            inputAreaEl.remove();
+
+            offerEl.remove();
+            setElText(inputAreaEl, '');
+
+            var answerEl, answerTextEl;
+
+            answerEl = append(e('answer'), [answerTextEl = e('answer-text'), answerEmailLink, answerCopyLink]);
+
+            el.insertBefore(answerEl, el.firstChild);
+
+            var ondatachannelHandlers = {
+              'block': answerEl.remove.bind(answerEl)
+            };
+
+            events(pc, {
+              'oniceconnectionstatechange':
+                onIceConnectionState('connected', answerEl.remove.bind(answerEl)),
+              'onicecandidate':
+                function () { updateUI(pc.localDescription); }
+            });
+
+            function onIceConnectionState (state, action) {
+              return function () {
+                if (pc.iceConnectionState === state) action();
+              };
+            }
+
+            processMessage(message);
+
+            function updateUI (answer) {
+              var enc = stringEncodeObject(answer);
+
+              var link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                  body = 'Connect to me at: ' + link,
+                  subject = 'Connect to me';
+
+              answerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+              answerCopyLink.href = link;
+
+              setElText(answerTextEl, enc);
+              selectText(answerTextEl);
+            }
+
+            function processMessage(message) {
+
+              ({
+                'offer': function () { pc = setupConnection(message, updateUI); },
+                'answer': function () {
+                  pc.setRemoteDescription(message)
+                    .catch(function (error) {
+                      console.log('error!', error);
+                    });
+                }
+              })[message.type]();
+
+              function setupConnection(offer, haveAnswer) {
+                (pc = makePeer())
+                  .setRemoteDescription(offer)
+                  .then(c(pc, 'createAnswer'))
+                  .then(c(pc, 'setLocalDescription'))
+                  .then(function() { return haveAnswer(pc.localDescription); })
+                  .catch(function(error) {
+                    console.log('error', error);
+                  });
+
+                events(pc, {
+                  'ondatachannel': function(event) {
+                    var channel = event.channel;
+
+                    (ondatachannelHandlers[channel.label] || emptyFn)();
+
+                    events(channel, {
+                      'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
+                    });
+                  },
+
+                  'oniceconnectionstatechange':
+                    onIceConnectionState('connected', answerEl.remove.bind(answerEl)),
+
+                  'onicecandidate': function (event) { updateUI(pc.localDescription); }
+                });
+
+                return pc;
+              }
+            }
+          }
+
+          function makePeer() {
+            var pc; return (
+              pc = createNewPeerConnection(
+                function (offer) {
+                  var enc = stringEncodeObject(pc.localDescription),
+                      link = encodeURI(window.location.origin + window.location.pathname + '#' + btoa(enc)),
+                      body = 'Connect to me at: ' + link,
+                      subject = 'Connect to me';
+
+                  offerEmailLink.href = encodeURI('mailto:?subject=' + subject + '&body=' + body);
+                  offerCopyLink.href = link;
+
+                  updateOfferElText(enc);
+                },
+                function (answer) { },
+                function (error) {
+                  console.log('error', error);
+                  updateOfferElText(JSON.stringify(error));
+                }
+              )
+            );
+
+            function updateOfferElText (text) {
+              setOfferElText(text);
+              selectText(offerTextEl);
+            }
+
+            function createNewPeerConnection(deliverOffer, receiveAnswer, deliverError) {
+              var pc;
+
+              return events(
+                pc = new RTCPeerConnection(config), {
+                  'onnegotiationneeded': function (event) {
+                    pc
+                      .createOffer()
+                      .then(setLocalDescription)
+                      .then(function () { return deliverOffer(pc.localDescription); })
+                      .catch(deliverError);
+                  },
+
+                  'onicecandidate': function (event) { return deliverOffer(pc.localDescription); }
+                }
+              )[0];
+
+              function setLocalDescription(offer) { return pc.setLocalDescription(offer); }
+            }
+          }
+
+          function startDataChannelUi (channel) {
+            var ui;
+
+            append(el, [ui = makeDataChannelUI(channel), inputAreaEl]);
+
+            inputAreaEl.focus();
+
+            function makeDataChannelUI (channel) {
+              var messages, channelInput,
+                  ui = e('data-channel-' + channel.label + '-ui');
+
+              append(ui, [messages = e('messages'), channelInput = e('channel-input')]);
+
+              inputAreaEl.onkeydown = function (event) {
+                if (event.keyCode === 13) return addMessage('our-message', event.target.textContent), sendInput(event);
+              };
+
+              events(channel, {
+                'onmessage': function (event) {
+                  addMessage('message', event.data);
+
+                  if (document.hidden) notify(event.data);
+                }
+              });
+
+              function addMessage(type, text) {
+                var el = e(type);
+                el.innerText = text;
+                messages.prepend(el);
+              }
+
+              function sendInput (event) {
+                channel.send(event.target.textContent); // doesn't send empty strings, seems
+                event.target.textContent = '';
+              }
+
+              return ui;
+            }
+          }
+
+          function startLatencyChannelUI (channel) {
+            var latencyChannel = channel;
+            var diffListener;
+
+            events(latencyChannel, {
+              'onmessage': function (event) {
+                var diff = pong(event.data);
+
+                if (diff !== undefined) setDiff(diff);
+              }
+            });
+
+            ping();
+
+            var ui = makeLatencyUI(latencyChannel, ping, pong, getDiff);
+
+            el.insertBefore(ui, el.firstChild);
+
+            return ui;
+
+            function ping() {
+              latencyChannel.send(new Date().getTime());
+            }
+
+            function pong(message) {
+              var parts = message.split(' ');
+              var theirTime, diff;
+              var ourTime = new Date().getTime();
+
+              if (parts.length > 1) {
+                var ourOldTime = parseInt(parts[0], 10);
+
+                theirTime = parseInt(parts[1], 10);
+
+                diff = ourTime - ourOldTime;
+              }
+              else {
+                theirTime = parseInt(parts[0]);
+
+                latencyChannel.send(theirTime + ' ' + ourTime);
+
+                diff = undefined;
+              }
+
+              return diff;
+            }
+
+            function getDiff(fn) { diffListener = fn; }
+            function setDiff(diff) { if (diffListener) diffListener(diff); }
+
+            function makeLatencyUI (channel, ping, pong, setDiff) {
+              var button = e('button'),
+                  diffEl = e('diff');
+
+              button.innerText = 'ping';
+
+              button.addEventListener('click', ping);
+
+              setDiff(function (diff) { diffEl.innerText = diff; });
+
+              return append(e('latency-ui'), [button, diffEl]);
+            }
+          }
+
+          function setElText (el, text) { el.innerHTML = text; }
+
+          function setOfferElText(text) { setElText(offerTextEl, text); }
+          function setAnswerElText(text) { setElText(answerTextEl, text); }
+
+          function selectText(el) {
+            if (!el.isConnected) return;
+
+            var range = document.createRange();
+            range.selectNodeContents(el);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        }
+      }
+
+      function getGoogleSTUN() {
+        return {
+          urls: [
+            'stun:stun1.l.google.com:19302' //, 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'
+          ]
+        };
+      }
+
+      function getTextMessageEmails() {
+        return {
+          'AT&T': {'sms': 'txt.att.net', 'mms': 'mms.att.net'},
+          'T-Mobile': 'tmomail.net',
+          'Verizon': {'sms': 'vtext.com', 'mms': 'vzwpix.com'},
+          'Sprint': {'sms': 'messaging.sprintpcs.com', 'mms': 'pm.sprint.com'},
+          'Virgin Mobile': {'sms': 'vmobl.com', 'mms': 'vmpix.com'},
+          'Tracfone': 'mmst5.tracfone.com',
+          'Metro PCS': 'mymetropcs.com',
+          'Boost Mobile': {'sms': 'sms.myboostmobile.com', 'mms': 'myboostmobile.com'},
+          'Cricket': {'sms': 'sms.cricketwireless.net', 'mms': 'mms.cricketwireless.net'},
+          'Republic Wireless': 'text.republicwireless.com',
+          'Google Fi (Project Fi)': 'msg.fi.google.com',
+          'U.S. Cellular': {'sms': 'email.uscc.net', 'mms': 'mms.uscc.net'},
+          'Ting': 'message.ting.com',
+          'Consumer Cellular': 'mailmymobile.net',
+          'C-Spire': 'cspire1.com',
+          'Page Plus': 'ytext.com'
+        };
+      }
+
+      function events (obj, handlers) {
+        console.log('events -- ff not working');
+
+        if (obj === null || obj === undefined) return console.log('oops, no obj for handlers!');
+
+        var allEvents = Object.keys(Object.getPrototypeOf(obj)).filter(function (key) {
+          console.log('*', key );
+          return key.indexOf('on') === 0 && key.length > 2;
+        });
+
+        return [obj, allEvents.reduce(function (r, key) {
+          r[key] = event(obj, key, handlers[key] || emptyFn);
+          return r;
+        }, {})];
+      }
+
+      function event(obj, name, handler) {
+        obj[name] = function() {
+          console.log('#e', name, arguments);
+          handler.apply(obj, arguments);
+        };
+      }
+
+      function append (p, c) {
+        c.forEach(function (e) { p.appendChild(e); });
+        return p;
+      }
+    </script>
+  </head>
+  <body onload="load()"></body>
+</html>
