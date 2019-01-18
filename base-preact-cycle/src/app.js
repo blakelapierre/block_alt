@@ -1,13 +1,17 @@
 import { h, render } from 'preact-cycle';
 
+const log = [];
+
 const SET_NEW_TEXT = (_, list, value) => {
-  console.log({list, value});
   list.newText = value.target.value;
 };
 
 const ADD_NEW_TEXT = (_, list) => {
   if (list.newText !== '') list.items.push(list.newText);
+  log.push(['ADD_NEW_TEXT', list, list.newText]);
   list.newText = '';
+
+  console.log(log);
 };
 
 const Tracker = ({tracker:{items, inputText}}, {mutation}) => (
