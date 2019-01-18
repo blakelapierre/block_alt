@@ -137,26 +137,27 @@
           z(emailLink, [offerEmailLink, answerEmailLink = e('a')]);
           z(copyLink, [offerCopyLink, answerCopyLink = e('a')]);
 
-          var channelonopenHandlers = {
-            'block': startDataChannelUi,
-            'latency': startLatencyChannelUI
-          };
-
           var pc = makePeer(),
               channel = pc.createDataChannel('block'),
-              latencyChannel= pc.createDataChannel('latency');
+              latencyChannel= pc.createDataChannel('latency'),
+              channelonopenHandlers = {
+                                        'block': startDataChannelUi,
+                                        'latency': startLatencyChannelUI
+                                      };
 
-          [channel, latencyChannel].forEach(function (channel) {
-            events(channel, {
-              'onopen': function (event) { channelonopenHandlers[channel.label](channel); }
-            });
-          });
+          z(setupChannel, [channel, latencyChannel]);
 
           go(window.location.hash);
 
           window.addEventListener('hashchange', function (event) { go(window.location.hash); });
 
           return space;
+
+          function setupChannel(channel) {
+            events(channel, {
+              'onopen': function () { channelonopenHandlers[channel.label](channel); }
+            })
+          }
 
           function emailLink (e) { link(e, 'Send as Email'); }
           function copyLink (e)  { link(e, 'Copy As Link'); }
@@ -205,12 +206,14 @@
             el.insertBefore(answerEl, el.firstChild);
 
             var ondatachannelHandlers = {
-              'block': function () { answerEl.remove(); }
+              'block': answerEl.remove.bind(answerEl)
             };
 
             events(pc, {
               'oniceconnectionstatechange':
-                onIceConnectionState('connected', answerEl.remove.bind(answerEl))
+                onIceConnectionState('connected', answerEl.remove.bind(answerEl)),
+              'onicecandidate':
+                function () { updateUI(pc.localDescription); }
             });
 
             function onIceConnectionState (state, action) {
@@ -218,8 +221,6 @@
                 if (pc.iceConnectionState === state) action();
               };
             }
-
-            pc.addEventListener('icecandidate', function (event) { updateUI(pc.localDescription); })
 
             processMessage(message);
 
@@ -270,11 +271,8 @@
                     });
                   },
 
-                  'oniceconnectionstatechange': function(event) {
-                    if (pc.iceConnectionState === 'connected') {
-                      answerEl.remove();
-                    }
-                  },
+                  'oniceconnectionstatechange':
+                    onIceConnectionState('connected', answerEl.remove.bind(answerEl)),
 
                   'onicecandidate': function (event) { updateUI(pc.localDescription); }
                 });
@@ -428,7 +426,7 @@
 
               button.innerText = 'ping';
 
-              button.addEventListener('click', function (event) { ping(); });
+              button.addEventListener('click', ping);
 
               setDiff(function (diff) { diffEl.innerText = diff; });
 
@@ -458,6 +456,27 @@
           urls: [
             'stun:stun1.l.google.com:19302' //, 'stun:stun2.l.google.com:19302', 'stun:stun3.l.google.com:19302', 'stun:stun4.l.google.com:19302'
           ]
+        };
+      }
+
+      function getTextMessageEmails() {
+        return {
+          'AT&T': {'sms': 'txt.att.net', 'mms': 'mms.att.net'},
+          'T-Mobile': 'tmomail.net',
+          'Verizon': {'sms': 'vtext.com', 'mms': 'vzwpix.com'},
+          'Sprint': {'sms': 'messaging.sprintpcs.com', 'mms': 'pm.sprint.com'},
+          'Virgin Mobile': {'sms': 'vmobl.com', 'mms': 'vmpix.com'},
+          'Tracfone': 'mmst5.tracfone.com',
+          'Metro PCS': 'mymetropcs.com',
+          'Boost Mobile': {'sms': 'sms.myboostmobile.com', 'mms': 'myboostmobile.com'},
+          'Cricket': {'sms': 'sms.cricketwireless.net', 'mms': 'mms.cricketwireless.net'},
+          'Republic Wireless': 'text.republicwireless.com',
+          'Google Fi (Project Fi)': 'msg.fi.google.com',
+          'U.S. Cellular': {'sms': 'email.uscc.net', 'mms': 'mms.uscc.net'},
+          'Ting': 'message.ting.com',
+          'Consumer Cellular': 'mailmymobile.net',
+          'C-Spire': 'cspire1.com',
+          'Page Plus': 'ytext.com'
         };
       }
 
